@@ -85,8 +85,8 @@ export default function FormPage() {
                                     Relaxation
                                 </label>
                             </div>
-  
-                                <button type="submit" className="btn btn-primary w-full">
+
+                                <button className="btn btn-primary w-full py-4 text-lg font-bold">
                                     Plan My Trip
                                 </button>
                         </form>
