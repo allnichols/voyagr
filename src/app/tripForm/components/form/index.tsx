@@ -1,7 +1,9 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from 'next/navigation'
 
 export default function TripForm() {
+    const router = useRouter();
     const [formData, setFormData] = useState({
         destination: "",
         departureDate: "",
@@ -22,11 +24,30 @@ export default function TripForm() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Handle form submission logic here
-        console.log(formData);
-    };
+        fetch('http://localhost:3000/api/submitForm', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        }).then(response => {
+            console.log('Response status:', response.status);
+            if(response.ok) {
+                const params = new URLSearchParams({
+                    destination: formData.destination,
+                    departureDate: formData.departureDate,
+                    returnDate: formData.returnDate,
+                    preferences: formData.preferences.join(","),
+                })
+                router.push(`/itinerary?${params.toString()}`);
+            }
+        })
+          .catch((error) => {
+              console.error('Error:', error);
+              // Handle error (e.g., show an error message)
+          });
 
-    console.log(formData);
+    };
 
     return (
         <form onSubmit={handleSubmit}>
