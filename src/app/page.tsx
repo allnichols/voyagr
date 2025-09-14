@@ -12,8 +12,8 @@ export default function Home() {
           Your personal AI travel assistant. Plan trips, get recommendations,
           and explore the world with ease.
         </p>
-        <Link 
-          href="/form"
+        <Link
+          href="/tripForm"
           className="px-6 py-3 btn btn-primary"
         >
           Get Started
