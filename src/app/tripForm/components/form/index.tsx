@@ -30,21 +30,21 @@ export default function TripForm() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(formData),
-        }).then(response => {
-            console.log('Response status:', response.status);
-            if(response.ok) {
-                const params = new URLSearchParams({
+        }).then(response =>response.json()).then(data => {
+              console.log('Success:', data);
+                // Redirect to the itinerary page with query parameters
+                const query = new URLSearchParams({
                     destination: formData.destination,
                     departureDate: formData.departureDate,
-                    returnDate: formData.returnDate,
+                    returnDate: formData.returnDate,  
                     preferences: formData.preferences.join(","),
-                })
-                router.push(`/itinerary?${params.toString()}`);
-            }
-        })
-          .catch((error) => {
-              console.error('Error:', error);
-              // Handle error (e.g., show an error message)
+                    aiData: encodeURIComponent(JSON.stringify(data)) // Assuming the API returns the number of days
+                });
+                router.push(`/itinerary?${query.toString()}`);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                // Handle error (e.g., show an error message)
           });
 
     };
