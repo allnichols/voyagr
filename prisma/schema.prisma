@@ -24,7 +24,7 @@ model User {
 
 model Trip {
   id            Int      @id @default(autoincrement())
-  userId        Int      @unique
+  userId        Int      
   destination   String
   departureDate DateTime
   returnDate    DateTime
@@ -50,6 +50,7 @@ model TripActivity {
   timeOfDay     String?
   place         String
   descriptions  String?
+  address       String?
   links         String[]
   createdAt     DateTime @default(now())
 

@@ -46,7 +46,6 @@ export default function parseTextReponse(responseText: string) {
 
     }
 
-    console.log('days', days);
     return days;
 }
 

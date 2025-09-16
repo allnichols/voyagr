@@ -11,10 +11,11 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-        const trips = await prisma.trip.findMany({
+        let trips = await prisma.trip.findMany({
             where: { userId: Number(userId) },
             orderBy: { createdAt: 'desc' }
         });
+
         return new Response(JSON.stringify(trips), { status: 200 });
     } catch (error) {
         console.error('Error fetching trips:', error);

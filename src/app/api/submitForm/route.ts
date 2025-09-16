@@ -16,9 +16,6 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
-        console.log('Received form data:', formData);
-
-
         const response: GenerateContentResponse = await ai.models.generateContent({
             model: "gemini-2.5-flash-lite",
             contents: `Create a travel itinerary for the following details:
@@ -28,13 +25,12 @@ export async function POST(req: NextRequest) {
 
                     and respond with the following format
 
-                    Destination: {destination}
                     Day {day} - {date}
                     Time: {morning | afternoon | evening}
                     Place: {place}
                     Description: {description}
                     Links: {descriptionLinks joined by commas}
-                    address: {address}
+                    Address: {address}
                     `,
             config: {
                 thinkingConfig: {
@@ -45,25 +41,37 @@ export async function POST(req: NextRequest) {
 
         const aiResponse = response.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
         const responseText = parseTextReponse(aiResponse);
-
-        // Save to database
+        
         await prisma.trip.create({
             data: {
+                userId: 1,
                 destination: formData.destination,
                 departureDate: new Date(formData.departureDate),
                 returnDate: new Date(formData.returnDate),
-                preferences: Array.isArray(formData.preferences) ? formData.preferences.join(", ") : String(formData.preferences),
-                aiData: responseText,
-                user: {
-                    connect: { id: 1 } // Make sure formData.userId is provided and valid
+                days: {
+                    create: responseText.map(day => ({
+                        date: new Date(day.date),
+                        dayNumber: parseInt(day.day),
+                        activities: {
+                            create: day.activities.map(activity => ({
+                                timeOfDay: activity.time,
+                                place: activity.place,
+                                descriptions: activity.description,
+                                address: activity.address,
+                                links: activity.links
+                                
+                            }))
+                        }
+                    }))
                 }
-            },
+            }
         });
 
         
 
-        return NextResponse.json({ message: 'Form submitted successfully', data: responseText }, { status: 200 });
+        return NextResponse.json({ message: 'Form submitted successfully' }, { status: 200 });
     } catch (error) {
+        console.error('API Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
