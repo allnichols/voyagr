@@ -2,6 +2,7 @@
 import Sidebar from "./components/Sidebar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Itinerary from "./itinerary";
+import TripDetails from "./components/TripDetails";
 
 const queryClient = new QueryClient()
 
@@ -12,9 +13,8 @@ export default function ItineraryPage() {
             <div className="relative font-sans grid grid-cols-1 md:grid-cols-[350px_1fr] lg:grid-cols-[450px_1fr] min-h-screen">
                 {/* Sidebar */}
                 <Sidebar />
-                {/* Main Content */}
-                    <Itinerary />
-
+                {/* Map */}
+                <TripDetails />
                 <main className="flex flex-col bg-base-200 gap-8 items-start">
                     {/* Main dashboard content goes here */}
                 </main>

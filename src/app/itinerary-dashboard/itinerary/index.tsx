@@ -3,7 +3,7 @@ import { useCurrentTrip } from "@/app/itinerary-dashboard/store/currentTrip";
 
 export default function Itinerary() {
 
-    const currentTripId = useCurrentTrip((state) => state.currentTripId);
+    const currentTripId = useCurrentTrip((state) => state.currentTrip.id);
 
     console.log("Current Trip ID:", currentTripId);
 

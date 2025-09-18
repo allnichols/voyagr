@@ -34,7 +34,7 @@ export default function TripForm() {
               if(data) {
                 // Redirect to the itinerary page
                 router.push('/itinerary-dashboard');
-                console.log(data);
+                
               }
             })
             .catch((error) => {

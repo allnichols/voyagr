@@ -1,9 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import type { Trip } from "@prisma/client";
-import TripDetails from "../TripDetails";
 import { useCurrentTrip } from "@/app/itinerary-dashboard/store/currentTrip";
-
+import './trips.css';
 
 function getTotalDays(departureDate: Date, returnDate: Date): number {
     const start = new Date(departureDate);
@@ -15,8 +14,8 @@ function getTotalDays(departureDate: Date, returnDate: Date): number {
 }
 
 export default function Trips() {
-    // const updateFirstName = usePersonStore((state) => state.updateFirstName)
     const setTripID = useCurrentTrip((state) => state.setCurrentTripId);
+    const selectedTripId = useCurrentTrip((state) => state.currentTrip.id);
 
     const [data, setData] = useState<Trip[] | null>(null);
 
@@ -48,18 +47,21 @@ export default function Trips() {
     useEffect(() => {
         fetchData();
     }, []);
-    console.log(data)
+    
 
     return (
         <>
-            <div className="flex items-center justify-between mb-4 w-[95%]">
+            <div className="flex items-center justify-between mb-4">
                 <p className="text-lg font-semibold">My Trips</p>
                 <button className="btn btn-sm btn-outline btn-primary rounded-sm">+ New Trip</button>
             </div>
-            <ul className="menu text-base-content w-[90%] p-4 pl-0">
+            <ul className="list text-base-content w-full p-4 pl-0 pr-0">
                 {data && data.map((trip) => (
-                    <li key={trip.id} className="mb-4 p-4 bg-white border-base-300 rounded-sm shadow-sm hover:shadow-lg transition-shadow duration-300">
-                        <div className="flex gap-3 bg-white flex-row justify-between w-[350px]">
+                    <li key={trip.id}
+                        className={
+                            `mb-4 p-4 bg-white border-base-300 rounded-sm shadow-sm hover:shadow-lg transition-shadow duration-300
+                            trip-item ${selectedTripId === trip.id ? "selected" : ""}`}>
+                        <div className="flex gap-3 bg-white flex-row justify-between ">
                             <div className="flex flex-col gap-3">
                                 <span
                                     className="font-semibold text-sm"
@@ -73,7 +75,12 @@ export default function Trips() {
                             </div>
 
                             <div className="flex flex-row gap-2">
-                                <button onClick={() => setTripID(trip.id)} className="btn btn-sm btn-outline btn-primary mt-2 rounded-sm">View</button>
+                                <button
+                                    onClick={() => setTripID(trip.id, trip.destination)}
+                                    className="btn btn-sm btn-outline btn-primary mt-2 rounded-sm"
+                                >
+                                    View
+                                </button>
                             </div>
                         </div>
                     </li>

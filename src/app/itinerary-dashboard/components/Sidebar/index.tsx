@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect } from "react";
 import Trips from "./Trips";
+import TripDetails from "../TripDetails";
 
 export default function Sidebar() {
     const [open, setOpen] = useState(false);
@@ -40,7 +41,7 @@ export default function Sidebar() {
                     md:static md:translate-x-0 md:shadow-none
                 `}
             >
-                <div className="p-6 flex flex-col h-full">
+                <div className="relative p-6 flex flex-col h-full">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-2xl font-bold">Voyagr</h2>
                         {/* Close button only on small screens */}
@@ -56,6 +57,7 @@ export default function Sidebar() {
                         <div className="divider w-full"></div>
                         <Trips />
                     </div>
+                    
                 </div>
             </aside>
 
