@@ -1,28 +1,72 @@
 "use client"
+import { useState, useEffect } from "react";
 import Trips from "./Trips";
 
 export default function Sidebar() {
-   
+    const [open, setOpen] = useState(false);
+
+    // Open sidebar by default on md+ screens
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth >= 768) setOpen(true);
+            else setOpen(false);
+        };
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    const handleToggle = () => setOpen((prev) => !prev);
+
     return (
-        <div className="drawer bg-base-100 w-[450px] md:drawer-open shadow-lg">
-            <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-            <div className="drawer-content ">
-                {/* Page content here */}
-                <label htmlFor="my-drawer-2" className="btn btn-primary drawer-button md:hidden">
-                    Open drawer
-                </label>
-            </div>
-            <div className="drawer-side p-6 ">
-                <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
-                <h2 className="text-2xl font-bold mb-4">Voyagr</h2>
-                <div className="">
+        <>
+            {/* Toggle button for small screens */}
+            {!open && (
+                <button
+                    className="fixed top-4 left-4 z-50 btn btn-primary md:hidden"
+                    onClick={handleToggle}
+                    aria-label="Open sidebar"
+                >
+                    ☰
+                </button>
+            )}
 
+            {/* Sidebar */}
+            <aside
+                className={`
+                    fixed top-0 left-0 h-full w-full bg-base-100 shadow-lg z-40
+                    transform transition-transform duration-300
+                    ${open ? "translate-x-0" : "-translate-x-full"}
+                    md:static md:translate-x-0 md:shadow-none
+                `}
+            >
+                <div className="p-6 flex flex-col h-full">
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-2xl font-bold">Voyagr</h2>
+                        {/* Close button only on small screens */}
+                        <button
+                            className="btn btn-ghost"
+                            onClick={handleToggle}
+                            aria-label="Close sidebar"
+                        >
+                            ✕
+                        </button>
+                    </div>
+                    <div className="flex-1">
+                        <div className="divider w-full"></div>
+                        <Trips />
+                    </div>
                 </div>
-                <div className="divider w-[100%]"></div>
+            </aside>
 
-                <Trips />
-
-            </div>
-        </div>
-    )
+            {/* Overlay for small screens */}
+            {open && (
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-40 z-30 md:hidden"
+                    onClick={handleToggle}
+                    aria-label="Close sidebar overlay"
+                />
+            )}
+        </>
+    );
 }
