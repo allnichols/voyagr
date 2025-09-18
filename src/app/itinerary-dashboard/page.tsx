@@ -1,8 +1,8 @@
 "use client"
 import Sidebar from "./components/Sidebar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Itinerary from "./itinerary";
 import TripDetails from "./components/TripDetails";
+import Map from "./components/map";
 
 const queryClient = new QueryClient()
 
@@ -16,7 +16,7 @@ export default function ItineraryPage() {
                 {/* Map */}
                 <TripDetails />
                 <main className="flex flex-col bg-base-200 gap-8 items-start">
-                    {/* Main dashboard content goes here */}
+                    <Map />
                 </main>
                 {/* Optional Right Panel */}
                 {/* <section className="hidden lg:block bg-base-100 p-4 rounded-lg shadow-md h-full"> */}
