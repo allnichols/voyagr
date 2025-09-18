@@ -5,10 +5,18 @@ import TripDetails from "../TripDetails";
 import { useCurrentTrip } from "@/app/itinerary-dashboard/store/currentTrip";
 
 
+function getTotalDays(departureDate: Date, returnDate: Date): number {
+    const start = new Date(departureDate);
+    const end = new Date(returnDate);
+    // Calculate difference in milliseconds, then convert to days
+    const diffTime = end.getTime() - start.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    return diffDays;
+}
+
 export default function Trips() {
     // const updateFirstName = usePersonStore((state) => state.updateFirstName)
     const setTripID = useCurrentTrip((state) => state.setCurrentTripId);
-    const [openTrip, setOpenTrip] = useState<number | null>(null);
 
     const [data, setData] = useState<Trip[] | null>(null);
 
@@ -53,13 +61,19 @@ export default function Trips() {
                     <li key={trip.id} className="mb-4 p-4 bg-white border-base-300 rounded-sm shadow-sm hover:shadow-lg transition-shadow duration-300">
                         <div className="flex gap-3 bg-white flex-row justify-between w-[350px]">
                             <div className="flex flex-col gap-3">
-                                <span className="font-semibold text-sm">{trip.destination}</span>
-                                <span>{new Date(trip.departureDate).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })} - {new Date(trip.returnDate).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })}</span>
+                                <span
+                                    className="font-semibold text-sm"
+                                >
+                                    {`${getTotalDays(new Date(trip.departureDate), new Date(trip.returnDate))} days in ${trip.destination}`}
+                                </span>
+                                <span>
+                                    {new Date(trip.departureDate).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })} -
+                                    {new Date(trip.returnDate).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })}
+                                </span>
                             </div>
 
                             <div className="flex flex-row gap-2">
                                 <button onClick={() => setTripID(trip.id)} className="btn btn-sm btn-outline btn-primary mt-2 rounded-sm">View</button>
-                                <button className="btn btn-sm btn-outline btn-secondary mt-2 rounded-sm">Edit</button>
                             </div>
                         </div>
                     </li>
