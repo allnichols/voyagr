@@ -1,5 +1,5 @@
 "use client"
-import { useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useCurrentTrip } from "../../store/currentTrip";
 import { Suspense } from "react";
 
@@ -13,7 +13,7 @@ async function fetchTripDetails(tripId: number | null) {
 }
 
 function Details({ trip }: { trip: { id: number | null; destination: string | null } }) {
-    console.log(trip)
+    
     const { data, error, isLoading } = useSuspenseQuery({
         queryKey: ['tripDetails', trip.id],
         queryFn: () => fetchTripDetails(trip.id),
@@ -35,7 +35,9 @@ function Details({ trip }: { trip: { id: number | null; destination: string | nu
                             <p className="text-sm text-gray-500">
                                 Day
                             </p>
-                            <p className="text-lg">{`${day.dayNumber >= 10 ? '' : '0'}`}{day.dayNumber}</p>
+                            <p className="text-lg">
+                                {`${day.dayNumber >= 10 ? '' : '0'}`}{day.dayNumber}
+                            </p>
                         </div>
                         // <li key={day.dayNumber}>
                         //     <div className="timeline-middle">
