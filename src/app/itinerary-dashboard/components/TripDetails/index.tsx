@@ -1,7 +1,7 @@
 "use client"
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useCurrentTrip } from "../../store/currentTrip";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 
 
 async function fetchTripDetails(tripId: number | null) {
@@ -13,7 +13,7 @@ async function fetchTripDetails(tripId: number | null) {
 }
 
 function Details({ trip }: { trip: { id: number | null; destination: string | null } }) {
-    
+    const [daySelected, setDaySelected] = useState(1);
     const { data, error, isLoading } = useSuspenseQuery({
         queryKey: ['tripDetails', trip.id],
         queryFn: () => fetchTripDetails(trip.id),
@@ -23,42 +23,55 @@ function Details({ trip }: { trip: { id: number | null; destination: string | nu
     if (!data) return <div>No trip data available.</div>
     console.log(data)
     return (
-        <div>
+        <div >
             <h2 className="font-bold text-lg mb-2">
                 {`${data.length} ${data.length == 1 ? 'Day' : 'Days'} in ${trip.destination}`}
             </h2>
             <div className="divider w-full"></div>
-            <div>
-                {data.map((day: any, index: number) => {
+            <div className="max-h-[600px] overflow-y-auto pr-2">
+                {data.map((day: any) => {
+                    console.log(day)
                     return (
-                        <div className="mb-4" key={day.dayNumber}>
-                            <p className="text-sm text-gray-500">
-                                Day
-                            </p>
-                            <p className="text-lg">
-                                {`${day.dayNumber >= 10 ? '' : '0'}`}{day.dayNumber}
-                            </p>
+
+                        <div key={day.dayNumber} className="border-base-200 border rounded-lg p-4 mb-4">
+                            <div className="flex items-center justify-between mb-4">
+                                <div>
+                                    <p className="text-sm text-gray-500">
+                                        Day
+                                    </p>
+                                    <p className="text-lg">
+                                        {`${day.dayNumber >= 10 ? '' : '0'}`}{day.dayNumber}
+                                    </p>
+                                </div>
+                                <button onClick={() => setDaySelected(day.dayNumber)} className="btn btn-circle btn-sm btn-outline">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div className={`ml-4 ${daySelected === day.dayNumber ? 'block' : 'hidden'}`}>
+                                <ol className="list-decimal">
+                                    {day.activities.map((activity: any) => {
+                                        return (
+                                            <li  key={activity.id} className="mb-4">
+                                                <p><span>{activity.timeOfDay}</span> - {activity.place} </p>
+                                                <p>{activity.address}</p>
+                                                <div>
+                                                    <div className="flex flex-col">
+                                                        <p>Helpful Links: </p>
+
+                                                        {activity.links.map((link: string) => {
+                                                            return <a key={link} href={link} className="text-blue-500 underline mr-2" target="_blank" rel="noopener noreferrer">{link}</a>
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        )
+                                    })}
+                                </ol>
+
+                            </div>
                         </div>
-                        // <li key={day.dayNumber}>
-                        //     <div className="timeline-middle">
-                        //         <svg
-                        //             xmlns="http://www.w3.org/2000/svg"
-                        //             viewBox="0 0 20 20"
-                        //             fill="currentColor"
-                        //             className="h-5 w-5"
-                        //         >
-                        //             <path
-                        //                 fillRule="evenodd"
-                        //                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                        //                 clipRule="evenodd"
-                        //             />
-                        //         </svg>
-                        //     </div>
-                        //     <div className="timeline-end timeline-box">
-                        //         {`Day ${day.dayNumber}`} - {day.date}
-                        //     </div>
-                        //     <hr />
-                        // </li>
                     )
                 })}
             </div>
@@ -73,7 +86,7 @@ export default function TripDetails() {
 
     return (
         <div className={`
-            fixed top-0 left-[450px] h-full w-[350px] bg-white shadow-lg p-6 z-10
+            fixed top-0 left-[450px] h-full w-[500px] bg-white shadow-lg p-6 z-10
             transform transition-transform duration-300
             ${selectedTrip.id ? 'translate-x-0' : 'translate-x-[200%]'}
         `}>
