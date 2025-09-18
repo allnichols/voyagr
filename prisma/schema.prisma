@@ -28,6 +28,7 @@ model Trip {
   destination   String
   departureDate DateTime
   returnDate    DateTime
+  preferences   String[]
   createdAt     DateTime @default(now())
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   days          TripDay[]
