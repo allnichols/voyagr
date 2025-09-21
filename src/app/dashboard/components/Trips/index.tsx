@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import type { Trip } from "@prisma/client";
-import { useCurrentTrip } from "@/app/itinerary-dashboard/store/currentTrip";
+import { useCurrentTrip } from "@/app/dashboard/store/currentTrip";
 import './trips.css';
 
 function getTotalDays(departureDate: Date, returnDate: Date): number {

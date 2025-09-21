@@ -13,7 +13,7 @@ export default function Home() {
           and explore the world with ease.
         </p>
         <Link
-          href="/itinerary-dashboard"
+          href="/dashboard"
           className="px-6 py-3 btn btn-primary"
         >
           Get Started
