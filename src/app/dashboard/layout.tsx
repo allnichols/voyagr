@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Script from 'next/script'
+import ReactQueryProvider from './ReactQueryProvider';
 import Sidebar from './components/Sidebar';
-
 export default function ItineraryDashboardLayout({
     children,
 }: Readonly<{
@@ -22,10 +22,15 @@ export default function ItineraryDashboardLayout({
             <Script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
                 integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
                 crossOrigin="" />
-            <Sidebar>
-                {children}
+            <ReactQueryProvider>
+                <Sidebar>
+                    {children}
 
-            </Sidebar>
+                </Sidebar>
+
+            </ReactQueryProvider>
+
+
 
 
         </>
