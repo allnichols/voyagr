@@ -1,7 +1,9 @@
 "use client";
-import { useState, useEffect } from "react";
-import type { Trip } from "@prisma/client";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCurrentTrip } from "@/app/dashboard/store/currentTrip";
+import { getTrips } from "../../actions";
+import { useQuery } from "@tanstack/react-query";
 import './trips.css';
 
 function getTotalDays(departureDate: Date, returnDate: Date): number {
@@ -14,40 +16,24 @@ function getTotalDays(departureDate: Date, returnDate: Date): number {
 }
 
 export default function Trips() {
+    const router = useRouter();
+
     const setTripID = useCurrentTrip((state) => state.setCurrentTripId);
     const selectedTripId = useCurrentTrip((state) => state.currentTrip.id);
 
-    const [data, setData] = useState<Trip[] | null>(null);
+    const { data } = useQuery({
+        queryFn: () => getTrips(1), // Replace with actual user ID
+        queryKey: ['trips'],
+    })
 
-    const fetchData = async () => {
-        try {
-            const response = await fetch('/api/getItinerary?userId=1'); // Replace with actual user ID
-            const result = await response.json();
-            if (!Array.isArray(result)) {
-                throw new Error('Invalid response format');
-            }
-            const trip = result.map((trip: Trip) => {
-                return {
-                    id: trip.id,
-                    destination: trip.destination,
-                    departureDate: trip.departureDate,
-                    returnDate: trip.returnDate,
-                    // preferences: trip.preferences,
-                    // aiData: trip.aiData,
-                    createdAt: trip.createdAt,
-                    userId: trip.userId,
-                }
-            })
-            setData(trip);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
+    const handleViewTrip = (tripId: number, destination: string) => {
+        setTripID(tripId, destination);
+
+        router.push(`/dashboard/trips/${tripId}`);
+        // Optionally, you can refetch or invalidate queries here if needed
+        // queryClient.invalidateQueries({ queryKey: ['tripDetails', tripId] });
     }
 
-    useEffect(() => {
-        fetchData();
-    }, []);
-    
 
     return (
         <>
@@ -55,12 +41,22 @@ export default function Trips() {
                 <p className="text-lg font-semibold">My Trips</p>
                 <button className="btn btn-sm btn-outline btn-primary rounded-sm">+ New Trip</button>
             </div>
-            <ul className="list text-base-content w-full p-4 pl-0 pr-0">
+            {data && data.length === 0 && (
+                    <div className="flex items-center justify-center h-96">
+                        <div className="text-center">
+                            <h2 className="text-xl mb-2 font-bold">You don't have any trips!</h2>
+                            <p className="mb-4">Create one now!</p>
+                            <Link href="/dashboard/create-trip" className="btn btn-secondary rounded-sm">Create a trip</Link>
+                        </div>
+                    </div>
+                )}
+            <ul className="list text-base-content w-[50%] p-4 pl-0 pr-0">
+                
                 {data && data.map((trip) => (
                     <li key={trip.id}
                         className={
                             `mb-4 p-4 bg-white border-base-300 rounded-sm shadow-sm hover:shadow-lg transition-shadow duration-300
-                            trip-item ${selectedTripId === trip.id ? "selected" : ""}`}>
+                            `}>
                         <div className="flex gap-3 bg-white flex-row justify-between ">
                             <div className="flex flex-col gap-3">
                                 <span
@@ -76,8 +72,8 @@ export default function Trips() {
 
                             <div className="flex flex-row gap-2">
                                 <button
-                                    onClick={() => setTripID(trip.id, trip.destination)}
-                                    className="btn btn-sm btn-outline btn-primary mt-2 rounded-sm"
+                                    onClick={() => handleViewTrip(trip.id, trip.destination)}
+                                    className="btn btn-sm btn-primary mt-2 rounded-sm"
                                 >
                                     View
                                 </button>

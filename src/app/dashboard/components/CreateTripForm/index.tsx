@@ -33,7 +33,7 @@ export default function TripForm() {
         }).then(response => response.json()).then(data => {
             if (data) {
                 // Redirect to the itinerary page
-                router.push('/itinerary-dashboard');
+                router.push('/trips');
 
             }
         })

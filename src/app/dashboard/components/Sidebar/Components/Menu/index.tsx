@@ -30,7 +30,7 @@ export default function Menu() {
         <div className="menu w-full">
             {menuItems.map((item) => {
                 return (
-                    <li key={item.href}>
+                    <li className="mb-2" key={item.href}>
                         <Link
 
                             href={item.href}
