@@ -7,7 +7,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
             <aside className="w-[250px] bg-white p-1 border-r-1 border-base-200">
                 {/* Sidebar content can go here */}
                 <div className="p-2 ">
-                    <h2 className="text-xl">Voyagr</h2>
+                    <h2 className="text-xl font-bold">Voyagr</h2>
 
                 </div>
                 <div className="divider mt-0" />
