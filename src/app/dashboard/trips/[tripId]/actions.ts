@@ -29,9 +29,13 @@ export async function getTripDetails(tripId: number | null) {
 
 export async function deleteActivity(activityId: number) {
     try {
-        await prisma.tripActivity.delete({
+       const tripActivity =  await prisma.tripActivity.delete({
             where: { id: activityId }
         });
+
+        console.log('deleted activity', tripActivity);
+
+        return tripActivity;
     } catch (error) {
         console.error("Error deleting activity:", error);
         throw new Error("Failed to delete activity.");
