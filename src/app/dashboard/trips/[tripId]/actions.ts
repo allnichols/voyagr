@@ -26,3 +26,26 @@ export async function getTripDetails(tripId: number | null) {
         throw new Error("Failed to fetch trip details.");
     }
 }
+
+export async function deleteActivity(activityId: number) {
+    try {
+        await prisma.tripActivity.delete({
+            where: { id: activityId }
+        });
+    } catch (error) {
+        console.error("Error deleting activity:", error);
+        throw new Error("Failed to delete activity.");
+    }
+}
+
+export async function deleteDay(dayId: number) {
+    try {
+        const deletedDay = await prisma.tripDay.delete({
+            where: { id: dayId }
+        });
+        return deletedDay;
+    } catch (error) {
+        console.error("Error deleting day:", error);
+        throw new Error("Failed to delete day.");
+    }
+}
