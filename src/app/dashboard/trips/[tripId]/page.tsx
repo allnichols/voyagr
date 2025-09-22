@@ -2,6 +2,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useCurrentTrip } from "../../store/currentTrip";
 import { Suspense, useState } from "react";
+import { useParams } from "next/navigation";
+import { getTripDetails } from "./actions";
 
 
 async function fetchTripDetails(tripId: number | null) {
@@ -13,24 +15,25 @@ async function fetchTripDetails(tripId: number | null) {
 }
 
 export default function TripPage() {
+    const params = useParams();
+    const tripId = params?.tripId ? Number(params.tripId) : null;
 
-    const [daySelected, setDaySelected] = useState(1);
     const [openDays, setOpenDays] = useState<number[]>([]);
-    const { data, error, isLoading } = useQuery({
-        queryKey: ['tripDetails', 5],
-        queryFn: () => fetchTripDetails(5),
+    const { data,  isLoading } = useQuery({
+        queryKey: ['tripDetails', tripId],
+        queryFn: () => getTripDetails(tripId),
     });
 
-    console.log(data, error, isLoading)
     if (!data) return <div>No trip data available.</div>
-    console.log(data)
 
     return (
         <div className="flex h-screen">
             {/* Left panel */}
             <div className="w-1/2 p-6 overflow-y-auto">
-                <h1 className="text-2xl font-bold mb-4">Details</h1>
+                <h1 className="text-3xl font-bold mb-4">Trip to {data[0].trip.destination}</h1>
+                <div className="divider" />
                 <div className="space-y-4">
+                    <h2>Itinerary</h2>
                     {data.map((day: any) => {
                         const isOpen = openDays.includes(day.dayNumber);
                         return (
@@ -62,16 +65,15 @@ export default function TripPage() {
                                         opacity: isOpen ? 1 : 0,
                                     }}
                                 >
-                                    <ol className="list-decimal">
+                                    
                                         {day.activities.map((activity: any) => (
-                                            <li key={activity.id} className="mb-4">
-                                                <p>
-                                                    <span>{activity.timeOfDay}</span> - {activity.place}
+                                            <div key={activity.id} className="mb-4 rounded-lg border-2 border-base-200 p-4">
+                                                <p className="text-xs font-semibold mb-1">
+                                                    {activity.place}
                                                 </p>
-                                                <p>{activity.address}</p>
-                                            </li>
+                                            </div>
                                         ))}
-                                    </ol>
+                                    
                                 </div>
                             </div>
                         )
