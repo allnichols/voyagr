@@ -52,7 +52,6 @@ model TripActivity {
   place         String
   descriptions  String?
   address       String?
-  links         String[]
   createdAt     DateTime @default(now())
 
   tripDay      TripDay @relation(fields: [tripDayId], references: [id], onDelete: Cascade)
