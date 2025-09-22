@@ -1,15 +1,27 @@
 "use client"
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
-export default function ItineraryPage() {
+const containerStyle = {
+    width: '100%',
+    height: '100%',
+    borderRadius: '16px'
+};
+
+const center = {
+    lat: 37.437041393899676,
+    lng: -4.191635586788259
+};
+
+export default function MainPage() {
 
     return (
         <div className="flex h-screen">
             <div className="w-1/2 p-6 overflow-y-auto">
-                <div className="flex flex-col mb-6">
+                <div className="flex flex-col mb-6 w-full">
 
                     <h2 className="text-2xl font-semibold">Explore</h2>
                     <div className="mt-4">
-                        <label className="input input-lg">
+                        <label className="input input-lg w-[85%]">
                             <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <g
                                     strokeLinejoin="round"
@@ -28,10 +40,16 @@ export default function ItineraryPage() {
                 </div>
             </div>
             {/* map placeholder */}
-            <div className="flex-1 bg-base-300 flex items-center justify-center">
-                <div className="mockup-window border bg-base-100 w-11/12 h-5/6 flex items-center justify-center">
-                    <span className="text-lg text-base-content">Map Placeholder</span>
-                </div>
+            <div className="w-1/2 flex items-center justify-center rounded-md">
+                <LoadScript googleMapsApiKey={process.env.GOOGLE_MAPS_API_KEY ?? ""}>
+                    <GoogleMap
+                        mapContainerStyle={containerStyle}
+                        center={center}
+                        zoom={10}
+                    >
+                        <Marker position={center} />
+                    </GoogleMap>
+                </LoadScript>
             </div>
         </div>
     );
