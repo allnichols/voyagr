@@ -3,6 +3,7 @@ import { useState } from "react";
 import { deleteActivity } from "../../actions"; // Adjust the path as needed
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToastMutation } from "@/app/dashboard/hooks/useToastMutation";
+import AddActivityBtn from "./AddActivityBtn";
 
 export default function Day({ day, index }: { day: any, index: number }) {
     const [openDays, setOpenDays] = useState<number[]>([]);
@@ -10,13 +11,13 @@ export default function Day({ day, index }: { day: any, index: number }) {
 
     const deleteActivityMutation = useMutation({
         mutationFn: async (activityId: number) => {
-           return await deleteActivity(activityId);
+            return await deleteActivity(activityId);
         },
         onSuccess: (data) => {
-            console.log('deleted', data);
-            // queryClient.setQueryData(["todos"], (old: any) => {
-            //     return old?.filter((todo: any) => todo.id !== data.id);
-            // });
+            ;
+            queryClient.setQueryData(["todos"], (old: any) => {
+                return old?.filter((todo: any) => todo.id !== data.id);
+            });
             queryClient.invalidateQueries({ queryKey: ["tripDetails"] });
         }
     })
@@ -37,12 +38,18 @@ export default function Day({ day, index }: { day: any, index: number }) {
         })
     }
 
+    const containerHeight = isOpen
+        ? day.activities.length > 0
+            ? `${day.activities.length * 200}px`
+            : "200px"
+        : "0";
+
     return (
         <>
-           {toast}
+            {toast}
             <div
                 key={day.dayNumber}
-                className={`mb-4 ${day.dayNumber === 1 ? '' : 'mt-[2rem]'} cursor-pointer rounded-lg`}
+                className={`mb-6 ${day.dayNumber === 1 ? '' : 'mt-[2rem]'} cursor-pointer rounded-lg`}
             >
                 <div className="flex items-center justify-between mb-4 rounded-lg ps-2 hover:bg-base-200">
                     <div className="flex items-center gap-4 p-2">
@@ -92,10 +99,12 @@ export default function Day({ day, index }: { day: any, index: number }) {
                     </div>
                 </div>
                 <div
-                    className="ml-4 transition-all duration-300"
+                    className="ml-4 mb-4 transition-all duration-300"
                     style={{
-                        maxHeight: isOpen ? `${day.activities.length * 80}px` : "0",
+                        maxHeight: containerHeight, // gotta change this to be dynamic based on content height
+
                         opacity: isOpen ? 1 : 0,
+
                     }}
                 >
 
@@ -123,7 +132,7 @@ export default function Day({ day, index }: { day: any, index: number }) {
                             </div>
                         </div>
                     ))}
-
+                    <AddActivityBtn dayNumber={day.dayNumber as number} />
                 </div>
             </div>
         </>

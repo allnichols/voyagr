@@ -27,6 +27,21 @@ export async function getTripDetails(tripId: number | null) {
     }
 }
 
+export async function addActivity(dayId: number, title: string) {
+    try {
+        const newActivity = await prisma.tripActivity.create({
+            data: {
+                place: title,
+                tripDayId: dayId,
+            }
+        });
+        return newActivity;
+    } catch (error) {
+        console.error("Error adding activity:", error);
+        throw new Error("Failed to add activity.");
+    }
+}
+
 export async function deleteActivity(activityId: number) {
     try {
        const tripActivity =  await prisma.tripActivity.delete({
