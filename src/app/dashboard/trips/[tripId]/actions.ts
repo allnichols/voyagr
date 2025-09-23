@@ -27,7 +27,7 @@ export async function getTripDetails(tripId: number | null) {
     }
 }
 
-export async function fetchPlace(query: string) {
+export async function fetchPlace(query: string, destination: string | null, dayNumber: number) {
     const headers: Record<string, string> = {
         "Content-Type": "application/json",
         "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.location,places.priceLevel,places.id,places.types",
@@ -39,7 +39,7 @@ export async function fetchPlace(query: string) {
     const res = await fetch("https://places.googleapis.com/v1/places:searchText", {
         method: "POST",
         headers,
-        body: JSON.stringify({ textQuery: query }), 
+        body: JSON.stringify({ textQuery: `${query} in ${destination}` }), 
         cache: "no-store"
     })
 
@@ -51,7 +51,7 @@ export async function fetchPlace(query: string) {
     const data = await res.json();
     const place = data.places;
     if(!place) return null;
-    console.log(data);
+    
     return { 
         query, 
         places: place
