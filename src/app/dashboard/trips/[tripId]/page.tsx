@@ -1,9 +1,11 @@
 "use client"
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 import { useParams } from "next/navigation";
 import { getTripDetails } from "./actions";
 import Day from "./components/Day";
+import { MapContainer } from 'react-leaflet/MapContainer'
+import { TileLayer } from 'react-leaflet/TileLayer'
+import 'leaflet/dist/leaflet.css';
 
 export default function TripPage() {
     const params = useParams();
@@ -33,10 +35,13 @@ export default function TripPage() {
             </div>
 
             {/* Right panel (map placeholder) */}
-            <div className="flex-1 bg-base-300 flex items-center justify-center">
-                <div className="mockup-window border bg-base-100 w-11/12 h-5/6 flex items-center justify-center">
-                    <span className="text-lg text-base-content">Map Placeholder</span>
-                </div>
+            <div className="flex-1 flex items-center justify-center">
+                <MapContainer center={[51.505, -0.09]} zoom={13} style={{ height: "100%", width: "100%", borderRadius: "16px" }}>
+                    <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                </MapContainer>
             </div>
         </div>
     )

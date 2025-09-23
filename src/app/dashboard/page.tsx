@@ -1,16 +1,8 @@
 "use client"
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { MapContainer } from 'react-leaflet/MapContainer'
+import { TileLayer } from 'react-leaflet/TileLayer'
+import 'leaflet/dist/leaflet.css';
 
-const containerStyle = {
-    width: '100%',
-    height: '100%',
-    borderRadius: '16px'
-};
-
-const center = {
-    lat: 37.437041393899676,
-    lng: -4.191635586788259
-};
 
 export default function MainPage() {
 
@@ -40,16 +32,13 @@ export default function MainPage() {
                 </div>
             </div>
             {/* map placeholder */}
-            <div className="w-1/2 flex items-center justify-center rounded-md">
-                <LoadScript googleMapsApiKey={process.env.GOOGLE_MAPS_API_KEY ?? ""}>
-                    <GoogleMap
-                        mapContainerStyle={containerStyle}
-                        center={center}
-                        zoom={10}
-                    >
-                        <Marker position={center} />
-                    </GoogleMap>
-                </LoadScript>
+            <div className="w-1/2 flex items-center justify-center rounded-md overflow-y-hidden">
+                <MapContainer center={[51.505, -0.09]} zoom={13} style={{ height: "95%", width: "95%", borderRadius: "16px" }}>
+                    <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                </MapContainer>
             </div>
         </div>
     );
