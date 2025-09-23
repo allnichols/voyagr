@@ -27,11 +27,43 @@ export async function getTripDetails(tripId: number | null) {
     }
 }
 
-export async function addActivity(dayId: number, title: string) {
+export async function fetchPlace(query: string) {
+    const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.location,places.priceLevel,places.id,places.types",
+    };
+    if (process.env.GOOGLE_MAPS_API_KEY) {
+        headers["X-Goog-Api-Key"] = process.env.GOOGLE_MAPS_API_KEY;
+    }
+
+    const res = await fetch("https://places.googleapis.com/v1/places:searchText", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ textQuery: query }), 
+        cache: "no-store"
+    })
+
+    if(!res.ok) {
+        console.error('Google API Error:', await res.text())
+        return null;
+    }
+
+    const data = await res.json();
+    const place = data.places;
+    if(!place) return null;
+    console.log(data);
+    return { 
+        query, 
+        places: place
+    }
+}
+
+export async function addActivity(dayId: number, place: string) {
+
     try {
         const newActivity = await prisma.tripActivity.create({
             data: {
-                place: title,
+                place: place,
                 tripDayId: dayId,
             }
         });
