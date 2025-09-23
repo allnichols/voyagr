@@ -30,7 +30,7 @@ export async function getTripDetails(tripId: number | null) {
 export async function fetchPlace(query: string, destination: string | null, dayNumber: number) {
     const headers: Record<string, string> = {
         "Content-Type": "application/json",
-        "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.location,places.priceLevel,places.id,places.types",
+        "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.location,places.priceLevel,places.id,places.types,places.iconMaskBaseUri",
     };
     if (process.env.GOOGLE_MAPS_API_KEY) {
         headers["X-Goog-Api-Key"] = process.env.GOOGLE_MAPS_API_KEY;
