@@ -29,7 +29,7 @@ export default function Trips() {
     const handleViewTrip = (tripId: number, destination: string) => {
         setTripID(tripId, destination);
 
-        router.push(`/dashboard/trips/${tripId}`);
+        router.push(`/dashboard/trips/${tripId}?destination=${encodeURIComponent(destination)}`);
         // Optionally, you can refetch or invalidate queries here if needed
         // queryClient.invalidateQueries({ queryKey: ['tripDetails', tripId] });
     }
