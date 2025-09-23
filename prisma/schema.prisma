@@ -50,8 +50,10 @@ model TripActivity {
   tripDayId     Int
   timeOfDay     String?
   place         String
-  descriptions  String?
+  gPlaceId      String?
   address       String?
+  latitude      Float?
+  longitude     Float?
   createdAt     DateTime @default(now())
 
   tripDay      TripDay @relation(fields: [tripDayId], references: [id], onDelete: Cascade)
