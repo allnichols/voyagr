@@ -91,9 +91,7 @@ export default function Map() {
 
             if ("geolocation" in navigator) {
                 navigator.geolocation.getCurrentPosition((position) => {
-
                     setPosition([position.coords.latitude, position.coords.longitude]);
-
                 });
             }
         }
