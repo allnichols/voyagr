@@ -27,7 +27,7 @@ export async function getTripDetails(tripId: number | null) {
     }
 }
 
-export async function fetchPlace(query: string, destination: string | null, dayNumber: number) {
+export async function fetchPlace(query: string, destination: string | null) {
     const headers: Record<string, string> = {
         "Content-Type": "application/json",
         "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.location,places.priceLevel,places.id,places.types,places.iconMaskBaseUri",
@@ -58,12 +58,15 @@ export async function fetchPlace(query: string, destination: string | null, dayN
     }
 }
 
-export async function addActivity(dayId: number, place: string) {
-
+export async function addActivity(place: any, dayId: number) {
     try {
         const newActivity = await prisma.tripActivity.create({
             data: {
-                place: place,
+                place: place.displayName.text,
+                address: place.formattedAddress,
+                gPlaceId: place.id,
+                latitude: place.location.latitude,
+                longitude: place.location.longitude,
                 tripDayId: dayId,
             }
         });

@@ -13,10 +13,9 @@ export default function Day({ day, index }: { day: any, index: number }) {
         mutationFn: async (activityId: number) => {
             return await deleteActivity(activityId);
         },
-        onSuccess: (data) => {
-            ;
-            queryClient.setQueryData(["todos"], (old: any) => {
-                return old?.filter((todo: any) => todo.id !== data.id);
+        onSuccess: () => {
+            queryClient.setQueryData(["tripDetails"], (old: any) => {
+                return old?.filter((detail: any) => detail.id !== detail.id);
             });
             queryClient.invalidateQueries({ queryKey: ["tripDetails"] });
         }
@@ -132,7 +131,7 @@ export default function Day({ day, index }: { day: any, index: number }) {
                             </div>
                         </div>
                     ))}
-                    <AddActivityBtn dayNumber={day.dayNumber as number} />
+                    <AddActivityBtn dayId={day.id} dayNumber={day.dayNumber as number} />
                 </div>
             </div>
         </>

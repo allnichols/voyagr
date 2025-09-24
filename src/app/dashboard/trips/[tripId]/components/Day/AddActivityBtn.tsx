@@ -1,22 +1,34 @@
 "use client"
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { fetchPlace } from '../../actions';
-import { useQuery } from '@tanstack/react-query';
-import { useCurrentTrip } from "@/app/dashboard/store/currentTrip";
+import { fetchPlace, addActivity } from '../../actions';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-export default function AddActivityBtn({ dayNumber }: { dayNumber: number }) {
+export default function AddActivityBtn({ dayId, dayNumber }: { dayId: number, dayNumber: number }) {
+    const queryCleint = useQueryClient();
     const searchParams = useSearchParams();
-
-    const selectedTrip = useCurrentTrip((state) => state.currentTrip.destination);
-    console.log('params', searchParams.get('destination'));
     const [query, setQuery] = useState("");
 
     const { data, isLoading, refetch } = useQuery({
-        queryKey: ['placeSearch', query, dayNumber],
-        queryFn: () => fetchPlace(query, searchParams.get("destination"), dayNumber),
+        queryKey: ['placeSearch', query],
+        queryFn: () => fetchPlace(query, searchParams.get("destination")),
         enabled: false, // Disable automatic query on mount
     });
+
+    const addActivityMutation = useMutation({
+        mutationFn: async ({ place, dayId }: { place: string, dayId: number }) => {
+            return await addActivity(place, dayId);
+        },
+        onSuccess: () => {
+            queryCleint.invalidateQueries({ queryKey: ['tripDetails'] });
+            // Close the modal
+            (document.getElementById('my_modal_3') as HTMLDialogElement)?.close();
+        }
+    });
+
+    const handleAddActivity = (place: string, dayId: number) => {
+        addActivityMutation.mutate({ place, dayId });
+    }
 
     const handleSearch = async (e: React.MouseEvent) => {
         e.preventDefault();
@@ -86,11 +98,9 @@ export default function AddActivityBtn({ dayNumber }: { dayNumber: number }) {
                                             <div 
                                                 key={place.id} 
                                                 className="border-b border-base-300 last:border-0 p-2 cursor-pointer hover:bg-amber-500" 
-                                                onClick={() => {
-                                                    console.log('clicked place', place);
-                                                }}
+                                                onClick={() => handleAddActivity(place, dayId)}
                                             >
-                                                <div className="">{place.displayName.text}</div>
+                                                <div>{place.displayName.text}</div>
                                             </div>
                                         )
                                     })}
