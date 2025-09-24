@@ -7,9 +7,11 @@ const prisma = new PrismaClient();
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const tripDayId = searchParams.get('tripDayId')
+
     try{
+
         let tripActivities = await prisma.tripActivity.findMany({
-            where: { tripDayId: Number(tripDayId),  }
+            where: { tripDayId: Number(tripDayId), },
         })
 
         return new Response(JSON.stringify(tripActivities), { status: 200 }) 

@@ -2,7 +2,7 @@ import 'leaflet/dist/leaflet.css';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useCurrentDay } from '@/app/dashboard/store/currentDay';
 
 const MapContainer = dynamic(
@@ -33,14 +33,27 @@ const svgString = encodeURIComponent(`
   </svg>
 `);
 
-async function getTripActivities(tripDayID: number | null) {
-    const url = `/api/trip-activities${tripDayID !== null ? `?tripDayId=${tripDayID}` : ''}`;
+async function getTripActivities(tripDayID: number | null, destination: string | null = null) {
+    const url = `/api/trip-activities${tripDayID !== null ? `?tripDayId=${tripDayID}` : ''}?destination=${destination}`;
     const res = await fetch(url, { method: 'GET' });
     if(!res.ok) throw new Error('Failed to get trip activities');
     return res.json();
 }
 
+async function getDestinationLatLong(destination: string) {
+    let city = destination.split(',')[0];
+    let country = destination.split(',').slice(-1)[0].trim();
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?city=${city}&country=${country}&format=json`)
+    if (!res.ok) throw new Error('Failed to fetch destination coordinates');
+    const data = await res.json();
+    if (data.length === 0) throw new Error('No coordinates found for destination');
+    return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+}
+
 export default function Map() {
+    const searchParams = useSearchParams();
+    const destination = searchParams.get('destination');
+
     const currentDay = useCurrentDay((state) => state.currentDay);
 
     const [icon, setIcon] = useState(null);
@@ -48,14 +61,23 @@ export default function Map() {
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['tripActivities', currentDay.id],
-        queryFn: () => getTripActivities(currentDay.id),
+        queryFn: () => getTripActivities(currentDay.id, destination),
         enabled: currentDay.id !== null,
     });
 
-    console.log(data);
+    const { data: destinationLatLong } = useQuery({
+        queryKey: ['destinationLatLong', destination],
+        queryFn: async () => getDestinationLatLong(destination!),
+        enabled: !!destination,
+    });
 
     useEffect(() => {
         if (typeof window !== "undefined") {
+
+            if(data && data.length > 0) {
+                const firstActivity = data[0];
+                setPosition([firstActivity.latitude, firstActivity.longitude]);
+            }
             const L = require("leaflet");
             setIcon(
                 new L.Icon({
@@ -75,16 +97,27 @@ export default function Map() {
                 });
             }
         }
-    }, []);
+    }, [data]);
+
     return (
-        <MapContainer center={[35.6768601, 139.7638947]} zoom={13} style={{ height: "100%", width: "100%", borderRadius: "16px" }}>
+        <MapContainer center={[
+            destinationLatLong?.lat ?? 0,
+            destinationLatLong?.lon ?? 0
+        ]} zoom={13} style={{ height: "100%", width: "100%", borderRadius: "16px" }}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            {/* {icon && (
-                <Marker icon={icon} position={[30.069830, 31.222191]}></Marker>
-            )} */}
+            {icon && data && data.map((activity: any) => (
+                <Marker key={activity.id} icon={icon} position={[activity.latitude, activity.longitude]}>
+                    <Popup>
+                        <div>
+                            <h3 className="font-bold">{activity.name}</h3>
+                            <p>{activity.description}</p>
+                        </div>
+                    </Popup>
+                </Marker>
+            ))}
         </MapContainer>
     )
 }
