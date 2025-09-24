@@ -1,6 +1,9 @@
 import 'leaflet/dist/leaflet.css';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+import { useCurrentDay } from '@/app/dashboard/store/currentDay';
 
 const MapContainer = dynamic(
     () => import('react-leaflet').then((mod) => mod.MapContainer),
@@ -30,34 +33,51 @@ const svgString = encodeURIComponent(`
   </svg>
 `);
 
+async function getTripActivities(tripDayID: number | null) {
+    const url = `/api/trip-activities${tripDayID !== null ? `?tripDayId=${tripDayID}` : ''}`;
+    const res = await fetch(url, { method: 'GET' });
+    if(!res.ok) throw new Error('Failed to get trip activities');
+    return res.json();
+}
+
 export default function Map() {
+    const currentDay = useCurrentDay((state) => state.currentDay);
+
     const [icon, setIcon] = useState(null);
-    const [position, setPosition] = useState<[number, number]>([0,0]);
+    const [position, setPosition] = useState<[number, number]>([0, 0]);
 
-     useEffect(() => {
-            if (typeof window !== "undefined") {
-                const L = require("leaflet");
-                setIcon(
-                  new L.Icon({
-                        iconUrl: `data:image/svg+xml,${svgString}`,
-                        iconSize: [32, 32],
-                        iconAnchor: [16, 32],
-                        popupAnchor: [0, -32],
-                        className: "",
-                    })
-                );
+    const { data, isLoading, error } = useQuery({
+        queryKey: ['tripActivities', currentDay.id],
+        queryFn: () => getTripActivities(currentDay.id),
+        enabled: currentDay.id !== null,
+    });
 
-                if("geolocation" in navigator){ 
-                    navigator.geolocation.getCurrentPosition((position) => {
-                        
-                        setPosition([position.coords.latitude, position.coords.longitude]);    
-                        
-                    });
-                }
+    console.log(data);
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const L = require("leaflet");
+            setIcon(
+                new L.Icon({
+                    iconUrl: `data:image/svg+xml,${svgString}`,
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 32],
+                    popupAnchor: [0, -32],
+                    className: "",
+                })
+            );
+
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition((position) => {
+
+                    setPosition([position.coords.latitude, position.coords.longitude]);
+
+                });
             }
-        }, []);
+        }
+    }, []);
     return (
-        <MapContainer center={[35.6768601,139.7638947]} zoom={13} style={{ height: "100%", width: "100%", borderRadius: "16px" }}>
+        <MapContainer center={[35.6768601, 139.7638947]} zoom={13} style={{ height: "100%", width: "100%", borderRadius: "16px" }}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"

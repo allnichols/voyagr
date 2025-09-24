@@ -3,9 +3,12 @@ import { useState } from "react";
 import { deleteActivity } from "../../actions"; // Adjust the path as needed
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToastMutation } from "@/app/dashboard/hooks/useToastMutation";
+import { useCurrentDay } from "@/app/dashboard/store/currentDay";
 import AddActivityBtn from "./AddActivityBtn";
 
 export default function Day({ day, index }: { day: any, index: number }) {
+    const setCurrentDay = useCurrentDay((state) => state.setCurrentDay);
+    const currentDay = useCurrentDay((state) => state.currentDay.id);
     const [openDays, setOpenDays] = useState<number[]>([]);
     const queryClient = useQueryClient();
 
@@ -37,6 +40,12 @@ export default function Day({ day, index }: { day: any, index: number }) {
         })
     }
 
+    const handleSelectDay = (currentDay: number, dayId: number) => {
+        if (currentDay !== dayId) {
+            setCurrentDay(dayId);
+        }
+    }
+
     const containerHeight = isOpen
         ? day.activities.length > 0
             ? `${day.activities.length * 200}px`
@@ -53,7 +62,10 @@ export default function Day({ day, index }: { day: any, index: number }) {
                 <div className="flex items-center justify-between mb-4 rounded-lg ps-2 hover:bg-base-200">
                     <div className="flex items-center gap-4 p-2">
                         <button
-                            onClick={() => handleSetOpenDays(day.dayNumber)}
+                            onClick={() => {
+                                handleSelectDay(currentDay as number, day.id);
+                                handleSetOpenDays(day.dayNumber);
+                            }}
                             className={`btn btn-circle btn-sm btn-ghost`}
                         >
                             {openDays.includes(day.dayNumber) ? (
