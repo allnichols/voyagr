@@ -34,7 +34,7 @@ const svgString = encodeURIComponent(`
 `);
 
 async function getTripActivities(tripDayID: number | null, destination: string | null = null) {
-    const url = `/api/trip-activities${tripDayID !== null ? `?tripDayId=${tripDayID}` : ''}?destination=${destination}`;
+    const url = `/api/trip-activities${tripDayID !== null ? `?tripDayId=${tripDayID}` : ''}`;
     const res = await fetch(url, { method: 'GET' });
     if(!res.ok) throw new Error('Failed to get trip activities');
     return res.json();
@@ -61,11 +61,11 @@ export default function Map() {
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['tripActivities', currentDay.id],
-        queryFn: () => getTripActivities(currentDay.id, destination),
+        queryFn: () => getTripActivities(currentDay.id),
         enabled: currentDay.id !== null,
     });
 
-    const { data: destinationLatLong } = useQuery({
+    const { data: destinationLatLong, isLoading: loadingDestination } = useQuery({
         queryKey: ['destinationLatLong', destination],
         queryFn: async () => getDestinationLatLong(destination!),
         enabled: !!destination,
@@ -97,6 +97,9 @@ export default function Map() {
         }
     }, [data]);
 
+    if (isLoading || loadingDestination) return <div>Loading map...</div>;
+    if (error) return <div>Error loading map data.</div>;
+
     return (
         <MapContainer center={[
             destinationLatLong?.lat ?? 0,
@@ -110,8 +113,8 @@ export default function Map() {
                 <Marker key={activity.id} icon={icon} position={[activity.latitude, activity.longitude]}>
                     <Popup>
                         <div>
-                            <h3 className="font-bold">{activity.name}</h3>
-                            <p>{activity.description}</p>
+                            <h3 className="font-bold">{activity.place}</h3>
+                            <button className="btn btn-xs btn-primary mt-2 rounded-2xl">View More</button>
                         </div>
                     </Popup>
                 </Marker>
