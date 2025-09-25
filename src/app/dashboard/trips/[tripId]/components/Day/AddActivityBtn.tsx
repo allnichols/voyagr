@@ -3,10 +3,12 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { fetchPlace, addActivity } from '../../actions';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useCurrentDay } from "@/app/dashboard/store/currentDay";
 
 export default function AddActivityBtn({ dayId, dayNumber }: { dayId: number, dayNumber: number }) {
     const queryCleint = useQueryClient();
     const searchParams = useSearchParams();
+    const currentDay = useCurrentDay((state) => state.currentDay.id);
     const [query, setQuery] = useState("");
 
     const { data, isLoading, refetch } = useQuery({
@@ -20,7 +22,7 @@ export default function AddActivityBtn({ dayId, dayNumber }: { dayId: number, da
             return await addActivity(place, dayId);
         },
         onSuccess: () => {
-            queryCleint.invalidateQueries({ queryKey: ['tripDetails'] });
+            queryCleint.invalidateQueries({ queryKey: ['tripActivities', currentDay] });
             // Close the modal
             (document.getElementById('my_modal_3') as HTMLDialogElement)?.close();
         }
@@ -38,8 +40,6 @@ export default function AddActivityBtn({ dayId, dayNumber }: { dayId: number, da
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setQuery(e.target.value);
     }
-
-    console.log('search data', data);
 
     return (
         <>

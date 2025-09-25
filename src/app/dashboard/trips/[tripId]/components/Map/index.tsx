@@ -36,7 +36,7 @@ const svgString = encodeURIComponent(`
 async function getTripActivities(tripDayID: number | null, destination: string | null = null) {
     const url = `/api/trip-activities${tripDayID !== null ? `?tripDayId=${tripDayID}` : ''}`;
     const res = await fetch(url, { method: 'GET' });
-    if(!res.ok) throw new Error('Failed to get trip activities');
+    if (!res.ok) throw new Error('Failed to get trip activities');
     return res.json();
 }
 
@@ -54,15 +54,15 @@ export default function Map() {
     const searchParams = useSearchParams();
     const destination = searchParams.get('destination');
 
-    const currentDay = useCurrentDay((state) => state.currentDay);
-
+    const currentDayId = useCurrentDay((state) => state.currentDay.id);
+    console.log('currentDayId from the map', currentDayId);
     const [icon, setIcon] = useState(null);
     const [position, setPosition] = useState<[number, number]>([0, 0]);
 
     const { data, isLoading, error } = useQuery({
-        queryKey: ['tripActivities', currentDay.id],
-        queryFn: () => getTripActivities(currentDay.id),
-        enabled: currentDay.id !== null,
+        queryKey: ['dayActivities', currentDayId],
+        queryFn: () => getTripActivities(currentDayId),
+        enabled: currentDayId !== null,
     });
 
     const { data: destinationLatLong, isLoading: loadingDestination } = useQuery({
@@ -74,7 +74,7 @@ export default function Map() {
     useEffect(() => {
         if (typeof window !== "undefined") {
 
-            if(data && data.length > 0) {
+            if (data && data.length > 0) {
                 const firstActivity = data[0];
                 setPosition([firstActivity.latitude, firstActivity.longitude]);
             }
@@ -109,16 +109,18 @@ export default function Map() {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            {icon && data && data.map((activity: any) => (
-                <Marker key={activity.id} icon={icon} position={[activity.latitude, activity.longitude]}>
-                    <Popup>
-                        <div>
-                            <h3 className="font-bold">{activity.place}</h3>
-                            <button className="btn btn-xs btn-primary mt-2 rounded-2xl">View More</button>
-                        </div>
-                    </Popup>
-                </Marker>
-            ))}
+            {icon && data && data.map((activity: any) => {
+                return (
+                    <Marker key={activity.id} icon={icon} position={[activity.latitude, activity.longitude]}>
+                        <Popup>
+                            <div>
+                                <h3 className="font-bold">{activity.place}</h3>
+                                <button className="btn btn-xs btn-primary mt-2 rounded-2xl">View More</button>
+                            </div>
+                        </Popup>
+                    </Marker>
+                )
+            })}
         </MapContainer>
     )
 }

@@ -7,6 +7,7 @@ import Map from "./components/Map";
 import { useCurrentDay } from "../../store/currentDay";
 import  ErrorBoundary from "@/app/utils/ErrorBoundry";
 import { DayDropdown }from "./components/Day";
+import React from "react";
 
 async function getTripDays(tripId: number | null) {
     const url = `/api/trip-days${tripId !== null ? `?tripId=${tripId}` : ''}`;
@@ -20,6 +21,8 @@ export default function TripPage() {
     const searchParams = useSearchParams();
     const destination = searchParams.get('destination');
     const tripId = params?.tripId ? Number(params.tripId) : null;
+
+    const [openDayDropdown, setOpenDayDropdown] = React.useState<number | null>(null);
 
     const { data, isLoading } = useQuery({
         queryKey: ['tripDays', tripId],
@@ -37,9 +40,17 @@ export default function TripPage() {
                 <div className="divider" />
                 <div className="space-y-4">
                     <h2 className="text-2xl font-semibold">Itinerary</h2>
-                    {data.map((day: any, i: number) => {
+                    {data.map((day: any, idx: number) => {
                         return (
-                            <DayDropdown key={day.dayNumber} dayId={day.id} index={i} />
+                            <DayDropdown 
+                                key={day.dayNumber} 
+                                dayId={day.id} 
+                                index={idx}
+                                isOpen={openDayDropdown === day.id}
+                                onToggle={() =>{ 
+                                    setOpenDayDropdown(openDayDropdown === day.id ? null : day.id)
+                                }}    
+                            />
                         )
                     })}
                 </div>
