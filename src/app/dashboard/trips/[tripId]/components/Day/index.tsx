@@ -1,30 +1,41 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import { deleteActivity } from "../../actions"; // Adjust the path as needed
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToastMutation } from "@/app/dashboard/hooks/useToastMutation";
 import { useCurrentDay } from "@/app/dashboard/store/currentDay";
 import AddActivityBtn from "./AddActivityBtn";
 
-export default function Day({ day, index }: { day: any, index: number }) {
+async function getTripDayActivites(tripDayId: number | null) {
+    const url = `/api/trip-activities${tripDayId !== null ? `?tripDayId=${tripDayId}` : ''}`;
+    const res = await fetch(url, { method: 'GET' });
+    if (!res.ok) throw new Error('Failed to get trip day ativities');
+    return res.json();
+}
+
+export const DayDropdown = React.memo(function DayDropdown({ dayId, index }: { dayId: number, index: number }) {
     const setCurrentDay = useCurrentDay((state) => state.setCurrentDay);
     const currentDay = useCurrentDay((state) => state.currentDay.id);
     const [openDays, setOpenDays] = useState<number[]>([]);
     const queryClient = useQueryClient();
+
+    const { data: activities } = useQuery({
+        queryKey: ["dayActivities", dayId],
+        queryFn: () => getTripDayActivites(dayId),
+    });
 
     const deleteActivityMutation = useMutation({
         mutationFn: async (activityId: number) => {
             return await deleteActivity(activityId);
         },
         onSuccess: () => {
-            queryClient.setQueryData(["tripDetails"], (old: any) => {
-                return old?.filter((detail: any) => detail.id !== detail.id);
-            });
-            queryClient.invalidateQueries({ queryKey: ["tripDetails"] });
+            queryClient.invalidateQueries({ queryKey: ["tripActivities", currentDay] });
         }
     })
 
-    const isOpen = openDays.includes(day.dayNumber);
+    console.log(activities)
+
+    // const isOpen = openDays.includes(day.dayNumber);
 
     const toast = useToastMutation(deleteActivityMutation, 3000);
 
@@ -46,29 +57,29 @@ export default function Day({ day, index }: { day: any, index: number }) {
         }
     }
 
-    const containerHeight = isOpen
-        ? day.activities.length > 0
-            ? `${day.activities.length * 200}px`
-            : "200px"
-        : "0";
+    // const containerHeight = isOpen
+    //     ? day.activities.length > 0
+    //         ? `${day.activities.length * 200}px`
+    //         : "200px"
+    //     : "0";
 
     return (
         <>
             {toast}
             <div
-                key={day.dayNumber}
-                className={`mb-6 ${day.dayNumber === 1 ? '' : 'mt-[2rem]'} cursor-pointer rounded-lg`}
+
+            // className={`mb-6 ${day.dayNumber === 1 ? '' : 'mt-[2rem]'} cursor-pointer rounded-lg`}
             >
                 <div className="flex items-center justify-between mb-4 rounded-lg ps-2 hover:bg-base-200">
                     <div className="flex items-center gap-4 p-2">
                         <button
                             onClick={() => {
-                                handleSelectDay(currentDay as number, day.id);
-                                handleSetOpenDays(day.dayNumber);
+                                // handleSelectDay(currentDay as number, day.id);
+                                // handleSetOpenDays(day.dayNumber);
                             }}
                             className={`btn btn-circle btn-sm btn-ghost`}
                         >
-                            {openDays.includes(day.dayNumber) ? (
+                            {/* {openDays.includes(day.dayNumber) ? (
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                                 </svg>
@@ -76,7 +87,7 @@ export default function Day({ day, index }: { day: any, index: number }) {
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                                 </svg>
-                            )}
+                            )} */}
 
                         </button>
                         <div>
@@ -84,7 +95,7 @@ export default function Day({ day, index }: { day: any, index: number }) {
                                 Day
                             </p>
                             <p className="text-lg">
-                                {`${day.dayNumber >= 10 ? '' : '0'}`}{day.dayNumber}
+                                {/* {`${day.dayNumber >= 10 ? '' : '0'}`}{day.dayNumber} */}
                             </p>
                         </div>
 
@@ -111,15 +122,15 @@ export default function Day({ day, index }: { day: any, index: number }) {
                 </div>
                 <div
                     className="ml-4 mb-4 transition-all duration-300"
-                    style={{
-                        maxHeight: containerHeight, // gotta change this to be dynamic based on content height
+                // style={{
+                //     maxHeight: containerHeight, // gotta change this to be dynamic based on content height
 
-                        opacity: isOpen ? 1 : 0,
+                //     opacity: isOpen ? 1 : 0,
 
-                    }}
+                // }}
                 >
 
-                    {day.activities.map((activity: any, i: number) => (
+                    {/* {day.activities.map((activity: any, i: number) => (
                         <div key={activity.id} className={`flex justify-between align-bottom mb-4 rounded-lg border-2 border-base-200 p-4 opacity-0 transition-all duration-400 ${isOpen ? "block opacity-100" : "hidden"}`}>
                             <p className="text-xs font-semibold mb-1">
                                 {activity.place}
@@ -142,10 +153,10 @@ export default function Day({ day, index }: { day: any, index: number }) {
                                 </ul>
                             </div>
                         </div>
-                    ))}
-                    <AddActivityBtn dayId={day.id} dayNumber={day.dayNumber as number} />
+                    ))} */}
+                    {/* <AddActivityBtn dayId={day.id} dayNumber={day.dayNumber as number} /> */}
                 </div>
             </div>
         </>
     )
-}
+})
