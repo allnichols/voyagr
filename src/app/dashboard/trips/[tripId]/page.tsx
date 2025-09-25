@@ -1,19 +1,29 @@
 "use client"
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { getTripDetails } from "./actions";
-import Day from "./components/Day";
 import 'leaflet/dist/leaflet.css';
 import Map from "./components/Map";
+import { useCurrentDay } from "../../store/currentDay";
+import  ErrorBoundary from "@/app/utils/ErrorBoundry";
+import { DayDropdown }from "./components/Day";
 
+async function getTripDays(tripId: number | null) {
+    const url = `/api/trip-days${tripId !== null ? `?tripId=${tripId}` : ''}`;
+    const res = await fetch(url, { method: 'GET' });
+    if (!res.ok) throw new Error('Failed to get trip days');
+    return res.json();
+}
 
 export default function TripPage() {
     const params = useParams();
+    const searchParams = useSearchParams();
+    const destination = searchParams.get('destination');
     const tripId = params?.tripId ? Number(params.tripId) : null;
 
     const { data, isLoading } = useQuery({
-        queryKey: ['tripDetails', tripId],
-        queryFn: () => getTripDetails(tripId),
+        queryKey: ['tripDays', tripId],
+        queryFn: () => getTripDays(tripId),
     });
 
 
@@ -23,13 +33,13 @@ export default function TripPage() {
         <div className="flex h-screen">
             {/* Left panel */}
             <div className="w-1/2 p-6 overflow-y-auto">
-                <h1 className="text-3xl font-bold mb-4">Trip to {data[0].trip.destination}</h1>
+                <h1 className="text-3xl font-bold mb-4">Trip to {destination}</h1>
                 <div className="divider" />
                 <div className="space-y-4">
                     <h2 className="text-2xl font-semibold">Itinerary</h2>
                     {data.map((day: any, i: number) => {
                         return (
-                            <Day key={day.dayNumber} day={day} index={i} />
+                            <DayDropdown key={day.dayNumber} dayId={day.id} index={i} />
                         )
                     })}
                 </div>
@@ -37,7 +47,9 @@ export default function TripPage() {
 
             {/* Right panel (map placeholder) */}
             <div className="flex-1 flex items-center justify-center">
-                <Map />
+                <ErrorBoundary>
+                    <Map />
+                </ErrorBoundary>
             </div>
         </div>
     )
