@@ -46,8 +46,6 @@ export const DayDropdown = React.memo(
 
         console.log(activities)
 
-        // const isOpen = openDays.includes(day.dayNumber);
-
         const toast = useToastMutation(deleteActivityMutation, 3000);
 
         const handleDeleteActvity = (activityId: number) => {
@@ -138,11 +136,11 @@ export const DayDropdown = React.memo(
                         style={{
                             maxHeight: isOpen ? "500px" : "0",
                             opacity: isOpen ? 1 : 0,
-                            overflow: "hidden",
+                            // overflow: "hidden",
                         }}
                     >
 
-                        {/* {day.activities.map((activity: any, i: number) => (
+                        {activities && activities.map((activity: any, i: number) => (
                         <div key={activity.id} className={`flex justify-between align-bottom mb-4 rounded-lg border-2 border-base-200 p-4 opacity-0 transition-all duration-400 ${isOpen ? "block opacity-100" : "hidden"}`}>
                             <p className="text-xs font-semibold mb-1">
                                 {activity.place}
@@ -165,8 +163,8 @@ export const DayDropdown = React.memo(
                                 </ul>
                             </div>
                         </div>
-                    ))} */}
-                        {/* <AddActivityBtn dayId={day.id} dayNumber={day.dayNumber as number} /> */}
+                    ))}
+                        <AddActivityBtn dayId={dayId} dayNumber={0} />
                     </div>
                 </div>
             </>

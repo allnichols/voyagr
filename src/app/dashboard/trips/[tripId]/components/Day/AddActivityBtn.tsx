@@ -8,7 +8,7 @@ import { useCurrentDay } from "@/app/dashboard/store/currentDay";
 export default function AddActivityBtn({ dayId, dayNumber }: { dayId: number, dayNumber: number }) {
     const queryCleint = useQueryClient();
     const searchParams = useSearchParams();
-    const currentDay = useCurrentDay((state) => state.currentDay.id);
+    const currentDayId = useCurrentDay((state) => state.currentDay.id);
     const [query, setQuery] = useState("");
 
     const { data, isLoading, refetch } = useQuery({
@@ -22,7 +22,7 @@ export default function AddActivityBtn({ dayId, dayNumber }: { dayId: number, da
             return await addActivity(place, dayId);
         },
         onSuccess: () => {
-            queryCleint.invalidateQueries({ queryKey: ['tripActivities', currentDay] });
+            queryCleint.invalidateQueries({ queryKey: ['dayActivities', currentDayId] });
             // Close the modal
             (document.getElementById('my_modal_3') as HTMLDialogElement)?.close();
         }
