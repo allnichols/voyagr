@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCurrentTrip } from "@/app/dashboard/store/currentTrip";
-import { getTrips } from "../../actions";
+import { getTrips } from "./actions";
 import { useQuery } from "@tanstack/react-query";
 import './trips.css';
 
