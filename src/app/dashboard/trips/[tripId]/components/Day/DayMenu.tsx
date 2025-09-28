@@ -1,22 +1,34 @@
-import { useMutation } from "@tanstack/react-query";
-import { deleteDay } from "../../actions"; // Adjust the path as needed
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteDay, updateDayNumbers } from "../../actions"; // Adjust the path as needed
 
 
 type DayMenuProps = {
     index: number;
     dayId: number;
+    days: { id: number; dayNumber: number, tripId: number }[],
 };
 
 
-export default function DayMenu({ index, dayId }: DayMenuProps) {
-    
+export default function DayMenu({ index, dayId, days }: DayMenuProps) {
+    const queryClient = useQueryClient();
+
     const deleteDayMutation = useMutation({
         mutationFn: async (dayId: number) => {
             return await deleteDay(dayId);
         }, 
-        onSuccess: () => {
-            // Invalidate or refetch queries if needed
-            console.log("Day deleted successfully");
+        onSuccess: async () => {
+            const deletedDay = days.find(day => day.id === dayId);
+            if (!deletedDay) return;
+
+            const updatedDayNumbers = days
+                .filter(day => day.dayNumber > deletedDay.dayNumber)
+                .map(day => ({ id: day.id, dayNumber: day.dayNumber - 1, tripId: day.tripId }));
+        
+            if(updatedDayNumbers.length > 0) { 
+                await updateDayNumbers(deletedDay.tripId, updatedDayNumbers);
+            }
+
+            queryClient.invalidateQueries({ queryKey: ['tripDays'] });
         }
     });
     

@@ -44,7 +44,8 @@ export default function TripPage() {
                         return (
                             <DayDropdown 
                                 key={day.dayNumber} 
-                                dayId={day.id} 
+                                dayId={day.id}
+                                days={data} 
                                 dayNumber={day.dayNumber}
                                 index={idx}
                                 isOpen={openDayDropdown === day.id}

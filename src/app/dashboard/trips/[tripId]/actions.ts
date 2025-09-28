@@ -103,3 +103,21 @@ export async function deleteDay(dayId: number) {
         throw new Error("Failed to delete day.");
     }
 }
+
+export async function updateDayNumbers(tripId: number, days: { id: number; dayNumber: number, tripId: number }[]) {
+    
+    try{ 
+        const updatedDays = await Promise.all(
+            days.map(day => 
+                prisma.tripDay.update({
+                where: { id: day.id },
+                data: { dayNumber: day.dayNumber }
+            }))
+        )
+
+        return updatedDays;
+    } catch (error) {
+        console.error(error);
+        throw new Error('could not update days')
+    }
+}

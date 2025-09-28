@@ -19,12 +19,14 @@ export const DayDropdown = memo(
         dayId,
         dayNumber,
         index,
+        days,
         isOpen,
         onToggle
     }: {
         dayId: number,
         dayNumber: number,
         index: number,
+        days: { id: number; dayNumber: number, tripId: number }[],
         isOpen: boolean,
         onToggle: () => void
     }) {
@@ -98,7 +100,7 @@ export const DayDropdown = memo(
                             </div>
 
                         </div>
-                        <DayMenu index={index} dayId={dayId} />
+                        <DayMenu index={index} dayId={dayId} days={days} />
                     </div>
                     <div
                         className="ml-4 mb-4 transition-all duration-300"
