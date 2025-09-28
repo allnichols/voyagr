@@ -36,49 +36,43 @@ export default function Itinerary() {
     })
 
     return (
-            <div className="w-1/2 p-6 overflow-y-auto">
-                <h1 className="text-3xl font-bold mb-4">Trip to {destination}</h1>
-                <div className="divider" />
-                <div className="space-y-4">
-                    <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-2xl font-semibold">Itinerary</h2>
+        <div className="w-1/2 p-6 overflow-y-auto">
+            <h1 className="text-3xl font-bold mb-4">Trip to {destination}</h1>
+            <div className="divider" />
+            <div className="space-y-4">
+                <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-2xl font-semibold">Itinerary</h2>
 
-                        <div>
-                            <button
-                                className="btn btn-primary rounded-sm"
-                                onClick={() => addTripDayMutation.mutate(tripId as number)}
-                            >
-                                Add Day
-                            </button>
-
-                        </div>
+                    <div>
+                        <button
+                            className="btn btn-primary rounded-sm"
+                            onClick={() => addTripDayMutation.mutate(tripId as number)}
+                        >
+                            Add Day
+                        </button>
 
                     </div>
-                    {isLoading && (
-                        <>
-                            <div className="skeleton h-10 w-[90%]"></div>
-                            <div className="skeleton h-10 w-[90%]"></div>
-                            <div className="skeleton h-10 w-[90%]"></div>
-                        </>
-                    )}
-                    {data && data.map((day: any, idx: number) => {
-                        return (
-                            <DayDropdown
-                                key={day.dayNumber}
-                                dayId={day.id}
-                                days={data}
-                                dayNumber={day.dayNumber}
-                                index={idx}
-                                isOpen={openDayDropdown === day.id}
-                                onToggle={() => {
-                                    setOpenDayDropdown(openDayDropdown === day.id ? null : day.id)
-                                }}
-                            />
-                        )
-                    })}
-                    {data && data.length === 0 && <p>No days added yet. Click "Add Day" to start planning your trip!</p>}
+
                 </div>
+                {isLoading && <span className="loading loading-infinity loading-md"></span>}
+                {data && data.map((day: any, idx: number) => {
+                    return (
+                        <DayDropdown
+                            key={day.dayNumber}
+                            dayId={day.id}
+                            days={data}
+                            dayNumber={day.dayNumber}
+                            index={idx}
+                            isOpen={openDayDropdown === day.id}
+                            onToggle={() => {
+                                setOpenDayDropdown(openDayDropdown === day.id ? null : day.id)
+                            }}
+                        />
+                    )
+                })}
+                {data && data.length === 0 && <p>No days added yet. Click "Add Day" to start planning your trip!</p>}
             </div>
+        </div>
 
     );
 }
