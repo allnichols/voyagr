@@ -1,4 +1,4 @@
-import Menu from "./Components/Menu";
+import Menu from "./components/menu";
 
 export default function Sidebar({ children }: { children: React.ReactNode }) {
   

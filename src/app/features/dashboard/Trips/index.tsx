@@ -19,7 +19,6 @@ export default function Trips() {
     const router = useRouter();
 
     const setTripID = useCurrentTrip((state) => state.setCurrentTripId);
-    const selectedTripId = useCurrentTrip((state) => state.currentTrip.id);
 
     const { data } = useQuery({
         queryFn: () => getTrips(1), // Replace with actual user ID
@@ -30,8 +29,6 @@ export default function Trips() {
         setTripID(tripId, destination);
 
         router.push(`/dashboard/trips/${tripId}?destination=${encodeURIComponent(destination)}`);
-        // Optionally, you can refetch or invalidate queries here if needed
-        // queryClient.invalidateQueries({ queryKey: ['tripDetails', tripId] });
     }
 
 

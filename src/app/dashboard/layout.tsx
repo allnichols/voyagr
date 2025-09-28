@@ -1,7 +1,8 @@
 import Head from 'next/head';
 import Script from 'next/script'
 import ReactQueryProvider from './ReactQueryProvider';
-import Sidebar from './components/Sidebar';
+import Sidebar from '@/app/features/dashboard/sidebar';
+
 export default function ItineraryDashboardLayout({
     children,
 }: Readonly<{
