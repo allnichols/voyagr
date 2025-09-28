@@ -11,6 +11,8 @@ export default function AddActivityBtn({ dayId, dayNumber }: { dayId: number, da
     const currentDayId = useCurrentDay((state) => state.currentDay.id);
     const [query, setQuery] = useState("");
 
+    const modalId = `add_activity_modal_${dayId}`;
+
     const { data, isLoading, refetch } = useQuery({
         queryKey: ['placeSearch', query],
         queryFn: () => fetchPlace(query, searchParams.get("destination")),
@@ -24,7 +26,7 @@ export default function AddActivityBtn({ dayId, dayNumber }: { dayId: number, da
         onSuccess: () => {
             queryCleint.invalidateQueries({ queryKey: ['dayActivities', currentDayId] });
             // Close the modal
-            (document.getElementById('my_modal_3') as HTMLDialogElement)?.close();
+            (document.getElementById(modalId) as HTMLDialogElement)?.close();
         }
     });
 
@@ -43,16 +45,19 @@ export default function AddActivityBtn({ dayId, dayNumber }: { dayId: number, da
 
     return (
         <>
-            <button onClick={() => (document.getElementById('my_modal_3') as HTMLDialogElement)?.showModal()} className="btn btn-neutral btn-outline rounded-2xl">
+            <button onClick={() => (document.getElementById(modalId) as HTMLDialogElement)?.showModal()} className="btn btn-neutral btn-outline rounded-2xl">
                 <span className="text-xl mb-1">+</span>
                 Add Activity
             </button>
-            <dialog id="my_modal_3" className="modal">
+            <dialog id={modalId} className="modal">
                 <div className="modal-box max-h-[500px] flex flex-col overflow-hidden">
-                    <form method="dialog">
-                        {/* if there is a button in form, it will close the modal */}
-                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-                    </form>
+                    <div className="modal-action">
+                        <form method="dialog">
+                            {/* if there is a button in form, it will close the modal */}
+                            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                        </form>
+                    </div>
+
                     <div>
                         <label className="input mt-2">
                             <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -95,9 +100,9 @@ export default function AddActivityBtn({ dayId, dayNumber }: { dayId: number, da
                                     {data.places.map((place: any) => {
                                         console.log('place', place.type);
                                         return (
-                                            <div 
-                                                key={place.id} 
-                                                className="border-b border-base-300 last:border-0 p-2 cursor-pointer hover:bg-amber-500" 
+                                            <div
+                                                key={place.id}
+                                                className="border-b border-base-300 last:border-0 p-2 cursor-pointer hover:bg-amber-500"
                                                 onClick={() => handleAddActivity(place, dayId)}
                                             >
                                                 <div>{place.displayName.text}</div>

@@ -60,11 +60,6 @@ export const DayDropdown = memo(
             }
         };
 
-        const handleRemoveDay = (dayId: number) => {
-            // Implement the logic to remove the day here
-            console.log("Remove day with ID:", dayId);
-        }
-
         return (
             <>
                 {toast}
