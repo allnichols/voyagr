@@ -3,9 +3,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useSearchParams } from "next/navigation";
 import { addDayToTrip } from "./actions";
 import 'leaflet/dist/leaflet.css';
-import Map from "./components/Map";
+import Map from "@/app/features/dashboard/Trips/components/Map";
 import ErrorBoundary from "@/app/utils/ErrorBoundry";
-import { DayDropdown } from "./components/Day";
+import { DayDropdown } from "../../../features/dashboard/Trips/components/Day";
 import React from "react";
 
 async function getTripDays(tripId: number | null) {

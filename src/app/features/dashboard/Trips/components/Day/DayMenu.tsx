@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteDay, updateDayNumbers } from "../../actions"; // Adjust the path as needed
+import { deleteDay, updateDayNumbers } from "../../../../../dashboard/trips/[tripId]/actions"; // Adjust the path as needed
 
 
 type DayMenuProps = {

@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { fetchPlace, addActivity } from '../../actions';
+import { fetchPlace, addActivity } from '../../../../../dashboard/trips/[tripId]/actions';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCurrentDay } from "@/app/dashboard/store/currentDay";
 

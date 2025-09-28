@@ -1,6 +1,6 @@
 "use client";
 import { useState, memo } from "react";
-import { deleteActivity } from "../../actions"; // Adjust the path as needed
+import { deleteActivity } from "../../../../../dashboard/trips/[tripId]/actions"; // Adjust the path as needed
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToastMutation } from "@/app/dashboard/hooks/useToastMutation";
 import { useCurrentDay } from "@/app/dashboard/store/currentDay";
