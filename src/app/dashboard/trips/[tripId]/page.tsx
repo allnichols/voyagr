@@ -1,12 +1,11 @@
 "use client"
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useSearchParams } from "next/navigation";
-import { getTripDetails } from "./actions";
+import { addDayToTrip } from "./actions";
 import 'leaflet/dist/leaflet.css';
 import Map from "./components/Map";
-import { useCurrentDay } from "../../store/currentDay";
-import  ErrorBoundary from "@/app/utils/ErrorBoundry";
-import { DayDropdown }from "./components/Day";
+import ErrorBoundary from "@/app/utils/ErrorBoundry";
+import { DayDropdown } from "./components/Day";
 import React from "react";
 
 async function getTripDays(tripId: number | null) {
@@ -19,6 +18,7 @@ async function getTripDays(tripId: number | null) {
 export default function TripPage() {
     const params = useParams();
     const searchParams = useSearchParams();
+    const queryClient = useQueryClient();
     const destination = searchParams.get('destination');
     const tripId = params?.tripId ? Number(params.tripId) : null;
 
@@ -29,8 +29,15 @@ export default function TripPage() {
         queryFn: () => getTripDays(tripId),
     });
 
+    const addTripDayMutation = useMutation({
+        mutationFn: async (tripId: number) => {
+            return await addDayToTrip(tripId, new Date());
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['tripDays', tripId] });
+        }
+    })
 
-    if (!data) return <div>No trip data available.</div>
 
     return (
         <div className="flex h-screen">
@@ -39,22 +46,37 @@ export default function TripPage() {
                 <h1 className="text-3xl font-bold mb-4">Trip to {destination}</h1>
                 <div className="divider" />
                 <div className="space-y-4">
-                    <h2 className="text-2xl font-semibold">Itinerary</h2>
-                    {data.map((day: any, idx: number) => {
+                    <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-2xl font-semibold">Itinerary</h2>
+
+                        <div>
+                            <button
+                                className="btn btn-primary rounded-sm"
+                                onClick={() => addTripDayMutation.mutate(tripId as number)}
+                            >
+                                Add Day
+                            </button>
+                            
+                        </div>
+
+                    </div>
+                    {isLoading && <p>Loading days...</p>}
+                    {data && data.map((day: any, idx: number) => {
                         return (
-                            <DayDropdown 
-                                key={day.dayNumber} 
+                            <DayDropdown
+                                key={day.dayNumber}
                                 dayId={day.id}
-                                days={data} 
+                                days={data}
                                 dayNumber={day.dayNumber}
                                 index={idx}
                                 isOpen={openDayDropdown === day.id}
-                                onToggle={() =>{ 
+                                onToggle={() => {
                                     setOpenDayDropdown(openDayDropdown === day.id ? null : day.id)
-                                }}    
+                                }}
                             />
                         )
                     })}
+                    {data && data.length === 0 && <p>No days added yet. Click "Add Day" to start planning your trip!</p>}
                 </div>
             </div>
 

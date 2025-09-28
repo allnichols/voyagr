@@ -92,6 +92,33 @@ export async function deleteActivity(activityId: number) {
     }
 }
 
+
+
+export async function addDayToTrip(tripId: number, date: Date){
+    try {
+
+        const lastDay = await prisma.tripDay.findFirst({
+            where: { tripId },
+            orderBy: { dayNumber: "desc" },
+            select: { dayNumber: true }
+        });
+
+        const lastDayNumber = lastDay ? lastDay.dayNumber + 1 : 1;
+
+        const newDay = await prisma.tripDay.create({
+            data: {
+                tripId,
+                dayNumber: lastDayNumber,
+                date
+            }
+        });
+        return newDay
+    } catch (error) {
+        console.error("error adding a day")
+        throw new Error("Failed to add a day")
+    }
+}
+
 export async function deleteDay(dayId: number) {
     try {
         const deletedDay = await prisma.tripDay.delete({
