@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCurrentTrip } from "@/app/dashboard/store/currentTrip";
+import { useCurrentTrip } from "@/app/features/dashboard/store/currentTrip";
 import { getTrips } from "./actions";
 import { useQuery } from "@tanstack/react-query";
 import './trips.css';

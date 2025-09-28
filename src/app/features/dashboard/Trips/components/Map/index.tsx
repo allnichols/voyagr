@@ -1,9 +1,11 @@
+"use client";
 import 'leaflet/dist/leaflet.css';
+import ErrorBoundary from '@/app/utils/ErrorBoundry';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import { useCurrentDay } from '@/app/dashboard/store/currentDay';
+import { useCurrentDay } from '@/app/features/dashboard/store/currentDay';
 
 const MapContainer = dynamic(
     () => import('react-leaflet').then((mod) => mod.MapContainer),
@@ -101,26 +103,29 @@ export default function Map() {
     if (error) return <div>Error loading map data.</div>;
 
     return (
-        <MapContainer center={[
-            destinationLatLong?.lat ?? 0,
-            destinationLatLong?.lon ?? 0
-        ]} zoom={13} style={{ height: "100%", width: "100%", borderRadius: "16px" }}>
-            <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {icon && data && data.map((activity: any) => {
-                return (
-                    <Marker key={activity.id} icon={icon} position={[activity.latitude, activity.longitude]}>
-                        <Popup>
-                            <div>
-                                <h3 className="font-bold">{activity.place}</h3>
-                                <button className="btn btn-xs btn-primary mt-2 rounded-2xl">View More</button>
-                            </div>
-                        </Popup>
-                    </Marker>
-                )
-            })}
-        </MapContainer>
+        <ErrorBoundary>
+            <MapContainer center={[
+                destinationLatLong?.lat ?? 0,
+                destinationLatLong?.lon ?? 0
+            ]} zoom={13} style={{ height: "100%", width: "100%", borderRadius: "16px" }}>
+                <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                {icon && data && data.map((activity: any) => {
+                    return (
+                        <Marker key={activity.id} icon={icon} position={[activity.latitude, activity.longitude]}>
+                            <Popup>
+                                <div>
+                                    <h3 className="font-bold">{activity.place}</h3>
+                                    <button className="btn btn-xs btn-primary mt-2 rounded-2xl">View More</button>
+                                </div>
+                            </Popup>
+                        </Marker>
+                    )
+                })}
+            </MapContainer>
+        </ErrorBoundary>
+
     )
 }

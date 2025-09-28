@@ -1,9 +1,9 @@
 "use client"
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { fetchPlace, addActivity } from '../../../../../dashboard/trips/[tripId]/actions';
+import { fetchPlace, addActivity } from '../itinerary/actions';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useCurrentDay } from "@/app/dashboard/store/currentDay";
+import { useCurrentDay } from "@/app/features/dashboard/store/currentDay";
 
 export default function AddActivityBtn({ dayId, dayNumber }: { dayId: number, dayNumber: number }) {
     const queryCleint = useQueryClient();

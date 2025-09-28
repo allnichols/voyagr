@@ -1,6 +1,6 @@
 "use client"
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useCurrentTrip } from "../../store/currentTrip";
+import { useCurrentTrip } from "../../../features/dashboard/store/currentTrip";
 import { Suspense, useState } from "react";
 
 
