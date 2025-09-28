@@ -18,11 +18,16 @@ export default class ErrorBoundary extends React.Component<Props, State> {
         console.error("ErrorBoundary caught an error", error, errorInfo);
     }
 
+    handleReset = () => {
+        this.setState({ hasError: false, error: null });
+    }
+
     render() {
         if(this.state.hasError){
             return (
-                <div>
-                    Failed to load map
+                <div className="flex flex-col items-center justify-center h-full">
+                    <p>Failed to load map</p>
+                    <button className="btn btn-primary rounded-sm" onClick={this.handleReset}>Refresh Map</button>
                 </div>
             )
         }
