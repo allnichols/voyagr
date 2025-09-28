@@ -45,6 +45,7 @@ export default function TripPage() {
                             <DayDropdown 
                                 key={day.dayNumber} 
                                 dayId={day.id} 
+                                dayNumber={day.dayNumber}
                                 index={idx}
                                 isOpen={openDayDropdown === day.id}
                                 onToggle={() =>{ 

@@ -16,11 +16,13 @@ async function getTripDayActivites(tripDayId: number | null) {
 export const DayDropdown = React.memo(
     function DayDropdown({
         dayId,
+        dayNumber,
         index,
         isOpen,
         onToggle
     }: {
         dayId: number,
+        dayNumber: number,
         index: number,
         isOpen: boolean,
         onToggle: () => void
@@ -66,19 +68,12 @@ export const DayDropdown = React.memo(
                 setCurrentDay(dayId);
             }
         }
-
-        // const containerHeight = isOpen
-        //     ? day.activities.length > 0
-        //         ? `${day.activities.length * 200}px`
-        //         : "200px"
-        //     : "0";
+;
 
         return (
             <>
                 {toast}
                 <div
-
-                // className={`mb-6 ${day.dayNumber === 1 ? '' : 'mt-[2rem]'} cursor-pointer rounded-lg`}
                 >
                     <div className="flex items-center justify-between mb-4 rounded-lg ps-2 hover:bg-base-200">
                         <div className="flex items-center gap-4 p-2">
@@ -86,7 +81,6 @@ export const DayDropdown = React.memo(
                                 onClick={() => {
                                     handleSelectDay(currentDay as number, dayId);
                                     onToggle();
-                                    // handleSetOpenDays(day.dayNumber);
                                 }}
                                 className={`btn btn-circle btn-sm btn-ghost`}
                             >
@@ -106,7 +100,7 @@ export const DayDropdown = React.memo(
                                     Day
                                 </p>
                                 <p className="text-lg">
-                                    {/* {`${day.dayNumber >= 10 ? '' : '0'}`}{day.dayNumber} */}
+                                    {`${dayNumber >= 10 ? '' : '0'}`}{dayNumber}
                                 </p>
                             </div>
 
@@ -136,6 +130,7 @@ export const DayDropdown = React.memo(
                         style={{
                             maxHeight: isOpen ? "500px" : "0",
                             opacity: isOpen ? 1 : 0,
+                            display: isOpen ? "block" : "none",
                             // overflow: "hidden",
                         }}
                     >
