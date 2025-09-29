@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import { PrismaClient } from '@prisma/client';
 import parseTextReponse from './parseResponse';
+import getGooglePlaces from './getGooglePlaces';
 
 // const GOOGLE_GENAI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
 const GOOGLE_API_KEY = process.env.GOOGLE_GENAI_API_KEY; // Set this in your environment
@@ -29,7 +30,6 @@ export async function POST(req: NextRequest) {
                     Time: {morning | afternoon | evening}
                     Place: {place}
                     Description: {description}
-                    Links: {descriptionLinks joined by commas}
                     Address: {address}
                     `,
             config: {
@@ -40,26 +40,29 @@ export async function POST(req: NextRequest) {
         });
 
         const aiResponse = response.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
-        const responseText = parseTextReponse(aiResponse);
-        
-        await prisma.trip.create({
+        const parsedResponse = parseTextReponse(aiResponse);
+
+        const googlePlaces = await getGooglePlaces(parsedResponse, formData.destination);
+
+        console.log(googlePlaces)
+        const createdTrip = await prisma.trip.create({
             data: {
                 userId: 1,
                 destination: formData.destination,
                 departureDate: new Date(formData.departureDate),
                 returnDate: new Date(formData.returnDate),
                 days: {
-                    create: responseText.map(day => ({
+                    create: googlePlaces.map(day => ({
                         date: new Date(day.date),
-                        dayNumber: parseInt(day.day),
+                        dayNumber: parseInt(day.dayNumber),
                         activities: {
                             create: day.activities.map(activity => ({
-                                timeOfDay: activity.time,
+                                timeOfDay: activity.timeOfDay,
                                 place: activity.place,
-                                descriptions: activity.description,
                                 address: activity.address,
-                                links: activity.links
-                                
+                                longitude: activity.longitude,
+                                latitude: activity.latitude,
+                                gPlaceId: activity.gPlaceId
                             }))
                         }
                     }))
@@ -67,11 +70,33 @@ export async function POST(req: NextRequest) {
             }
         });
 
-        
-
-        return NextResponse.json({ message: 'Form submitted successfully' }, { status: 200 });
+        return NextResponse.json({ createdTrip })
     } catch (error) {
         console.error('API Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    }
+}
+
+
+const x = {
+    "id": "ChIJPyOTG8KMGGARh_IXobWxHmo",
+    "types": [
+        "garden",
+        "tourist_attraction",
+        "playground",
+        "state_park",
+        "park",
+        "point_of_interest",
+        "establishment"
+    ],
+    "formattedAddress": "11 Naitōmachi, Shinjuku City, Tokyo 160-0014, Japan",
+    "location": {
+        "latitude": 35.685176299999995,
+        "longitude": 139.7100517
+    },
+    "iconMaskBaseUri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/tree_pinlet",
+    "displayName": {
+        "text": "Shinjuku Gyoen National Garden",
+        "languageCode": "en"
     }
 }

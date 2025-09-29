@@ -36,7 +36,8 @@ export default function getGooglePlaces(parseAiResponse: {
                         address: data.places[0].formattedAddress,
                         latitude: data.places[0].location?.latitude,
                         longitude: data.places[0].location?.longitude,
-                        place: data.places[0].displayName?.text
+                        place: data.places[0].displayName?.text,
+                        timeOfDay: activity.time
                      };
                 })
             );

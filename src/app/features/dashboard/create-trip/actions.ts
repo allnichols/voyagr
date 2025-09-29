@@ -1,6 +1,5 @@
 "use server";
 import { PrismaClient } from "@prisma/client";
-import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import parseTextReponse from "./parseResponse";
 
@@ -13,6 +12,34 @@ type TripData = {
     departureDate: string;
     returnDate: string;
     preferences: string[];
+
+}
+
+async function fetchGooglePlace(place: string, destination: string) {
+    const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.location,places.id,places.iconMaskBaseUri"
+    }
+
+    if(process.env.GOOGLE_MAPS_API_KEY) {
+        headers["X-Goog-Api-Key"] = process.env.GOOGLE_MAPS_API_KEY;
+    }
+
+    const res = await fetch("https://places.googleapis.com/v1/places:searchText", {
+        method: "POST",
+        headers, 
+        body: JSON.stringify({ textQuery: `${place} in ${destination}`})
+    });
+
+    if(!res.ok) {
+        console.error('Google API Error: ', await res.text())
+        return null;
+    }
+
+    const data = await res.json();
+    const placeInfo = data.place;
+
+    return placeInfo;
 
 }
 
@@ -32,7 +59,6 @@ export async function createTrip(tripData: TripData) {
                     Time: {morning | afternoon | evening}
                     Place: {place}
                     Description: {description}
-                    Links: {descriptionLinks joined by commas}
                     Address: {address}
                     `,
             config: {
@@ -44,6 +70,9 @@ export async function createTrip(tripData: TripData) {
 
         const aiResponse = response.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
         const responseText = parseTextReponse(aiResponse);
+
+        console.log(aiResponse);
+
 
         await prisma.trip.create({
             data: {
@@ -59,10 +88,8 @@ export async function createTrip(tripData: TripData) {
                             create: day.activities.map(activity => ({
                                 timeOfDay: activity.time,
                                 place: activity.place,
-                                descriptions: activity.description,
                                 address: activity.address,
                                 links: activity.links
-
                             }))
                         }
                     }))

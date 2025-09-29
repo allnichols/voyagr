@@ -12,7 +12,6 @@ export default function TripsPage() {
         </Suspense>
       </div>
 
-      
     </div>
   );
 }

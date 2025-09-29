@@ -1,47 +1,18 @@
 "use client";
-import { useState } from "react";
-import { useRouter } from 'next/navigation'
 
-export default function TripForm() {
-    const router = useRouter();
-    const [formData, setFormData] = useState({
-        destination: "",
-        departureDate: "",
-        returnDate: "",
-        preferences: [] as string[],
-    });
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value, type, checked } = e.target;
-
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: name === "preferences" ? checked ?
-                [...prevData.preferences, value] :
-                prevData.preferences.filter((pref) => pref !== value) : value,
-        }));
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        fetch('http://localhost:3000/api/submitForm', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        }).then(response => response.json()).then(data => {
-            if (data) {
-                // Redirect to the itinerary page
-                router.push('/trips');
-
-            }
-        })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-
-    };
+// Integrate google places API for trip creation form
+// it will get the address, lat, lng of the destination
+// and store it in the database
+export default function CreateTripForm({ formData, handleChange, handleSubmit }: {
+    formData: {
+        destination: string;
+        departureDate: string;
+        returnDate: string;
+        preferences: string[];
+    },
+    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    handleSubmit: (e: React.FormEvent) => void,
+}) {
 
     return (
         <div>
@@ -134,6 +105,6 @@ export default function TripForm() {
                     Plan My Trip
                 </button>
             </form>
-        </div>
+        </div>    
     )
 }
