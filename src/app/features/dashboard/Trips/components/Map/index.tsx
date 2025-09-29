@@ -57,7 +57,6 @@ export default function Map() {
     const destination = searchParams.get('destination');
 
     const currentDayId = useCurrentDay((state) => state.currentDay.id);
-    console.log('currentDayId from the map', currentDayId);
     const [icon, setIcon] = useState(null);
     const [position, setPosition] = useState<[number, number]>([0, 0]);
 
