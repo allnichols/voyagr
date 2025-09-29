@@ -4,7 +4,6 @@ import { PrismaClient } from '@prisma/client';
 import parseTextReponse from './parseResponse';
 import getGooglePlaces from './getGooglePlaces';
 
-// const GOOGLE_GENAI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
 const GOOGLE_API_KEY = process.env.GOOGLE_GENAI_API_KEY; // Set this in your environment
 
 const ai = new GoogleGenAI({ apiKey: GOOGLE_API_KEY });
@@ -74,29 +73,5 @@ export async function POST(req: NextRequest) {
     } catch (error) {
         console.error('API Error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
-    }
-}
-
-
-const x = {
-    "id": "ChIJPyOTG8KMGGARh_IXobWxHmo",
-    "types": [
-        "garden",
-        "tourist_attraction",
-        "playground",
-        "state_park",
-        "park",
-        "point_of_interest",
-        "establishment"
-    ],
-    "formattedAddress": "11 Naitōmachi, Shinjuku City, Tokyo 160-0014, Japan",
-    "location": {
-        "latitude": 35.685176299999995,
-        "longitude": 139.7100517
-    },
-    "iconMaskBaseUri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/tree_pinlet",
-    "displayName": {
-        "text": "Shinjuku Gyoen National Garden",
-        "languageCode": "en"
     }
 }
