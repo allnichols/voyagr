@@ -2,8 +2,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCurrentTrip } from "@/app/features/dashboard/store/currentTrip";
-import { getTrips } from "./actions";
-import { useQuery } from "@tanstack/react-query";
+import { getTrips, removeTrip } from "./actions";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import './trips.css';
 
 function getTotalDays(departureDate: Date, returnDate: Date): number {
@@ -17,19 +17,29 @@ function getTotalDays(departureDate: Date, returnDate: Date): number {
 
 export default function Trips() {
     const router = useRouter();
-
+    const queryClient = useQueryClient();
     const setTripID = useCurrentTrip((state) => state.setCurrentTripId);
 
     const { data } = useQuery({
         queryFn: () => getTrips(1), // Replace with actual user ID
         queryKey: ['trips'],
-    })
+    });
+
+    const removeTripMutation = useMutation({
+        mutationFn: async (tripId: number) => {
+                return await removeTrip(tripId);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['trips'] });
+        }
+    });
 
     const handleViewTrip = (tripId: number, destination: string) => {
         setTripID(tripId, destination);
-
         router.push(`/dashboard/trips/${tripId}?destination=${encodeURIComponent(destination)}`);
     }
+
+
 
 
     return (
@@ -67,13 +77,17 @@ export default function Trips() {
                                 </span>
                             </div>
 
-                            <div className="flex flex-row gap-2">
+                            <div className="flex flex-row gap-2 items-baseline">
                                 <button
                                     onClick={() => handleViewTrip(trip.id, trip.destination)}
                                     className="btn btn-sm btn-primary mt-2 rounded-sm"
                                 >
                                     View
                                 </button>
+                                <button 
+                                    className="btn btn-sm btn-outline btn-accent rounded-sm"
+                                    onClick={() => removeTripMutation.mutate(trip.id)}>Remove</button>
+
                             </div>
                         </div>
                     </li>
