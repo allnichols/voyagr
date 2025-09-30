@@ -11,10 +11,7 @@ export default function Home() {
           Your personal AI travel assistant. Plan trips, get recommendations,
           and explore the world with ease.
         </p>
-        <Link
-          href="/dashboard"
-          className="px-6 py-3 btn btn-primary"
-        >
+        <Link href="/dashboard" className="px-6 py-3 btn btn-primary">
           Get Started
         </Link>
       </main>

@@ -1,17 +1,17 @@
 .trip-item {
-    position: relative;
+  position: relative;
 }
 
 .trip-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    border-radius: 4px;
-    /* background-color: transparent; */
-    transition: background-color 0.3s ease;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  border-radius: 4px;
+  /* background-color: transparent; */
+  transition: background-color 0.3s ease;
 }
 
 .trip-item:hover::before,

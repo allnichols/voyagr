@@ -1,16 +1,16 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 interface CurrentTripDay {
-    currentDay: {
-        id: number | null;
-    }
-    setCurrentDay: (id: number) => void;
+  currentDay: {
+    id: number | null;
+  };
+  setCurrentDay: (id: number) => void;
 }
 
-
 export const useCurrentDay = create<CurrentTripDay>((set) => ({
-    currentDay: { id: null },
-    setCurrentDay: (id) => set(() => ({
-        currentDay: { id }
-    }))
-}))
+  currentDay: { id: null },
+  setCurrentDay: (id) =>
+    set(() => ({
+      currentDay: { id },
+    })),
+}));

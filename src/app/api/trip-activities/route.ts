@@ -5,17 +5,16 @@ const prisma = new PrismaClient();
 
 // Get trip activities by tripDayId
 export async function GET(req: NextRequest) {
-    const { searchParams } = new URL(req.url);
-    const tripDayId = searchParams.get('tripDayId')
+  const { searchParams } = new URL(req.url);
+  const tripDayId = searchParams.get("tripDayId");
 
-    try{
+  try {
+    let tripActivities = await prisma.tripActivity.findMany({
+      where: { tripDayId: Number(tripDayId) },
+    });
 
-        let tripActivities = await prisma.tripActivity.findMany({
-            where: { tripDayId: Number(tripDayId), },
-        })
-
-        return new Response(JSON.stringify(tripActivities), { status: 200 }) 
-    } catch {
-        return new Response(JSON.stringify({ error: 'Internal Server Error'}))
-    }
+    return new Response(JSON.stringify(tripActivities), { status: 200 });
+  } catch {
+    return new Response(JSON.stringify({ error: "Internal Server Error" }));
+  }
 }

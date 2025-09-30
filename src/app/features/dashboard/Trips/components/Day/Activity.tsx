@@ -4,7 +4,7 @@
 // export const DayActivitiesDropdown = React.memo(
 //     function DayActivitiesDropdown({ dayNumber }: { dayNumber: number }) {
 //         const queryClient = useQueryClient();
-//         const { data: activities } = useQuery({ 
+//         const { data: activities } = useQuery({
 //             queryKey: ['dayActivities', dayNumber],
 //             queryFn: () => console.log('fetch day activities')
 //         });
@@ -15,6 +15,6 @@
 //         })
 
 //         if(!activities) return <div>Loading...</div>;
-        
+
 //         return <></>
 //     });

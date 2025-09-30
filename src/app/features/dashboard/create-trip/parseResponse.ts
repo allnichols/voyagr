@@ -1,52 +1,54 @@
-
 export default function parseTextReponse(responseText: string) {
-    const lines = responseText.split('\n').map(line => line.trim()).filter(Boolean);
+  const lines = responseText
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
 
-    let currentDay = '';
-    let currentDate = '';
-    let days: { day: string, date: string, activities: any[] }[] = [];
+  let currentDay = "";
+  let currentDate = "";
+  let days: { day: string; date: string; activities: any[] }[] = [];
 
-    for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
 
-        const dayMatch = line.match(/^Day (\d+) - (\d{4}-\d{2}-\d{2})$/);
-        if (dayMatch) {
-            currentDay = dayMatch[1];
-            currentDate = dayMatch[2];
+    const dayMatch = line.match(/^Day (\d+) - (\d{4}-\d{2}-\d{2})$/);
+    if (dayMatch) {
+      currentDay = dayMatch[1];
+      currentDate = dayMatch[2];
 
-            if (!days.find(d => d.day === currentDay && d.date === currentDate)) {
-                days.push({ day: currentDay, date: currentDate, activities: [] });
-            }
+      if (!days.find((d) => d.day === currentDay && d.date === currentDate)) {
+        days.push({ day: currentDay, date: currentDate, activities: [] });
+      }
 
-            continue;
-
-        }
-
-        const timeMatch = line.match(/^Time:\s*(.+)$/);
-        if (timeMatch) {
-            const time = timeMatch[1];
-            const placeLine = lines[++i] || '';
-            const placeMatch = placeLine.match(/^Place:\s*(.+)$/);
-            const place = placeMatch ? placeMatch[1] : '';
-
-            const descriptionLine = lines[++i] || '';
-            const descriptionMatch = descriptionLine.match(/^Description:\s*(.+)$/);
-            const description = descriptionMatch ? descriptionMatch[1] : '';
-            const linksLine = lines[++i] || '';
-            const linksMatch = linksLine.match(/^Links:\s*(.+)$/);
-            const links = linksMatch ? linksMatch[1].split(',').map(link => link.trim()) : [];
-            const addressLine = lines[++i] || '';
-            const addressMatch = addressLine.match(/^Address:\s*(.+)$/);
-            const address = addressMatch ? addressMatch[1] : '';
-            const dayObj = days.find(d => d.day === currentDay);
-            if (dayObj) {
-                dayObj.activities.push({ time, place, description, links, address });
-            }
-        }
-
+      continue;
     }
 
-    return days;
+    const timeMatch = line.match(/^Time:\s*(.+)$/);
+    if (timeMatch) {
+      const time = timeMatch[1];
+      const placeLine = lines[++i] || "";
+      const placeMatch = placeLine.match(/^Place:\s*(.+)$/);
+      const place = placeMatch ? placeMatch[1] : "";
+
+      const descriptionLine = lines[++i] || "";
+      const descriptionMatch = descriptionLine.match(/^Description:\s*(.+)$/);
+      const description = descriptionMatch ? descriptionMatch[1] : "";
+      const linksLine = lines[++i] || "";
+      const linksMatch = linksLine.match(/^Links:\s*(.+)$/);
+      const links = linksMatch
+        ? linksMatch[1].split(",").map((link) => link.trim())
+        : [];
+      const addressLine = lines[++i] || "";
+      const addressMatch = addressLine.match(/^Address:\s*(.+)$/);
+      const address = addressMatch ? addressMatch[1] : "";
+      const dayObj = days.find((d) => d.day === currentDay);
+      if (dayObj) {
+        dayObj.activities.push({ time, place, description, links, address });
+      }
+    }
+  }
+
+  return days;
 }
 
 // Lines: [

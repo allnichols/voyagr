@@ -11,7 +11,6 @@ export default function TripsPage() {
           <Trips />
         </Suspense>
       </div>
-
     </div>
   );
 }
