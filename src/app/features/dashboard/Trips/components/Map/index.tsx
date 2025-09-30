@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useCurrentDay } from "@/app/features/dashboard/store/currentDay";
 import ErrorBoundary from "@/app/utils/ErrorBoundry";
+import "leaflet/dist/leaflet.css";
 
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
@@ -55,7 +56,7 @@ async function getDestinationLatLong(destination: string) {
   return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
 }
 
-export default function TripMap() {
+export default function Map() {
   const searchParams = useSearchParams();
   const destination = searchParams.get("destination");
 
@@ -107,8 +108,8 @@ export default function TripMap() {
     <ErrorBoundary>
       <MapContainer
         center={[destinationLatLong?.lat ?? 0, destinationLatLong?.lon ?? 0]}
-        zoom={13}
-        style={{ height: "100%", width: "100%", borderRadius: "16px" }}
+        zoom={10}
+        style={{ height: "90%", width: "100%", borderRadius: "16px" }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
