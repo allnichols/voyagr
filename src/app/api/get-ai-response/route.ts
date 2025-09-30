@@ -43,13 +43,13 @@ export async function POST(req: NextRequest) {
 
         const googlePlaces = await getGooglePlaces(parsedResponse, formData.destination);
 
-        console.log(googlePlaces)
         const createdTrip = await prisma.trip.create({
             data: {
                 userId: 1,
                 destination: formData.destination,
                 departureDate: new Date(formData.departureDate),
                 returnDate: new Date(formData.returnDate),
+                preferences: formData.preferences,
                 days: {
                     create: googlePlaces.map(day => ({
                         date: new Date(day.date),
