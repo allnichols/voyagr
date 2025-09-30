@@ -1,11 +1,10 @@
 "use client";
-import "leaflet/dist/leaflet.css";
-import ErrorBoundary from "@/app/utils/ErrorBoundry";
-import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useCurrentDay } from "@/app/features/dashboard/store/currentDay";
+import ErrorBoundary from "@/app/utils/ErrorBoundry";
 
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
@@ -56,7 +55,7 @@ async function getDestinationLatLong(destination: string) {
   return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
 }
 
-export default function Map() {
+export default function TripMap() {
   const searchParams = useSearchParams();
   const destination = searchParams.get("destination");
 
@@ -127,7 +126,10 @@ export default function Map() {
                 <Popup>
                   <div>
                     <h3 className="font-bold">{activity.place}</h3>
-                    <button className="btn btn-xs btn-primary mt-2 rounded-2xl">
+                    <button
+                      className="btn btn-xs btn-primary mt-2 rounded-2xl"
+                      type="button"
+                    >
                       View More
                     </button>
                   </div>
