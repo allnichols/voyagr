@@ -123,7 +123,7 @@ export default function SignUpForm() {
           disabled={
             formData.email === "" || formData.password === "" || loading
           }
-          className="btn btn-primary w-full mt-4"
+          className="btn btn-primary w-full mt-4 disabled:opacity-70 disabled:cursor-not-allowed"
           type="submit"
         >
           {loading ? "Signing up..." : "Sign Up"}
