@@ -30,7 +30,7 @@ export default function getGooglePlaces(parseAiResponse: {
                     }
 
                     const data = await res.json();
-
+                    
                     return { 
                         gPlaceId: data.places[0].id,
                         address: data.places[0].formattedAddress,
@@ -40,7 +40,10 @@ export default function getGooglePlaces(parseAiResponse: {
                         timeOfDay: activity.time
                      };
                 })
-            );
+            ).catch((error) => {
+                console.error(error.message)
+                throw new Error("Error getting places from google: ", error)
+            });
 
             const tripDay = {
                 date: dayPlan.date,
