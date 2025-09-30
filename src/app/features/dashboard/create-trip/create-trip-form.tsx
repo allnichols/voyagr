@@ -15,7 +15,7 @@ export default function CreateTripForm({ formData, handleChange, handleSubmit }:
 }) {
 
     return (
-        <div>
+        <div className="mt-10 p-6 bg-white rounded-lg shadow-md w-full max-w-lg">
             <h1 className="text-xl mb-4 text-center font-bold">Create your trip</h1>
             <form onSubmit={handleSubmit}>
 
