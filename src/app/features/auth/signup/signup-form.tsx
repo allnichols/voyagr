@@ -1,13 +1,62 @@
 "use client";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useState } from "react";
+
+type SignupPayload = {
+  email: string;
+  password: string;
+};
+
+async function signup(payload: SignupPayload) {
+  const res = await fetch("http://localhost:3000/api/signup", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    throw new Error("Signup failed");
+  }
+
+  return res.json();
+}
 
 export default function SignUpForm() {
+  const router = useRouter();
+  const [formData, setFormData] = useState<SignupPayload>({
+    email: "",
+    password: "",
+  });
+
+  const signupMutation = useMutation({
+    mutationFn: signup,
+    onSuccess: () => {
+      router.push("/dashboard");
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    signupMutation.mutate(formData);
+  };
+
+  const loading = signupMutation.isPending;
+
   return (
     <div>
       <h1 className="text-center text-3xl">Sign Up</h1>
-      <form className="m-auto mt-6 max-w-md">
+      <form onSubmit={handleSubmit} className="m-auto mt-6 max-w-md">
         <fieldset className="fieldset">
           <label className="input validator w-full mb-4">
             <svg
@@ -26,7 +75,13 @@ export default function SignUpForm() {
                 <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
               </g>
             </svg>
-            <input type="email" placeholder="mail@site.com" required />
+            <input
+              type="email"
+              name="email"
+              placeholder="mail@site.com"
+              required
+              onChange={handleInput}
+            />
           </label>
 
           <label className="input validator w-full mb-4">
@@ -48,10 +103,12 @@ export default function SignUpForm() {
             </svg>
             <input
               type="password"
+              name="password"
               required
               placeholder="Password"
               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
               title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
+              onChange={handleInput}
             />
           </label>
           <p className="validator-hint hidden">
@@ -62,8 +119,14 @@ export default function SignUpForm() {
             At least one uppercase letter
           </p>
         </fieldset>
-        <button className="btn btn-primary w-full mt-4" type="submit">
-          Sign Up
+        <button
+          disabled={
+            formData.email === "" || formData.password === "" || loading
+          }
+          className="btn btn-primary w-full mt-4"
+          type="submit"
+        >
+          {loading ? "Signing up..." : "Sign Up"}
         </button>
       </form>
       <div className="divider">OR</div>
@@ -98,6 +161,9 @@ export default function SignUpForm() {
           </svg>
           Signup with Google
         </button>
+        {signupMutation.isError && (
+          <p className="text-red-500 mt-2">Signup failed. Try again.</p>
+        )}
       </div>
     </div>
   );
