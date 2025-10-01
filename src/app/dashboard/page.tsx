@@ -1,9 +1,8 @@
-"use client";
 import { MapContainer } from "react-leaflet/MapContainer";
 import { TileLayer } from "react-leaflet/TileLayer";
 import "leaflet/dist/leaflet.css";
 
-export default function MainPage() {
+export default async function MainPage() {
   return (
     <div className="flex h-screen">
       <div className="w-1/2 p-6 overflow-y-auto">
