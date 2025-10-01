@@ -18,6 +18,7 @@ export default function LoginForm() {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -36,6 +37,7 @@ export default function LoginForm() {
       });
 
       if (res?.error) {
+        setLoginError(res.error);
         setLoading(false);
         return;
       }
@@ -51,9 +53,9 @@ export default function LoginForm() {
     <div>
       <h1 className="text-center text-3xl">Login</h1>
       <form onSubmit={handleLogin} className="m-auto mt-6 max-w-md">
-        {error && (
+        {loginError && (
           <p className="text-red-500 mb-4">
-            {error === "CredentialsSignin"
+            {loginError === "CredentialsSignin"
               ? "Invalid email or password."
               : "Login failed. Please try again."}
           </p>
