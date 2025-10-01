@@ -18,11 +18,15 @@ async function signup(payload: SignupPayload) {
   });
 
   if (!res.ok) {
-    throw new Error("Signup failed");
+    const error = await res.json().catch(() => ({}));
+    throw new Error(error.message || "Signup failed");
   }
 
   return res.json();
 }
+
+// add toast hook for global notification
+// get current users session, store in global state, redirect to dashboard, get users trips
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -30,14 +34,18 @@ export default function SignUpForm() {
     email: "",
     password: "",
   });
+  const [error, setError] = useState<string | null>(null);
 
   const signupMutation = useMutation({
     mutationFn: signup,
     onSuccess: () => {
+      setError(null);
       router.push("/dashboard");
     },
     onError: (error) => {
-      console.error(error);
+      setError(error.message);
+
+      console.error(error.message);
     },
   });
 
@@ -48,7 +56,10 @@ export default function SignUpForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    signupMutation.mutate(formData);
+    signupMutation.mutate({
+      email: formData.email,
+      password: formData.password,
+    });
   };
 
   const loading = signupMutation.isPending;
@@ -161,9 +172,7 @@ export default function SignUpForm() {
           </svg>
           Signup with Google
         </button>
-        {signupMutation.isError && (
-          <p className="text-red-500 mt-2">Signup failed. Try again.</p>
-        )}
+        {error && <p className="text-red-500 mt-2">{error}</p>}
       </div>
     </div>
   );
