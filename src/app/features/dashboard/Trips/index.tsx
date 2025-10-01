@@ -1,9 +1,9 @@
 "use client";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCurrentTrip } from "@/app/features/dashboard/store/currentTrip";
 import { getTrips, removeTrip } from "./actions";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import "./trips.css";
 
 function getTotalDays(departureDate: Date, returnDate: Date): number {

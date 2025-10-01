@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Script from "next/script";
+import { SessionProvider } from "next-auth/react";
 import Sidebar from "@/app/features/dashboard/sidebar";
 import ReactQueryProvider from "../ReactQueryProvider";
 
@@ -30,9 +31,11 @@ export default function ItineraryDashboardLayout({
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossOrigin=""
       />
-      <ReactQueryProvider>
-        <Sidebar>{children}</Sidebar>
-      </ReactQueryProvider>
+      <SessionProvider>
+        <ReactQueryProvider>
+          <Sidebar>{children}</Sidebar>
+        </ReactQueryProvider>
+      </SessionProvider>
     </>
   );
 }
