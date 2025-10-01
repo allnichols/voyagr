@@ -6,6 +6,11 @@ import CredentialsProvider from "next-auth/providers/credentials";
 const prisma = new PrismaClient();
 
 const handler = NextAuth({
+  logger: {
+    error(code, metadata) {
+      console.error(code, metadata);
+    },
+  },
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -34,7 +39,7 @@ const handler = NextAuth({
     }),
   ],
   pages: {
-    signIn: "/login",
+    signIn: "/auth/login",
   },
   session: {
     strategy: "jwt",

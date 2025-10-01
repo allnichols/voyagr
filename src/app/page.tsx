@@ -14,6 +14,9 @@ export default function Home() {
         <Link href="/auth/signup" className="px-6 py-3 btn btn-primary">
           Get Started
         </Link>
+        <Link href="/auth/login" className="px-6 py-3 btn btn-secondary">
+          Login
+        </Link>
       </main>
     </div>
   );
