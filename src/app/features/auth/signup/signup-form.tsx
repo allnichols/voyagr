@@ -69,31 +69,38 @@ export default function SignUpForm() {
       <h1 className="text-center text-3xl">Sign Up</h1>
       <form onSubmit={handleSubmit} className="m-auto mt-6 max-w-md">
         <fieldset className="fieldset">
-          <label className="input validator w-full mb-4">
-            <svg
-              className="h-[1em] opacity-50"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-            >
-              <g
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                strokeWidth="2.5"
-                fill="none"
-                stroke="currentColor"
+          <div className="mb-4">
+            {error && <p className="text-red-500">{error}</p>}
+
+            <label className="input validator w-full">
+              <svg
+                className="h-[1em] opacity-50"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
               >
-                <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-              </g>
-            </svg>
-            <input
-              type="email"
-              name="email"
-              placeholder="mail@site.com"
-              required
-              onChange={handleInput}
-            />
-          </label>
+                <g
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  strokeWidth="2.5"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                </g>
+              </svg>
+              <input
+                type="email"
+                name="email"
+                placeholder="mail@site.com"
+                required
+                onChange={handleInput}
+              />
+              <p className="validator-hint hidden">
+                Please enter a valid email address
+              </p>
+            </label>
+          </div>
 
           <label className="input validator w-full mb-4">
             <svg
@@ -172,7 +179,6 @@ export default function SignUpForm() {
           </svg>
           Signup with Google
         </button>
-        {error && <p className="text-red-500 mt-2">{error}</p>}
       </div>
     </div>
   );
