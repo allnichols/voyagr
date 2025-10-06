@@ -1,13 +1,6 @@
 "use client";
 
-// Integrate google places API for trip creation form
-// it will get the address, lat, lng of the destination
-// and store it in the database
-export default function CreateTripForm({
-  formData,
-  handleChange,
-  handleSubmit,
-}: {
+type CreateTripFormProps = {
   formData: {
     destination: string;
     departureDate: string;
@@ -16,10 +9,25 @@ export default function CreateTripForm({
   };
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleSubmit: (e: React.FormEvent) => void;
-}) {
+  loading?: boolean;
+  errorMessage?: string | null;
+};
+
+export default function CreateTripForm({
+  formData,
+  handleChange,
+  handleSubmit,
+  errorMessage,
+  loading = false,
+}: CreateTripFormProps) {
   return (
     <div className="mt-10 p-6 bg-white rounded-lg shadow-md w-full max-w-lg">
       <h1 className="text-xl mb-4 text-center font-bold">Create your trip</h1>
+      {errorMessage && (
+        <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
+          {errorMessage}
+        </div>
+      )}
       <form onSubmit={handleSubmit}>
         {/* Form fields will go here */}
         <div className="mb-8">
@@ -165,9 +173,16 @@ export default function CreateTripForm({
             !formData.departureDate ||
             !formData.returnDate
           }
-          className="btn btn-primary w-full py-4 text-lg font-bold"
+          className={`btn btn-primary w-full py-4 text-lg font-bold`}
         >
-          Plan My Trip
+          {loading ? (
+            <>
+              <span className="loading loading-spinner"></span> "Creating
+              Trip..."
+            </>
+          ) : (
+            "Create Trip"
+          )}
         </button>
       </form>
     </div>

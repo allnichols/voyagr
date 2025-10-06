@@ -12,6 +12,7 @@ export default function CreateTrip() {
     preferences: [] as string[],
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -29,6 +30,7 @@ export default function CreateTrip() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     fetch("http://localhost:3000/api/get-ai-response", {
       method: "POST",
       headers: {
@@ -38,6 +40,7 @@ export default function CreateTrip() {
     })
       .then((response) => response.json())
       .then((data) => {
+        setIsLoading(false);
         if (data) {
           router.push(
             `/dashboard/trips/${data.createdTrip.id}?destination=${data.createdTrip.destination}`,
@@ -45,7 +48,11 @@ export default function CreateTrip() {
         }
       })
       .catch((error) => {
+
         console.error("Error:", error);
+        const errorMessage = error?.message || "Something went wrong!";
+        setIsLoading(false)
+        setErrorMessage(errorMessage);
       });
   };
 
@@ -54,6 +61,8 @@ export default function CreateTrip() {
       formData={formData}
       handleChange={handleChange}
       handleSubmit={handleSubmit}
+      errorMessage={errorMessage}
+      loading={isLoading}
     />
   );
 }
