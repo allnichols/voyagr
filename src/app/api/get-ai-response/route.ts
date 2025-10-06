@@ -3,6 +3,7 @@ import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import { PrismaClient } from "@prisma/client";
 import parseTextReponse from "./parseResponse";
 import getGooglePlaces from "./getGooglePlaces";
+import { auth } from "../auth/[...nextauth]/auth";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_GENAI_API_KEY; // Set this in your environment
 
@@ -11,6 +12,12 @@ const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await auth();
+
+    if(!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const formData = await req.json();
     if (
       !formData.destination ||
@@ -56,7 +63,7 @@ export async function POST(req: NextRequest) {
 
     const createdTrip = await prisma.trip.create({
       data: {
-        userId: 1,
+        userId: Number(session.user.id),
         destination: formData.destination,
         departureDate: new Date(formData.departureDate),
         returnDate: new Date(formData.returnDate),
