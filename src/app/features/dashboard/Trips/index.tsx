@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCurrentTrip } from "@/app/features/dashboard/store/currentTrip";
-import { getTrips, removeTrip } from "./actions";
+import {  removeTrip } from "./actions";
 import "./trips.css";
 
 function getTotalDays(departureDate: Date, returnDate: Date): number {
@@ -15,13 +15,19 @@ function getTotalDays(departureDate: Date, returnDate: Date): number {
   return diffDays;
 }
 
+async function getTrips() {
+  const res = await fetch("/api/trips", { method: "GET" });
+  if (!res.ok) throw new Error("Failed to fetch trips");
+  return res.json();
+}
+
 export default function Trips() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const setTripID = useCurrentTrip((state) => state.setCurrentTripId);
 
   const { data } = useQuery({
-    queryFn: () => getTrips(1), // Replace with actual user ID
+    queryFn: () => getTrips(), // Replace with actual user ID
     queryKey: ["trips"],
   });
 
@@ -71,7 +77,7 @@ export default function Trips() {
       <div className="divider" />
 
       <div className="grid gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
-        {data?.map((trip) => {
+        {data?.map((trip:any) => {
           return (
             <div className="card border-1 border-base-200" key={trip.id}>
               <div className="card-body">
@@ -109,7 +115,7 @@ export default function Trips() {
                         No preferences set
                       </span>
                     )}
-                    {trip?.preferences?.map((pref) => (
+                    {trip?.preferences?.map((pref:string) => (
                       <span
                         key={pref}
                         className="badge badge-outline badge-secondary mr-1"

@@ -1,12 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 import { compare } from "bcrypt";
-import type { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 const prisma = new PrismaClient();
 
-const handler: NextAuthOptions = NextAuth({
+const handler = NextAuth({
   logger: {
     error(code, metadata) {
       console.error(code, metadata);
@@ -44,6 +43,22 @@ const handler: NextAuthOptions = NextAuth({
   },
   session: {
     strategy: "jwt",
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      // Persist the OAuth access_token and or the user id to the token right after signin
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      // Send properties to the client, like an access_token and user id from a provider.
+      if (session.user) {
+        session.user.id = token.id;
+      }
+      return session;
+    },
   },
   secret: process.env.NEXTAUTH_SECRET,
 });
