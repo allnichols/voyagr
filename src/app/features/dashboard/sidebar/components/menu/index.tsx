@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { menuItems } from "./constants";
+import UserProfile from "@/app/features/dashboard/sidebar/components/user-profile";
 
 export default function Menu() {
   const pathname = usePathname();
@@ -20,6 +21,10 @@ export default function Menu() {
           </li>
         );
       })}
+
+      <div className="md:absolute sticky bottom-10">
+        <UserProfile />
+      </div>
     </div>
   );
 }
