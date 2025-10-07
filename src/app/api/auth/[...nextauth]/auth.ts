@@ -8,11 +8,10 @@ import { getServerSession } from "next-auth";
 import { PrismaClient } from "@prisma/client";
 import { compare } from "bcrypt";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 
 const prisma = new PrismaClient();
 
-// You'll need to import and pass this
-// to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
 export const config = {
   logger: {
     error(code, metadata) {
@@ -20,6 +19,10 @@ export const config = {
     },
   },
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -53,6 +56,33 @@ export const config = {
     strategy: "jwt",
   },
   callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+      if (account?.provider === "google") {
+        try {
+          const existingUser = await prisma.user.findUnique({
+            where: { email: user.email! },
+          });
+
+          if (!existingUser) {
+            await prisma.user.create({
+              data: {
+                email: user.email!,
+                name: user.name!,
+                image: user.image,
+                password: null,
+              },
+            });
+          }
+          return true;
+        } catch (error) {
+          console.error("Error using Google sign in provider:", error);
+          return false;
+        }
+      }
+
+      return true;
+    },
+
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
