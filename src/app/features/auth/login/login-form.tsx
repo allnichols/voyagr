@@ -134,7 +134,11 @@ export default function LoginForm() {
       </form>
       <div className="divider">OR</div>
       <div>
-        <button className="btn bg-white text-black border-[#e5e5e5] w-full">
+        <button 
+          onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+          className="btn bg-white text-black border-[#e5e5e5] w-full"
+          type="button"
+        >
           <svg
             aria-label="Google logo"
             width="16"

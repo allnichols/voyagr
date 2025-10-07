@@ -38,7 +38,7 @@ export default async function MainPage() {
       </div>
       {/* map placeholder */}
       <div className="w-1/2 flex items-center justify-center rounded-md overflow-y-hidden">
-        <MapContainer
+        {/* <MapContainer
           center={[51.505, -0.09]}
           zoom={13}
           style={{ height: "95%", width: "95%", borderRadius: "16px" }}
@@ -47,7 +47,7 @@ export default async function MainPage() {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-        </MapContainer>
+        </MapContainer> */}
       </div>
     </div>
   );

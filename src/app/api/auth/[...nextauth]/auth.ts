@@ -5,12 +5,10 @@ import type {
 } from "next";
 import type { NextAuthOptions } from "next-auth";
 import { getServerSession } from "next-auth";
-import { PrismaClient } from "@prisma/client";
 import { compare } from "bcrypt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
 
 export const config = {
   logger: {
@@ -49,33 +47,74 @@ export const config = {
       },
     }),
   ],
-  pages: {
-    signIn: "/auth/login",
-  },
   session: {
     strategy: "jwt",
   },
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
+    
+    async signIn({ user, account, profile }) {
       if (account?.provider === "google") {
         try {
+          console.log("Google sign-in attempt for:", user.email);
+          
           const existingUser = await prisma.user.findUnique({
             where: { email: user.email! },
+            include:  { accounts: true }
           });
 
           if (!existingUser) {
+            console.log("Creating new user for:", user.email);
             await prisma.user.create({
               data: {
                 email: user.email!,
-                name: user.name!,
+                name: user.name || "",
                 image: user.image,
                 password: null,
               },
             });
+            console.log("User created successfully");
+          } else {
+            console.log("User already exists:", user.email);
+            const existingGoogleAccount = existingUser.accounts.find(
+              acc => acc.provider === 'google' && acc.providerAccountId === account.providerAccountId
+            )
+            if(existingGoogleAccount) {
+              console.log("Existing Google account found for user:", user.email);
+              return true;
+            }
+
+            if(existingUser.password) {
+              // linking existing users google auth to their accounts table
+
+              await prisma.account.create({
+                data: {
+                  userId: existingUser.id,
+                  type: account.type,
+                  provider: account.provider,
+                  providerAccountId: account.providerAccountId,
+                  refresh_token: account.refresh_token, 
+                  access_token: account.refresh_token, 
+                  expires_at: account.expires_at,
+                  token_type: account.token_type,
+                  scope: account.scope,
+                  id_token: account.id_token,
+                  session_state: account.session_state
+                }
+              })
+
+              await prisma.user.update({
+                where: { id: existingUser.id },
+                data: {
+                  name: existingUser.name || user.name,
+                  image: existingUser.image || user.image
+                }
+              });
+              return true;
+            }
           }
           return true;
         } catch (error) {
-          console.error("Error using Google sign in provider:", error);
+          console.error("Error in Google sign-in callback:", error);
           return false;
         }
       }
@@ -83,10 +122,33 @@ export const config = {
       return true;
     },
 
-    async jwt({ token, user }) {
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
+    },
+
+    async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
       }
+      
+      // For Google OAuth users, get the user ID from database
+      if (account?.provider === "google" && token.email) {
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { email: token.email },
+          });
+          if (dbUser) {
+            token.id = dbUser.id.toString();
+          }
+        } catch (error) {
+          console.error("Error fetching user in JWT callback:", error);
+        }
+      }
+      
       return token;
     },
     async session({ session, token }) {

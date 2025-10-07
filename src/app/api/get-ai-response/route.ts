@@ -4,11 +4,12 @@ import { PrismaClient } from "@prisma/client";
 import parseTextReponse from "./parseResponse";
 import getGooglePlaces from "./getGooglePlaces";
 import { auth } from "../auth/[...nextauth]/auth";
+import prisma from "@/lib/prisma";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_GENAI_API_KEY; // Set this in your environment
 
 const ai = new GoogleGenAI({ apiKey: GOOGLE_API_KEY });
-const prisma = new PrismaClient();
+
 
 export async function POST(req: NextRequest) {
   try {

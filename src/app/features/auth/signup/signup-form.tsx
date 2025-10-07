@@ -2,6 +2,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 
 type SignupPayload = {
   email: string;
@@ -149,7 +150,10 @@ export default function SignUpForm() {
       </form>
       <div className="divider">OR</div>
       <div>
-        <button className="btn bg-white text-black border-[#e5e5e5] w-full">
+        <button
+          onClick={() => signIn("google")}
+          className="btn bg-white text-black border-[#e5e5e5] w-full"
+        >
           <svg
             aria-label="Google logo"
             width="16"
