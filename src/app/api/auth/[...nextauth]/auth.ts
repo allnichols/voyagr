@@ -118,7 +118,6 @@ export const config = {
           return false;
         }
       }
-
       return true;
     },
 
