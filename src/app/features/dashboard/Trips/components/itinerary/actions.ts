@@ -1,4 +1,5 @@
 "use server";
+import { GooglePlace } from "@/types/google-places";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -31,7 +32,7 @@ export async function fetchPlace(query: string, destination: string | null) {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     "X-Goog-FieldMask":
-      "places.displayName,places.formattedAddress,places.location,places.priceLevel,places.id,places.types,places.iconMaskBaseUri",
+      "places.displayName,places.formattedAddress,places.location,places.priceLevel,places.id,places.types,places.iconMaskBaseUri,places.iconBackgroundColor,places.rating",
   };
   if (process.env.GOOGLE_MAPS_API_KEY) {
     headers["X-Goog-Api-Key"] = process.env.GOOGLE_MAPS_API_KEY;
@@ -62,7 +63,7 @@ export async function fetchPlace(query: string, destination: string | null) {
   };
 }
 
-export async function addActivity(place: any, dayId: number) {
+export async function addActivity(place: GooglePlace, dayId: number) {
   try {
     const newActivity = await prisma.tripActivity.create({
       data: {
