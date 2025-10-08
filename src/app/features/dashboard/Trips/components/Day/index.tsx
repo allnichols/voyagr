@@ -14,6 +14,27 @@ async function getTripDayActivites(tripDayId: number | null) {
   return res.json();
 }
 
+export function DragAndDropIndicator() {
+  return (
+    <svg
+      width={24}
+      height={24}
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-label="Drag and drop indicator"
+    >
+      {/* Left column */}
+      <circle cx={7} cy={6} r={1.5} fill="currentColor" />
+      <circle cx={7} cy={12} r={1.5} fill="currentColor" />
+      <circle cx={7} cy={18} r={1.5} fill="currentColor" />
+      {/* Right column */}
+      <circle cx={17} cy={6} r={1.5} fill="currentColor" />
+      <circle cx={17} cy={12} r={1.5} fill="currentColor" />
+      <circle cx={17} cy={18} r={1.5} fill="currentColor" />
+    </svg>
+  );
+}
+
 export const DayDropdown = memo(function DayDropdown({
   dayId,
   dayNumber,
@@ -107,12 +128,16 @@ export const DayDropdown = memo(function DayDropdown({
                 </svg>
               )}
             </button>
-            <div>
-              <p className="text-sm text-gray-500">Day</p>
-              <p className="text-lg">
-                {`${dayNumber >= 10 ? "" : "0"}`}
-                {dayNumber}
-              </p>
+            <div className="flex items-center gap-4">
+              <div>
+                <p className="text-sm text-gray-500">Day</p>
+                <p className="text-lg">
+                  {`${dayNumber >= 10 ? "" : "0"}`}
+                  {dayNumber}
+                </p>
+              </div>
+
+              <DragAndDropIndicator />
             </div>
           </div>
           <DayMenu index={index} dayId={dayId} days={days} />
