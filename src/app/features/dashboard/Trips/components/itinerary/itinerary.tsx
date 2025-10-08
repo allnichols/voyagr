@@ -36,7 +36,7 @@ export default function Itinerary() {
   });
 
   return (
-    <div className="w-1/2 p-6 overflow-y-auto">
+    <div className="w-1/2 p-6 overflow-hidden">
       <h1 className="text-3xl font-bold mb-4">Trip to {destination}</h1>
       <div className="divider" />
       <div className="space-y-4">
@@ -55,27 +55,31 @@ export default function Itinerary() {
         {isLoading && (
           <span className="loading loading-infinity loading-md"></span>
         )}
-        {data &&
-          data.map((day: any, idx: number) => {
-            return (
-              <DayDropdown
-                key={day.dayNumber}
-                dayId={day.id}
-                days={data}
-                dayNumber={day.dayNumber}
-                index={idx}
-                isOpen={openDayDropdown === day.id}
-                onToggle={() => {
-                  setOpenDayDropdown(
-                    openDayDropdown === day.id ? null : day.id,
-                  );
-                }}
-              />
-            );
-          })}
-        {data && data.length === 0 && (
-          <p>No days added yet. Click "Add Day" to start planning your trip!</p>
-        )}
+        <div className="overflow-y-auto max-h-[600px] pr-2">
+          {data &&
+            data.map((day: any, idx: number) => {
+              return (
+                <DayDropdown
+                  key={day.dayNumber}
+                  dayId={day.id}
+                  days={data}
+                  dayNumber={day.dayNumber}
+                  index={idx}
+                  isOpen={openDayDropdown === day.id}
+                  onToggle={() => {
+                    setOpenDayDropdown(
+                      openDayDropdown === day.id ? null : day.id,
+                    );
+                  }}
+                />
+              );
+            })}
+          {data && data.length === 0 && (
+            <p>
+              No days added yet. Click "Add Day" to start planning your trip!
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
