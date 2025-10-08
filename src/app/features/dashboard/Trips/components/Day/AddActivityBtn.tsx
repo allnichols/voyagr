@@ -6,6 +6,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCurrentDay } from "@/app/features/dashboard/store/currentDay";
 import Image from "next/image";
 import { GooglePlace } from "@/types/google-places";
+import { getPriceLevelIcons } from "./utils";
 
 export default function AddActivityBtn({
   dayId,
@@ -164,10 +165,7 @@ export default function AddActivityBtn({
                           <div>
                             <p>{place.displayName.text}</p>
                             <p className="text-xs text-gray-500">
-                              Price: {place.priceLevel
-                                ? `${place.priceLevel}`
-                                : "UNSPECIFIED"}{" "}
-                              -{" "}
+                              {getPriceLevelIcons(place.priceLevel)}
                             </p>
                           </div>
                           <button
