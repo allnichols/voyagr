@@ -82,6 +82,7 @@ model TripActivity {
   place     String
   gPlaceId  String?
   address   String?
+  iconMask  String?
   latitude  Float?
   longitude Float?
   createdAt DateTime @default(now())

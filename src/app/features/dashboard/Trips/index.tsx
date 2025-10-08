@@ -54,6 +54,7 @@ export default function Trips() {
         <button
           className="btn btn-sm btn-outline btn-primary rounded-sm"
           type="button"
+          onClick={() => router.push("/dashboard/create-trip")}
         >
           + New Trip
         </button>
