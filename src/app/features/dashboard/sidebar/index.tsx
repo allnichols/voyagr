@@ -12,7 +12,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
         <div className="divider mt-0" />
         <Menu />
       </aside>
-      <main className="flex-1 p-1 overflow-y-auto">{children}</main>
+      <main className="flex-1 p-1 overflow-y-hidden">{children}</main>
     </div>
   );
 }
