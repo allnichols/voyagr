@@ -4,6 +4,8 @@ import { useSearchParams } from "next/navigation";
 import { fetchPlace, addActivity } from "../itinerary/actions";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCurrentDay } from "@/app/features/dashboard/store/currentDay";
+import Image from "next/image";
+import { GooglePlace } from "@/types/google-places";
 
 export default function AddActivityBtn({
   dayId,
@@ -26,7 +28,13 @@ export default function AddActivityBtn({
   });
 
   const addActivityMutation = useMutation({
-    mutationFn: async ({ place, dayId }: { place: string; dayId: number }) => {
+    mutationFn: async ({
+      place,
+      dayId,
+    }: {
+      place: GooglePlace;
+      dayId: number;
+    }) => {
       return await addActivity(place, dayId);
     },
     onSuccess: () => {
@@ -38,7 +46,7 @@ export default function AddActivityBtn({
     },
   });
 
-  const handleAddActivity = (place: string, dayId: number) => {
+  const handleAddActivity = (place: GooglePlace, dayId: number) => {
     addActivityMutation.mutate({ place, dayId });
   };
 
@@ -115,19 +123,63 @@ export default function AddActivityBtn({
               <div className="flex-1 flex flex-col min-h-0">
                 <h2 className="font-bold text-lg">Results:</h2>
                 {data.places.length === 0 && <p>No places found.</p>}
-                <div className="mt-2 flex-1 overflow-y-auto">
-                  {data.places.map((place: any) => {
-                    console.log("place", place.type);
-                    return (
-                      <div
-                        key={place.id}
-                        className="border-b border-base-300 last:border-0 p-2 cursor-pointer hover:bg-amber-500"
-                        onClick={() => handleAddActivity(place, dayId)}
-                      >
-                        <div>{place.displayName.text}</div>
-                      </div>
-                    );
-                  })}
+                <div className="mt-2 overflow-y-auto">
+                  <ul className="list">
+                    {data.places.map((place: GooglePlace) => {
+                      console.log("place", place);
+                      return (
+                        <li key={place.id} className="list-row items-center">
+                          <div>
+                            {place.iconMaskBaseUri ? (
+                              <div className="w-4 h-4 bg-base-200">
+                                <Image
+                                  width={15}
+                                  height={15}
+                                  src={`${place.iconMaskBaseUri}.png`}
+                                  alt="Place icon"
+                                />
+                              </div>
+                            ) : (
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={1.5}
+                                stroke="currentColor"
+                                className="size-6"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                                />
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
+                                />
+                              </svg>
+                            )}
+                          </div>
+                          <div>
+                            <p>{place.displayName.text}</p>
+                            <p className="text-xs text-gray-500">
+                              Price: {place.priceLevel
+                                ? `${place.priceLevel}`
+                                : "UNSPECIFIED"}{" "}
+                              -{" "}
+                            </p>
+                          </div>
+                          <button
+                            className="btn btn-sm btn-soft rounded-2xl"
+                            onClick={() => handleAddActivity(place, dayId)}
+                          >
+                            Add
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </div>
               </div>
             )}
