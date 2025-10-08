@@ -42,24 +42,9 @@ export function getPriceLevelIcons(priceLevel: PriceLevel | undefined) {
         <div className="flex items-center gap-0.5">
             Price:
             {Array.from({ length: level }).map((_, idx) => {
-                return <DollarIcon key={idx} className="size-4 text-yellow-500" />
+                return <DollarIcon key={idx} className="size-4" />
             })}
 
         </div>
     )
-
-//   switch (priceLevel) {
-//     case PriceLevel.FREE:
-//       return 
-//     case PriceLevel.INEXPENSIVE:
-//       return "💲💲";
-//     case PriceLevel.MODERATE:
-//       return "💲💲💲";
-//     case PriceLevel.EXPENSIVE:
-//       return "💲💲💲💲";
-//     case PriceLevel.VERY_EXPENSIVE:
-//       return "💲💲💲💲💲";
-//     default:
-//       return "N/A";
-//   }
 }

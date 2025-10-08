@@ -164,9 +164,28 @@ export default function AddActivityBtn({
                           </div>
                           <div>
                             <p>{place.displayName.text}</p>
-                            <p className="text-xs text-gray-500">
-                              {getPriceLevelIcons(place.priceLevel)}
-                            </p>
+                            <div className="flex items-center gap-2">
+                              <p className="text-xs text-gray-500 flex items-center">
+                                {place.rating ? (
+                                  <>
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className="inline-block h-4 w-4 mr-1"
+                                      fill="#fde68a"
+                                      viewBox="0 0 24 24"
+                                      stroke="none"
+                                    >
+                                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                                    </svg>
+                                    {place.rating}
+                                  </>
+                                ) : ""}
+                              </p>
+                              - 
+                              <p className="text-xs text-gray-500">
+                                {getPriceLevelIcons(place.priceLevel)}
+                              </p>
+                            </div>
                           </div>
                           <button
                             className="btn btn-sm btn-soft rounded-2xl"
