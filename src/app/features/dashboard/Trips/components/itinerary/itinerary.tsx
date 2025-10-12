@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useSearchParams } from "next/navigation";
 import { DayDropdown } from "@/app/features/dashboard/trips/components/day";
 import { addDayToTrip } from "./actions";
+import { useDragAndDrop } from "../itinerary/hooks/useDragAndDrop";
 
 async function getTripDays(tripId: number | null) {
   const url = `/api/trip-days${tripId !== null ? `?tripId=${tripId}` : ""}`;
@@ -35,6 +36,13 @@ export default function Itinerary() {
     },
   });
 
+  const dayDragAndDrop = useDragAndDrop({
+    itemType: "day",
+    onReorder: (dragIndex: number, hoverIndex: number, type: string) => {
+      console.log("Reorder", { dragIndex, hoverIndex, type });
+    },
+  });
+
   return (
     <div className="w-1/2 p-6 overflow-hidden">
       <h1 className="text-3xl font-bold mb-4">Trip to {destination}</h1>
@@ -58,7 +66,7 @@ export default function Itinerary() {
         <div className="overflow-y-auto max-h-[600px] pr-2">
           {data &&
             data.map((day: any, idx: number) => {
-              return (
+              return (     
                 <DayDropdown
                   key={day.dayNumber}
                   dayId={day.id}
@@ -71,6 +79,13 @@ export default function Itinerary() {
                       openDayDropdown === day.id ? null : day.id,
                     );
                   }}
+                  onDragStart={dayDragAndDrop.handleDragStart}
+                  onDragOver={dayDragAndDrop.handleDragOver}
+                  onDragEnter={dayDragAndDrop.handleDragEnter}
+                  onDragLeave={dayDragAndDrop.handleDragLeave}
+                  onDrop={dayDragAndDrop.handleDrop}
+                  isDragging={dayDragAndDrop.isDragging}
+                  isDraggingOver={dayDragAndDrop.isDragOver}
                 />
               );
             })}

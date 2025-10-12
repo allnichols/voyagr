@@ -42,6 +42,13 @@ export const DayDropdown = memo(function DayDropdown({
   days,
   isOpen,
   onToggle,
+  onDragStart,
+  onDragOver,
+  onDragEnter,
+  onDragLeave,
+  onDrop,
+  isDragging,
+  isDraggingOver,
 }: {
   dayId: number;
   dayNumber: number;
@@ -49,6 +56,18 @@ export const DayDropdown = memo(function DayDropdown({
   days: { id: number; dayNumber: number; tripId: number }[];
   isOpen: boolean;
   onToggle: () => void;
+  onDragStart: (
+    e: React.DragEvent,
+    index: number,
+    dayId: number,
+    dayNumber: number,
+  ) => void;
+  onDragOver: (e: React.DragEvent, index: number) => void;
+  onDragEnter: (e: React.DragEvent) => void;
+  onDragLeave: (e: React.DragEvent) => void;
+  onDrop: (e: React.DragEvent, dropIndex: number) => void;
+  isDragging: (index: number) => boolean;
+  isDraggingOver: (index: number) => boolean;
 }) {
   const setCurrentDay = useCurrentDay((state) => state.setCurrentDay);
   const currentDay = useCurrentDay((state) => state.currentDay.id);
@@ -83,7 +102,16 @@ export const DayDropdown = memo(function DayDropdown({
   return (
     <>
       {toast}
-      <div>
+      <div
+        draggable="true"
+        id={`day-${dayId}-${index}`}
+        className={`cursor-grab ${isDragging(index) ? "opacity-50" : "opacity-100"} ${isDraggingOver(index) ? "bg-base-200" : ""}`}
+        onDragStart={(e) => onDragStart(e, index, dayId, dayNumber)}
+        onDragOver={(e) => onDragOver(e, index)}
+        onDragEnter={onDragEnter}
+        onDragLeave={onDragLeave}
+        onDrop={(e) => onDrop(e, index)}
+      >
         <div className="flex items-center justify-between mb-4 rounded-lg ps-2 hover:bg-base-200">
           <div className="flex items-center gap-4 p-2">
             <button
@@ -137,7 +165,22 @@ export const DayDropdown = memo(function DayDropdown({
                 </p>
               </div>
 
-              <DragAndDropIndicator />
+              {/* <svg
+                width={24}
+                height={24}
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-label="Drag and drop indicator"
+              >
+               
+                <circle cx={7} cy={6} r={1.5} fill="currentColor" />
+                <circle cx={7} cy={12} r={1.5} fill="currentColor" />
+                <circle cx={7} cy={18} r={1.5} fill="currentColor" />
+               
+                <circle cx={17} cy={6} r={1.5} fill="currentColor" />
+                <circle cx={17} cy={12} r={1.5} fill="currentColor" />
+                <circle cx={17} cy={18} r={1.5} fill="currentColor" />
+              </svg> */}
             </div>
           </div>
           <DayMenu index={index} dayId={dayId} days={days} />
