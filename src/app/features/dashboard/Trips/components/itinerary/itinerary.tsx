@@ -41,7 +41,7 @@ export default function Itinerary() {
 
   const dayDragAndDrop = useDragAndDrop({
     itemType: "day",
-    onReorder: (dragIndex: number, hoverIndex: number, dayId: number, type: string) => {
+    onReorder: (hoverIndex: number, dayId: number, type: string) => {
       if(type === 'day') {
         const draggedDay = data.find((day: any) => day.id === dayId);
         reorderDayMutation.mutate({
