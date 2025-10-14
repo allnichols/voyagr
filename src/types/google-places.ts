@@ -12,8 +12,8 @@ export interface GooglePlace {
   iconMaskBaseUri?: string;
   iconBackgroundColor?: string;
   userRatingCount?: number;
-  internationalPhoneNumber?: number;
-  nationalPhoneNumber?: number;
+  internationalPhoneNumber?: string;
+  nationalPhoneNumber?: string;
   websiteUri?: string;
 }
 
