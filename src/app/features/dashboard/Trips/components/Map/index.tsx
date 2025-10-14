@@ -157,15 +157,15 @@ export default function Map() {
                       </div>
 
                       <div className="flex items-center gap-1">
-                        <MapPinIcon className="h-5 w-5 text-gray-500" />
-                        <p className="text-xs text-gray-500 ml-1">
+                        <MapPinIcon className="h-10 w-10 text-gray-500" />
+                        <p className="text-sm text-gray-500 m-2!">
                           {activity.address}
                         </p>
                       </div>
                       {activity.nationalPhoneNumber && (
                         <div className="flex items-center gap-1">
                           <PhoneIcon className="h-5 w-5 text-gray-500" />
-                          <p className="text-xs text-gray-500 ml-1">
+                          <p className="text-sm text-gray-500 m-2!">
                             {activity.nationalPhoneNumber}
                           </p>
                         </div>
@@ -173,17 +173,17 @@ export default function Map() {
                       {activity.internationalPhoneNumber && (
                         <div className="flex items-center gap-1">
                           <PhoneIcon className="h-5 w-5 text-gray-500" />
-                          <p className="text-xs text-gray-500 ml-1">
+                          <p className="text-sm text-gray-500 m-2!">
                             {activity.internationalPhoneNumber}
                           </p>
                         </div>
                       )}
                       {activity.websiteUri && (
                         <div className="flex items-center gap-1">
-                          <GlobeAltIcon className="h-10 w-10 text-gray-500" />
+                          <GlobeAltIcon className="h-5 w-5 text-gray-500" />
                           <a
                             href={activity.websiteUri}
-                            className="text-xs text-gray-500 ml-1"
+                            className="text-sm text-gray-500 m-2!"
                           >
                             {activity.websiteUri}
                           </a>
