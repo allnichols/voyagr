@@ -4,6 +4,7 @@ import type { UseMutationResult } from "@tanstack/react-query";
 export function useToastMutation(
   mutation: UseMutationResult<any, any, any, any>,
   duration = 3000,
+  message?: string
 ) {
   const [showToast, setShowToast] = useState(false);
 
@@ -20,14 +21,13 @@ export function useToastMutation(
   }, [mutation.isSuccess, mutation.isError, duration, mutation]);
 
   const toast = showToast && (
-    <div className="toast toast-center z-400">
+    <div className="toast toast-center z-900">
       <div
         className={`alert ${mutation.isError ? "alert-error" : "alert-success"}`}
       >
         <span>
-          {mutation.isError
-            ? `Could not delete ${mutation.data ?? ""}`
-            : `Successfully deleted ${mutation.data?.place ?? ""}`}
+          {message ? message : ""}
+          {mutation.isError ? mutation.error.message : "Operation successful!"}
         </span>
       </div>
     </div>
