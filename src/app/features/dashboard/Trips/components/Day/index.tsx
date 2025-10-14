@@ -6,33 +6,14 @@ import { useToastMutation } from "@/app/dashboard/hooks/useToastMutation";
 import { useCurrentDay } from "@/app/features/dashboard/store/currentDay";
 import AddActivityBtn from "./AddActivityBtn";
 import DayMenu from "./DayMenu";
+import { LocationIcon } from "public/icons/location";
+import Image from "next/image";
 
 async function getTripDayActivites(tripDayId: number | null) {
   const url = `/api/trip-activities${tripDayId !== null ? `?tripDayId=${tripDayId}` : ""}`;
   const res = await fetch(url, { method: "GET" });
   if (!res.ok) throw new Error("Failed to get trip day ativities");
   return res.json();
-}
-
-export function DragAndDropIndicator() {
-  return (
-    <svg
-      width={24}
-      height={24}
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-label="Drag and drop indicator"
-    >
-      {/* Left column */}
-      <circle cx={7} cy={6} r={1.5} fill="currentColor" />
-      <circle cx={7} cy={12} r={1.5} fill="currentColor" />
-      <circle cx={7} cy={18} r={1.5} fill="currentColor" />
-      {/* Right column */}
-      <circle cx={17} cy={6} r={1.5} fill="currentColor" />
-      <circle cx={17} cy={12} r={1.5} fill="currentColor" />
-      <circle cx={17} cy={18} r={1.5} fill="currentColor" />
-    </svg>
-  );
 }
 
 export const DayDropdown = memo(function DayDropdown({
@@ -181,7 +162,20 @@ export const DayDropdown = memo(function DayDropdown({
               key={activity.id}
               className={`flex justify-between items-center mb-4 rounded-lg border-2 border-base-200 p-4 opacity-0 transition-all duration-400 ${isOpen ? "block opacity-100" : "hidden"}`}
             >
-              <p className="text-xs font-semibold mb-1">{activity.place}</p>
+              <div className="flex gap-2 items-center">
+                {activity.iconMask ? (
+                  <Image
+                    width={15}
+                    height={15}
+                    src={`${activity.iconMask}.png`}
+                    alt="Place icon"
+                  />
+                ) : (
+                  <LocationIcon />
+                )}
+                <p className="text-xs font-semibold mb-1">{activity.place}</p>
+              </div>
+
               <div className="dropdown dropdown-top dropdown-left  z-10">
                 <div tabIndex={i} className="btn btn-ghost btn-circle">
                   <svg
