@@ -8,15 +8,13 @@ function AuthGuard({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    if (status === "loading") return; // Still loading
+    if (status === "loading") return;
     if (!session) {
-      // Not authenticated, redirect to login
       router.push("/auth/login");
       return;
     }
   }, [session, status, router]);
 
-  // Show loading while checking authentication
   if (status === "loading") {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -25,7 +23,6 @@ function AuthGuard({ children }: { children: ReactNode }) {
     );
   }
 
-  // Don't render children if not authenticated
   if (!session) {
     return null;
   }
