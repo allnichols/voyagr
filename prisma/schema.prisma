@@ -83,9 +83,18 @@ model TripActivity {
   gPlaceId  String?
   address   String?
   iconMask  String?
+  rating    Int?
+  priceLevel String?
+  userRatingCount Int?
+  currentOpeningHours Int?
+  internationalPhoneNumber String?
+  nationalPhoneNumber String?
+  websiteUri String?
+  types String?
   latitude  Float?
   longitude Float?
   createdAt DateTime @default(now())
+
 
   tripDay TripDay @relation(fields: [tripDayId], references: [id], onDelete: Cascade)
 }

@@ -32,7 +32,22 @@ export async function fetchPlace(query: string, destination: string | null) {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     "X-Goog-FieldMask":
-      "places.displayName,places.formattedAddress,places.location,places.priceLevel,places.id,places.types,places.iconMaskBaseUri,places.iconBackgroundColor,places.rating",
+      [
+        "places.displayName",
+        "places.formattedAddress",
+        "places.location",
+        "places.priceLevel",
+        "places.priceRange",
+        "places.id",
+        "places.types",
+        "places.iconMaskBaseUri",
+        "places.iconBackgroundColor",
+        "places.rating",
+        "places.userRatingCount",
+        "places.internationalPhoneNumber",
+        "places.nationalPhoneNumber",
+        "places.websiteUri"
+      ].join(","),
   };
   if (process.env.GOOGLE_MAPS_API_KEY) {
     headers["X-Goog-Api-Key"] = process.env.GOOGLE_MAPS_API_KEY;
@@ -73,6 +88,13 @@ export async function addActivity(place: GooglePlace, dayId: number) {
         latitude: place.location.latitude,
         longitude: place.location.longitude,
         tripDayId: dayId,
+        websiteUri: place.websiteUri || null,
+        internationalPhoneNumber: place.internationalPhoneNumber || null,
+        nationalPhoneNumber: place.nationalPhoneNumber || null,
+        rating: place.rating || null,
+        userRatingCount: place.userRatingCount || null,
+        priceLevel: place.priceLevel || null,
+        types: place.types ? place.types.join(",") : null,
       },
     });
     return newActivity;

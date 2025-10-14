@@ -12,6 +12,7 @@ export function GooglePlaceResults({
   if (places.length === 0) {
     return <p className="text-center">No results found</p>;
   }
+  
   return (
     <ul className="list">
       {places.map((place) => (

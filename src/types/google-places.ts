@@ -11,6 +11,10 @@ export interface GooglePlace {
   rating?: number;
   iconMaskBaseUri?: string;
   iconBackgroundColor?: string;
+  userRatingCount?: number;
+  internationalPhoneNumber?: number;
+  nationalPhoneNumber?: number;
+  websiteUri?: string;
 }
 
 export type Location = {
