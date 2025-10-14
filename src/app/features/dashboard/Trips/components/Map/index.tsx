@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useCurrentDay } from "@/app/features/dashboard/store/currentDay";
 import ErrorBoundary from "@/app/utils/ErrorBoundry";
 import { TripActivity } from "@prisma/client";
+import { MapPinIcon, PhoneIcon, GlobeAltIcon } from "@heroicons/react/24/solid";
 import "leaflet/dist/leaflet.css";
 import "./popup.css";
 
@@ -126,8 +127,69 @@ export default function Map() {
                 position={[activity.latitude ?? 0, activity.longitude ?? 0]}
               >
                 <Popup>
-                  <div>
-                    <button className="btn btn-sm btn-ghost">Details</button>
+                  <div className="card">
+                    <div className="card-body gap-0">
+                      <h2 className="text-xl ellipsis mb-[-10px]">
+                        {activity.place}
+                      </h2>
+                      <div className="flex mt-0 gap-1.5 border-b border-gray-200 pb-1">
+                        <div className="flex items-center gap-1">
+                          <p>{activity.rating}</p>
+                          <div className="rating rating-xs rating-half">
+                            {[0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map(
+                              (value, idx) => (
+                                <input
+                                  key={value}
+                                  type="radio"
+                                  name={`rating-${activity.id}`}
+                                  className={`mask mask-star-2 mask-half-${idx % 2 === 0 ? 1 : 2} bg-yellow-300`}
+                                  aria-label={`${value} star`}
+                                  defaultChecked={activity.rating === value}
+                                  disabled
+                                />
+                              ),
+                            )}
+                          </div>
+                        </div>
+                        <p>{
+                          activity.userRatingCount ? `(${activity.userRatingCount})` : "0"
+                        }</p>
+                      </div>
+
+                      <div className="flex items-center gap-1">
+                        <MapPinIcon className="h-5 w-5 text-gray-500" />
+                        <p className="text-xs text-gray-500 ml-1">
+                          {activity.address}
+                        </p>
+                      </div>
+                      {activity.nationalPhoneNumber && (
+                        <div className="flex items-center gap-1">
+                          <PhoneIcon className="h-5 w-5 text-gray-500" />
+                          <p className="text-xs text-gray-500 ml-1">
+                            {activity.nationalPhoneNumber}
+                          </p>
+                        </div>
+                      )}
+                      {activity.internationalPhoneNumber && (
+                        <div className="flex items-center gap-1">
+                          <PhoneIcon className="h-5 w-5 text-gray-500" />
+                          <p className="text-xs text-gray-500 ml-1">
+                            {activity.internationalPhoneNumber}
+                          </p>
+                        </div>
+                      )}
+                      {activity.websiteUri && (
+                        <div className="flex items-center gap-1">
+                          <GlobeAltIcon className="h-10 w-10 text-gray-500" />
+                          <a
+                            href={activity.websiteUri}
+                            className="text-xs text-gray-500 ml-1"
+                          >
+                            {activity.websiteUri}
+                          </a>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </Popup>
               </Marker>

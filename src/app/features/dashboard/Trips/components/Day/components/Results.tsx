@@ -1,6 +1,7 @@
 import { GooglePlace } from "@/types/google-places";
 import Image from "next/image";
 import { getPriceLevelIcons } from "../utils";
+import { MapPinIcon } from "@heroicons/react/24/outline";
 
 export function GooglePlaceResults({
   places,
@@ -18,16 +19,8 @@ export function GooglePlaceResults({
       {places.map((place) => (
         <li key={place.id} className="list-row items-center">
           <div>
-            {place.iconMaskBaseUri ? (
-              <div className="w-4 h-4 bg-base-200">
-                <Image
-                  width={15}
-                  height={15}
-                  src={`${place.iconMaskBaseUri}.png`}
-                  alt="Place icon"
-                />
-              </div>
-            ) : (
+            {/* if  generic_pinlet is part of the iconMask show default icon svg  */}
+            {place.iconMaskBaseUri?.includes("generic_pinlet") ? (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -47,6 +40,15 @@ export function GooglePlaceResults({
                   d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
                 />
               </svg>
+            ) : place.iconMaskBaseUri ? (
+              <Image
+                width={15}
+                height={15}
+                src={`${place.iconMaskBaseUri}.png`}
+                alt="Place icon"
+              />
+            ) : (
+              <MapPinIcon className="h-6 w-6 text-gray-500" />
             )}
           </div>
           <div>
