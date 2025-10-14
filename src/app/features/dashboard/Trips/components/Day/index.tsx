@@ -103,9 +103,9 @@ export const DayDropdown = memo(function DayDropdown({
     <>
       {toast}
       <div
-        draggable="true"
+        draggable={isOpen ? false : true}
         id={`day-${dayId}-${index}`}
-        className={`cursor-grab ${isDragging(index) ? "opacity-50" : "opacity-100"} ${isDraggingOver(index) ? "bg-base-200" : ""}`}
+        className={`${isOpen ? "" : "cursor-grab"} ${isDragging(index) ? "opacity-50" : "opacity-100"} ${isDraggingOver(index) ? "bg-base-200" : ""}`}
         onDragStart={(e) => onDragStart(e, index, dayId, dayNumber)}
         onDragOver={(e) => onDragOver(e, index)}
         onDragEnter={onDragEnter}
