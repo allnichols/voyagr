@@ -5,6 +5,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { DayDropdown } from "@/app/features/dashboard/trips/components/day";
 import { addDayToTrip } from "./actions";
 import { useDragAndDrop } from "../itinerary/hooks/useDragAndDrop";
+import { useReorderDay } from "./hooks/useItineraryMutation";
 
 async function getTripDays(tripId: number | null) {
   const url = `/api/trip-days${tripId !== null ? `?tripId=${tripId}` : ""}`;
@@ -19,6 +20,7 @@ export default function Itinerary() {
   const queryClient = useQueryClient();
   const destination = searchParams.get("destination");
   const tripId = params?.tripId ? Number(params.tripId) : null;
+  const reorderDayMutation = useReorderDay();
 
   const [openDayDropdown, setOpenDayDropdown] = useState<number | null>(null);
 
@@ -39,7 +41,14 @@ export default function Itinerary() {
   const dayDragAndDrop = useDragAndDrop({
     itemType: "day",
     onReorder: (dragIndex: number, hoverIndex: number, type: string) => {
-      console.log("Reorder", { dragIndex, hoverIndex, type });
+      if(type === 'day') {
+        const draggedDay = data.days[dragIndex];
+        reorderDayMutation.mutate({
+          tripId: tripId as number,
+          dayId: draggedDay.id,
+          newPosition: hoverIndex,
+        });
+      }
     },
   });
 
