@@ -7,11 +7,11 @@ interface DragItem {
 }
 
 interface DragAndDropProps {
-  onReorder: (dragIndex: number, hoverIndex: number, type: string) => void;
+  onReorder: (dragIndex: number, hoverIndex: number, dayId: number, type: string) => void;
   itemType: string;
 }
 
-export const useDragAndDrop = ({ itemType }: DragAndDropProps) => {
+export const useDragAndDrop = ({ onReorder, itemType }: DragAndDropProps) => {
   const [draggedItem, setDraggedItem] = useState<DragItem | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
@@ -51,10 +51,9 @@ export const useDragAndDrop = ({ itemType }: DragAndDropProps) => {
     if(!data) return;
 
     const dragItem: DragItem = JSON.parse(data);
+    console.log("Drop", { dragItem, dropIndex });
     if (dragItem && dragItem.type === itemType) {
-      console.log("Drop", { dragItem, dropIndex });
-      // Call the onReorder callback here if needed
-      // onReorder(dragItem.index, dropIndex, itemType);
+     onReorder(dragItem.index, dropIndex, dragItem.dayId, dragItem.type);
     }
 
     setDraggedItem(null);

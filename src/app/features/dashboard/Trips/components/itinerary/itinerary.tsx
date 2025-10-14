@@ -6,6 +6,7 @@ import { DayDropdown } from "@/app/features/dashboard/trips/components/day";
 import { addDayToTrip } from "./actions";
 import { useDragAndDrop } from "../itinerary/hooks/useDragAndDrop";
 import { useReorderDay } from "./hooks/useItineraryMutation";
+import { useToastMutation } from "@/app/dashboard/hooks/useToastMutation";
 
 async function getTripDays(tripId: number | null) {
   const url = `/api/trip-days${tripId !== null ? `?tripId=${tripId}` : ""}`;
@@ -40,9 +41,9 @@ export default function Itinerary() {
 
   const dayDragAndDrop = useDragAndDrop({
     itemType: "day",
-    onReorder: (dragIndex: number, hoverIndex: number, type: string) => {
+    onReorder: (dragIndex: number, hoverIndex: number, dayId: number, type: string) => {
       if(type === 'day') {
-        const draggedDay = data.days[dragIndex];
+        const draggedDay = data.find((day: any) => day.id === dayId);
         reorderDayMutation.mutate({
           tripId: tripId as number,
           dayId: draggedDay.id,
@@ -52,7 +53,11 @@ export default function Itinerary() {
     },
   });
 
+  const toast = useToastMutation(reorderDayMutation, 3000);
+
   return (
+    <>
+      {toast}
     <div className="w-1/2 p-6 overflow-hidden">
       <h1 className="text-3xl font-bold mb-4">Trip to {destination}</h1>
       <div className="divider" />
@@ -106,5 +111,6 @@ export default function Itinerary() {
         </div>
       </div>
     </div>
+    </>
   );
 }
