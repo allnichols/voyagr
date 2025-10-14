@@ -47,7 +47,7 @@ export default function Itinerary() {
         reorderDayMutation.mutate({
           tripId: tripId as number,
           dayId: draggedDay.id,
-          newPosition: hoverIndex,
+          newPosition: hoverIndex + 1,
         });
       }
     },

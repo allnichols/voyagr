@@ -13,6 +13,7 @@ export async function GET(req: NextRequest) {
 
     let tripDays = await prisma.tripDay.findMany({
       where: { tripId: Number(tripId) },
+      orderBy: { dayNumber: "asc" },
     });
 
     return new Response(JSON.stringify(tripDays), { status: 200 });
