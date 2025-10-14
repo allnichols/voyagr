@@ -164,23 +164,6 @@ export const DayDropdown = memo(function DayDropdown({
                   {dayNumber}
                 </p>
               </div>
-
-              {/* <svg
-                width={24}
-                height={24}
-                viewBox="0 0 24 24"
-                fill="none"
-                aria-label="Drag and drop indicator"
-              >
-               
-                <circle cx={7} cy={6} r={1.5} fill="currentColor" />
-                <circle cx={7} cy={12} r={1.5} fill="currentColor" />
-                <circle cx={7} cy={18} r={1.5} fill="currentColor" />
-               
-                <circle cx={17} cy={6} r={1.5} fill="currentColor" />
-                <circle cx={17} cy={12} r={1.5} fill="currentColor" />
-                <circle cx={17} cy={18} r={1.5} fill="currentColor" />
-              </svg> */}
             </div>
           </div>
           <DayMenu index={index} dayId={dayId} days={days} />
@@ -196,7 +179,7 @@ export const DayDropdown = memo(function DayDropdown({
           {activities?.map((activity: any, i: number) => (
             <div
               key={activity.id}
-              className={`flex justify-between align-bottom mb-4 rounded-lg border-2 border-base-200 p-4 opacity-0 transition-all duration-400 ${isOpen ? "block opacity-100" : "hidden"}`}
+              className={`flex justify-between items-center mb-4 rounded-lg border-2 border-base-200 p-4 opacity-0 transition-all duration-400 ${isOpen ? "block opacity-100" : "hidden"}`}
             >
               <p className="text-xs font-semibold mb-1">{activity.place}</p>
               <div className="dropdown dropdown-top dropdown-left  z-10">
