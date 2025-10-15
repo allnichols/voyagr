@@ -1,12 +1,10 @@
 import { NextRequest } from "next/server";
 import { auth } from '@/app/api/auth/[...nextauth]/auth';
-import { PrismaClient } from "@prisma/client";
 import prisma from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
 
   const session = await auth();
-  console.log("Session in get-trips:", session);
   if (!session?.user) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,

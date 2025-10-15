@@ -13,17 +13,27 @@ export default async function getGooglePlaces(
 
   const googlePlaces = Promise.all(
     parseAiResponse.map(async (dayPlan) => {
-      console.log(`Processing day plan:`, dayPlan.day, `with ${dayPlan.activities.length} activities`);
-      
+
       try {
         const activityResults = await Promise.all(
           dayPlan.activities.map(async (activity) => {
-            console.log(`Processing activity: "${activity.place}" in ${destination}`);
-            
+
             const headers: Record<string, string> = {
               "Content-Type": "application/json",
-              "X-Goog-FieldMask":
-                "places.displayName,places.formattedAddress,places.location,places.priceLevel,places.id,places.types,places.iconMaskBaseUri",
+              "X-Goog-FieldMask": [
+                "places.displayName",
+                "places.formattedAddress",
+                "places.location",
+                "places.priceLevel",
+                "places.id",
+                "places.types",
+                "places.iconMaskBaseUri",
+                "places.rating",
+                "places.userRatingCount",
+                "places.internationalPhoneNumber",
+                "places.nationalPhoneNumber",
+                "places.websiteUri",
+              ].join(","),
               "X-Goog-Api-Key": process.env.GOOGLE_MAPS_API_KEY!,
             };
 
@@ -40,26 +50,24 @@ export default async function getGooglePlaces(
             );
 
             if (!res.ok) {
-              const errorText = await res.text();
-              console.error("Google API error:", res.status, res.statusText, errorText);
-              throw new Error(`Google API request failed: ${res.status} ${res.statusText}`);
+              throw new Error(
+                `Google API request failed: ${res.status} ${res.statusText}`,
+              );
             }
 
             const data = await res.json();
 
             if (!data.places || data.places.length === 0) {
-              console.warn(`No places found for "${activity.place} in ${destination}"`);
-              throw new Error(`No places found for "${activity.place} in ${destination}"`);
+              console.warn(
+                `No places found for "${activity.place} in ${destination}"`,
+              );
+              throw new Error(
+                `No places found for "${activity.place} in ${destination}"`,
+              );
             }
 
             const place = data.places[0];
-            console.log('place details:', place);
-            console.log(`Found place for "${activity.place}":`, {
-              id: place.id,
-              displayName: place.displayName?.text,
-              address: place.formattedAddress
-            });
-            
+
             return {
               gPlaceId: place.id,
               address: place.formattedAddress,
@@ -68,10 +76,22 @@ export default async function getGooglePlaces(
               place: place.displayName?.text,
               timeOfDay: activity.time,
               iconMask: place.iconMaskBaseUri ? place.iconMaskBaseUri : null,
+              rating: place.rating ? place.rating : null,
+              userRatingCount: place.userRatingCount ? place.userRatingCount : null,
+              websiteUri: place.websiteUri ? place.websiteUri : null,
+              internationalPhoneNumber: place.internationalPhoneNumber
+                ? place.internationalPhoneNumber
+                : null,
+              nationalPhoneNumber: place.nationalPhoneNumber
+                ? place.nationalPhoneNumber
+                : null,
+              priceLevel: place.priceLevel ? place.priceLevel : null,
+              types: place.types ? place.types : null,
+            
             };
-          })
+          }),
         );
-        
+
         const tripDay = {
           date: dayPlan.date,
           dayNumber: dayPlan.day,
@@ -79,10 +99,14 @@ export default async function getGooglePlaces(
         };
 
         return tripDay;
-        
       } catch (error) {
-        console.error(`Error processing day ${dayPlan.day}:`, error instanceof Error ? error.message : String(error));
-        throw new Error(`Error getting places from google for day ${dayPlan.day}: ${error instanceof Error ? error.message : String(error)}`);
+        console.error(
+          `Error processing day ${dayPlan.day}:`,
+          error instanceof Error ? error.message : String(error),
+        );
+        throw new Error(
+          `Error getting places from google for day ${dayPlan.day}: ${error instanceof Error ? error.message : String(error)}`,
+        );
       }
     }),
   );
