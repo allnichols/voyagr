@@ -2,13 +2,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import CreateTripForm from "./create-trip-form";
+import { DateRange } from "react-day-picker";
 
 export default function CreateTrip() {
   const router = useRouter();
   const [formData, setFormData] = useState({
+    dates: undefined as DateRange | undefined,
     destination: "",
-    departureDate: "",
-    returnDate: "",
     preferences: [] as string[],
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -28,9 +28,16 @@ export default function CreateTrip() {
     }));
   };
 
+  const handleDateChange = (dates: DateRange) => {
+    setFormData((prevData) => {
+      return { ...prevData, dates };
+    });
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setErrorMessage(null);
     fetch("http://localhost:3000/api/get-ai-response", {
       method: "POST",
       headers: {
@@ -59,6 +66,7 @@ export default function CreateTrip() {
   return (
     <CreateTripForm
       formData={formData}
+      handleDateChange={handleDateChange}
       handleChange={handleChange}
       handleSubmit={handleSubmit}
       errorMessage={errorMessage}

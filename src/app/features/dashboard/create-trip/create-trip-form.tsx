@@ -6,8 +6,6 @@ type CreateTripFormProps = {
   formData: {
     dates: DateRange | undefined;
     destination: string;
-    departureDate: string;
-    returnDate: string;
     preferences: string[];
   };
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -82,6 +80,15 @@ export default function CreateTripForm({
             mode="range"
             selected={formData.dates}
             onSelect={(date) => handleDateChange(date as DateRange)}
+            disabled={{
+              before: new Date(),
+              after: (() => {
+                const d = new Date();
+                d.setMonth(d.getMonth() + 1);
+                return d;
+              })(),
+            }}
+            numberOfMonths={1}
           />
         </div>
 
@@ -171,11 +178,7 @@ export default function CreateTripForm({
 
         <button
           type="submit"
-          disabled={
-            !formData.destination ||
-            !formData.departureDate ||
-            !formData.returnDate
-          }
+          disabled={!formData.destination || !formData.dates}
           className={`btn btn-primary w-full py-4 text-lg font-bold`}
         >
           {loading ? (
