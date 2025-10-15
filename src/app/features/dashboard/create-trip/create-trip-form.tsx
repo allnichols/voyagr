@@ -1,7 +1,10 @@
 "use client";
+import { DayPicker, DateRange } from "react-day-picker";
+import "react-day-picker/style.css";
 
 type CreateTripFormProps = {
   formData: {
+    dates: DateRange | undefined;
     destination: string;
     departureDate: string;
     returnDate: string;
@@ -9,6 +12,7 @@ type CreateTripFormProps = {
   };
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleSubmit: (e: React.FormEvent) => void;
+  handleDateChange: (dates: DateRange) => void;
   loading?: boolean;
   errorMessage?: string | null;
 };
@@ -17,12 +21,13 @@ export default function CreateTripForm({
   formData,
   handleChange,
   handleSubmit,
+  handleDateChange,
   errorMessage,
   loading = false,
 }: CreateTripFormProps) {
   return (
     <div className="mt-10 p-6 bg-white rounded-lg shadow-md w-full max-w-lg">
-      <h1 className="text-xl mb-4 text-center font-bold">Create your trip</h1>
+      <h1 className="text-2xl mb-4 text-center font-bold">Create your trip</h1>
       {errorMessage && (
         <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
           {errorMessage}
@@ -47,42 +52,40 @@ export default function CreateTripForm({
         </div>
 
         {/* Departure and Return Dates */}
-        <div className="mb-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="departure-date"
-            >
-              Departure Date
-            </label>
-            <input
-              id="departure-date"
-              type="date"
-              className="input shadow"
-              name="departureDate"
-              value={formData.departureDate}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="return-date"
-            >
-              Return Date
-            </label>
-            <input
-              id="return-date"
-              type="date"
-              className="input shadow"
-              name="returnDate"
-              value={formData.returnDate}
-              onChange={handleChange}
-            />
-          </div>
+        <div className="mb-8">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="dates"
+          >
+            Travel Dates
+          </label>
+          <button
+            type="button"
+            popoverTarget="rdp-popover"
+            className="input input-border"
+            style={{ anchorName: "--rdp" } as React.CSSProperties}
+          >
+            {formData.dates && formData.dates.from
+              ? `${formData.dates.from.toLocaleDateString()}${formData.dates.to ? " - " + formData.dates.to.toLocaleDateString() : ""}`
+              : "Pick a date"}
+          </button>
         </div>
-        <h2 className="text-2xl font-bold">Travel Preferences</h2>
+
+        <div
+          popover="auto"
+          id="rdp-popover"
+          className="dropdown"
+          style={{ positionAnchor: "--rdp" } as React.CSSProperties}
+        >
+          <DayPicker
+            className="react-day-picker"
+            mode="range"
+            selected={formData.dates}
+            onSelect={(date) => handleDateChange(date as DateRange)}
+          />
+        </div>
+
+        <h2 className="text-sm font-bold">Travel Preferences</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8 mt-4">
           <label className="label">
             <input
