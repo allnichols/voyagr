@@ -249,11 +249,11 @@ export default function Map() {
                         </div>
                       )}
                       {activity.websiteUri && (
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-1 text-ellipsis">
                           <GlobeAltIcon className="h-5 w-5 text-gray-500" />
                           <a
                             href={activity.websiteUri}
-                            className="text-sm text-gray-500 m-2!"
+                            className="text-sm  text-gray-500 m-2! overflow-hidden text-ellipsis whitespace-nowrap max-w-48 block"
                           >
                             {activity.websiteUri}
                           </a>
