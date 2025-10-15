@@ -80,7 +80,7 @@ export default function Trips() {
       <div className="grid gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
         {data?.map((trip:any) => {
           return (
-            <div className="card border-1 border-base-200" key={trip.id}>
+            <div className="card border-1 border-base-200 shadow-md" key={trip.id}>
               <div className="card-body">
                 <h2 className="card-title">{trip.destination}</h2>
                 <div>
@@ -109,13 +109,8 @@ export default function Trips() {
                 </div>
 
                 <div className="mt-4 mb-4">
-                  <h3 className="text-[#717182">Preferences:</h3>
-                  <div className="mt-1">
-                    {trip?.preferences?.length === 0 && (
-                      <span className="italic text-base-400">
-                        No preferences set
-                      </span>
-                    )}
+                  <div className="flex flex-wrap gap-1">
+                    
                     {trip?.preferences?.map((pref:string) => (
                       <span
                         key={pref}
