@@ -1,4 +1,4 @@
-export default function parseTextReponse(responseText: string) {
+export default async function parseTextReponse(responseText: string) {
   const lines = responseText
     .split("\n")
     .map((line) => line.trim())
