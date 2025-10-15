@@ -31,6 +31,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
+
     const response: GenerateContentResponse = await ai.models.generateContent({
       model: "gemini-2.5-flash-lite",
       contents: `Create a travel itinerary for the following details:
@@ -38,7 +39,8 @@ export async function POST(req: NextRequest) {
                     Dates: from ${formData.dates.from} to ${formData.dates.to},
                     Preferences: ${formData.preferences.join(", ")}
 
-                    and respond with the following format
+                    and respond with the following format. Do not use any other format:
+                    Avoid using ** or any markdown formatting. Just plain text.
 
                     Day {day} - {date}
                     Time: {morning | afternoon | evening}
@@ -55,8 +57,10 @@ export async function POST(req: NextRequest) {
 
     const aiResponse =
       response.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+    console.log("Raw AI Response:", aiResponse);
       
     const parsedResponse = await parseTextReponse(aiResponse);
+      console.log("Parsed AI Response:", parsedResponse);
 
     if(parsedResponse.length === 0) {
       return NextResponse.json(
@@ -78,6 +82,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    console.log("Final structured itinerary with Google Places data:", googlePlaces);
+
     const createdTrip = await prisma.trip.create({
       data: {
         userId: Number(session.user.id),
@@ -97,6 +103,14 @@ export async function POST(req: NextRequest) {
                 longitude: activity.longitude,
                 latitude: activity.latitude,
                 gPlaceId: activity.gPlaceId,
+                iconMask: activity.iconMask,
+                rating: activity.rating,
+                userRatingCount: activity.userRatingCount,
+                websiteUri: activity.websiteUri,
+                internationalPhoneNumber: activity.internationalPhoneNumber,
+                nationalPhoneNumber: activity.nationalPhoneNumber,
+                priceLevel: activity.priceLevel,
+                types: activity.types.join(", "),
               })),
             },
           })),
