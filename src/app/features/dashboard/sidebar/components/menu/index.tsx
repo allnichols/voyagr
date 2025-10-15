@@ -32,12 +32,10 @@ export default function Menu() {
       {/* Mobile Overlay */}
       {isOpen && (
         <div 
-          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+          className="lg:hidden fixed inset-0 bg-[#00000036] bg-opacity-60 z-40"
           onClick={() => setIsOpen(false)}
         />
       )}
-
-      {/* Sidebar */}
       <aside className={`
         w-[225px] bg-white border-r border-base-200 transition-transform duration-300 ease-in-out z-50
         lg:relative lg:translate-x-0

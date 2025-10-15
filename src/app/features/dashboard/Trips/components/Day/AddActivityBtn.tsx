@@ -73,7 +73,7 @@ export default function AddActivityBtn({
         Add Activity
       </button>
       <dialog id={modalId} className="modal">
-        <div className="modal-box max-h-[500px] flex flex-col overflow-hidden">
+        <div className="modal-box h-[550px] flex flex-col overflow-hidden">
           <div className="modal-action">
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
@@ -83,7 +83,7 @@ export default function AddActivityBtn({
             </form>
           </div>
 
-          <div>
+          <div className="flex items-center mb-4">
             <label className="input mt-2">
               <svg
                 className="h-[1em] opacity-50"
@@ -120,13 +120,18 @@ export default function AddActivityBtn({
           </div>
 
           <div className="mt-4 flex-1 flex flex-col min-h-0">
+            {!data && !isLoading && (
+              <p className="text-sm text-base-500">
+                Enter a search term to find places to add to your itinerary.
+              </p>
+            )}
             {isLoading && <p>Loading...</p>}
             {data && (
               <div className="flex-1 flex flex-col min-h-0">
                 <h2 className="font-bold text-lg">Results:</h2>
                 {data.places.length === 0 && <p>No places found.</p>}
                 <div className="mt-2 overflow-y-auto">
-                  <GooglePlaceResults 
+                  <GooglePlaceResults
                     places={data.places}
                     onSelect={(place) => handleAddActivity(place, dayId)}
                   />
