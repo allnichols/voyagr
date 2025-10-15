@@ -9,6 +9,7 @@ import { TripActivity } from "@prisma/client";
 import { MapPinIcon, PhoneIcon, GlobeAltIcon } from "@heroicons/react/24/solid";
 import "leaflet/dist/leaflet.css";
 import "./popup.css";
+import React from "react";
 
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
@@ -50,20 +51,62 @@ async function getDestinationLatLong(destination: string) {
   let country = destination.split(",").slice(-1)[0].trim();
 
   const usStates = [
-    'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 
-    'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 
-    'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 
-    'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 
-    'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 
-    'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 
-    'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 
-    'Wisconsin', 'Wyoming'
+    "Alabama",
+    "Alaska",
+    "Arizona",
+    "Arkansas",
+    "California",
+    "Colorado",
+    "Connecticut",
+    "Delaware",
+    "Florida",
+    "Georgia",
+    "Hawaii",
+    "Idaho",
+    "Illinois",
+    "Indiana",
+    "Iowa",
+    "Kansas",
+    "Kentucky",
+    "Louisiana",
+    "Maine",
+    "Maryland",
+    "Massachusetts",
+    "Michigan",
+    "Minnesota",
+    "Mississippi",
+    "Missouri",
+    "Montana",
+    "Nebraska",
+    "Nevada",
+    "New Hampshire",
+    "New Jersey",
+    "New Mexico",
+    "New York",
+    "North Carolina",
+    "North Dakota",
+    "Ohio",
+    "Oklahoma",
+    "Oregon",
+    "Pennsylvania",
+    "Rhode Island",
+    "South Carolina",
+    "South Dakota",
+    "Tennessee",
+    "Texas",
+    "Utah",
+    "Vermont",
+    "Virginia",
+    "Washington",
+    "West Virginia",
+    "Wisconsin",
+    "Wyoming",
   ];
 
-  if(usStates.includes(country)) {
+  if (usStates.includes(country)) {
     country = "USA";
   }
-  
+
   const res = await fetch(
     `https://nominatim.openstreetmap.org/search?city=${city}&country=${country}&format=json`,
   );
@@ -151,25 +194,36 @@ export default function Map() {
                       <div className="flex mt-0 gap-1.5 border-b border-gray-200 pb-1">
                         <div className="flex items-center gap-1">
                           <p>{activity.rating}</p>
-                          <div className="rating rating-xs rating-half">
-                            {[0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map(
-                              (value, idx) => (
+                          <div className="rating rating-sm rating-half">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <React.Fragment key={star}>
                                 <input
-                                  key={value}
                                   type="radio"
                                   name={`rating-${activity.id}`}
-                                  className={`mask mask-star-2 mask-half-${idx % 2 === 0 ? 1 : 2} bg-yellow-300`}
-                                  aria-label={`${value} star`}
-                                  defaultChecked={activity.rating === value}
+                                  className="mask mask-star-2 mask-half-1 bg-yellow-300 cursor-none"
+                                  aria-label={`${star - 0.5} star`}
+                                  defaultChecked={
+                                    activity.rating === star - 0.5
+                                  }
                                   disabled
                                 />
-                              ),
-                            )}
+                                <input
+                                  type="radio"
+                                  name={`rating-${activity.id}`}
+                                  className="mask mask-star-2 mask-half-2 bg-yellow-300 cursor-none"
+                                  aria-label={`${star} star`}
+                                  defaultChecked={activity.rating === star}
+                                  disabled
+                                />
+                              </React.Fragment>
+                            ))}
                           </div>
                         </div>
-                        <p>{
-                          activity.userRatingCount ? `(${activity.userRatingCount})` : "0"
-                        }</p>
+                        <p>
+                          {activity.userRatingCount
+                            ? `(${activity.userRatingCount})`
+                            : "0"}
+                        </p>
                       </div>
 
                       <div className="flex items-center gap-1">
