@@ -7,7 +7,7 @@ export default function MapToggle() {
   const [showMap, setShowMap] = useState(false);
 
   return (
-    <div className="md:hidden absolute top-[-40px] right-0 z-10">
+    <div className="md:hidden absolute top-[-40px] right-0 z-30">
       <button
         className="btn btn-primary btn-soft"
         onClick={() => setShowMap(!showMap)}
