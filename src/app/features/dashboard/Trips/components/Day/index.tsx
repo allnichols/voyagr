@@ -176,7 +176,7 @@ export const DayDropdown = memo(function DayDropdown({
                 <p className="text-xs font-semibold mb-1">{activity.place}</p>
               </div>
 
-              <div className="dropdown dropdown-top dropdown-left  z-10">
+              <div className="dropdown dropdown-top dropdown-left">
                 <div tabIndex={i} className="btn btn-ghost btn-circle">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -196,7 +196,7 @@ export const DayDropdown = memo(function DayDropdown({
                 </div>
                 <ul
                   tabIndex={i}
-                  className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-xl/20"
+                  className="dropdown-content menu bg-base-100 rounded-box  w-52 p-2 shadow-xl/20"
                 >
                   <li className="p-2 font-semibold">
                     <a onClick={() => handleDeleteActvity(activity.id)}>

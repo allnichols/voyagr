@@ -36,7 +36,7 @@ export default function DayMenu({ index, dayId, days }: DayMenuProps) {
 
   return (
     <div className="mr-2">
-      <div className="dropdown dropdown-top dropdown-left z-100">
+      <div className="dropdown dropdown-top dropdown-left z-20">
         <div
           tabIndex={index}
           role="button"
