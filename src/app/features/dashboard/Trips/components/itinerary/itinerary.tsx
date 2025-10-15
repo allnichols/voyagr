@@ -58,7 +58,7 @@ export default function Itinerary() {
   return (
     <>
       {toast}
-    <div className="w-1/2 p-6 overflow-hidden">
+    <div className="p-6 overflow-hidden">
       <h1 className="text-3xl font-bold mb-4">Trip to {destination}</h1>
       <div className="divider" />
       <div className="space-y-4">
