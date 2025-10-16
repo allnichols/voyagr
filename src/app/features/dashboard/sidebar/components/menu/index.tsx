@@ -12,7 +12,7 @@ export default function Menu() {
   return (
     <>
       {/* Mobile Menu Button - Only visible on mobile */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
+      <div className="md:hidden fixed top-4 left-4 z-50">
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="btn btn-square btn-ghost bg-white shadow-md"
@@ -32,13 +32,13 @@ export default function Menu() {
       {/* Mobile Overlay */}
       {isOpen && (
         <div 
-          className="lg:hidden fixed inset-0 bg-[#00000036] bg-opacity-60 z-40"
+          className="md:hidden fixed inset-0 bg-[#00000036] bg-opacity-60 z-40"
           onClick={() => setIsOpen(false)}
         />
       )}
       <aside className={`
         w-[225px] bg-white border-r border-base-200 transition-transform duration-300 ease-in-out z-50
-        lg:relative lg:translate-x-0
+        md:relative md:translate-x-0
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         ${window?.innerWidth < 1024 ? 'fixed top-0 left-0 h-full' : ''}
       `}>
@@ -49,7 +49,7 @@ export default function Menu() {
             {/* Close button for mobile */}
             <button 
               onClick={() => setIsOpen(false)}
-              className="btn btn-ghost btn-sm lg:hidden"
+              className="btn btn-ghost btn-sm md:hidden"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
