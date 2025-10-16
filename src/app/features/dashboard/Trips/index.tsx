@@ -107,21 +107,7 @@ export default function Trips() {
                     </p>
                   </div>
                 </div>
-
-                <div className="mt-4 mb-4">
-                  <div className="flex flex-wrap gap-1">
-                    
-                    {trip?.preferences?.map((pref:string) => (
-                      <span
-                        key={pref}
-                        className="badge badge-outline badge-secondary mr-1"
-                      >
-                        {pref}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div className="card-actions justify-end">
+                <div className="card-actions mt-2">
                   <button
                     onClick={() => handleViewTrip(trip.id, trip.destination)}
                     className="btn btn-sm btn-primary rounded-sm"
@@ -131,7 +117,7 @@ export default function Trips() {
                   </button>
                   <button
                     onClick={() => removeTripMutation.mutate(trip.id)}
-                    className="btn btn-sm btn-outline btn-accent rounded-sm"
+                    className="btn btn-sm btn-outline btn-error rounded-sm"
                     type="button"
                   >
                     Remove
