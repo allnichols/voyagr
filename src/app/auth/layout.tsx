@@ -11,7 +11,7 @@ export default function AuthLayout({
     <ReactQueryProvider>
       <div className="min-h-screen flex items-center justify-center bg-[#f5f6fa]">
         <h1 className="text-center absolute top-8 text-4xl font-bold">
-          <Link href="/" className="text-primary">
+          <Link href="/" className="text-secondary italic">
             Voyagr
           </Link>
         </h1>
