@@ -4,11 +4,12 @@ interface DragItem {
   index: number;
   dayId: number;
   type: string;
+  activityId?: number;
 }
 
 interface DragAndDropProps {
-  onReorder: ( hoverIndex: number, dayId: number, type: string) => void;
-  itemType: string;
+  onReorder: (hoverIndex: number, dayId: number, type: string, activityId?: number) => void;
+  itemType: "day" | "activity";
 }
 
 export const useDragAndDrop = ({ onReorder, itemType }: DragAndDropProps) => {
@@ -19,8 +20,17 @@ export const useDragAndDrop = ({ onReorder, itemType }: DragAndDropProps) => {
     e: React.DragEvent,
     index: number,
     dayId: number,
+    activityId?: number,
   ) => {
-    const dragItem = { index, dayId, type: itemType };
+    let dragItem;
+    if (itemType === 'activity') {
+      dragItem = { index, dayId, type: itemType, activityId, };
+    } else {
+      dragItem = { index, dayId, type: itemType };
+    }
+
+    console.log(dragItem)
+    
     setDraggedItem(dragItem);
 
     e.dataTransfer.setData("text/plain", JSON.stringify(dragItem));
@@ -32,33 +42,30 @@ export const useDragAndDrop = ({ onReorder, itemType }: DragAndDropProps) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
     setDragOverIndex(index);
-    console.log("Drag Over", index, e.dataTransfer.getData("text/plain"));
   };
 
   const handleDragEnter = (e: React.DragEvent) => {
     e.preventDefault();
-    console.log("Drag Enter");
   };
 
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
-    console.log("Drag Leave");
   };
 
   const handleDrop = (e: React.DragEvent, dropIndex: number) => {
     e.preventDefault();
     const data = e.dataTransfer.getData("text/plain");
-    if(!data) return;
+    if (!data) return;
 
     const dragItem: DragItem = JSON.parse(data);
     console.log("Drop", { dragItem, dropIndex });
     if (dragItem && dragItem.type === itemType) {
-     onReorder(dropIndex, dragItem.dayId, dragItem.type);
+      onReorder(dropIndex, dragItem.dayId, dragItem.type, dragItem.activityId);
     }
 
     setDraggedItem(null);
     setDragOverIndex(null);
-  }
+  };
 
   const isDragging = (index: number) => draggedItem?.index === index;
   const isDragOver = (index: number) => dragOverIndex === index;
@@ -72,6 +79,6 @@ export const useDragAndDrop = ({ onReorder, itemType }: DragAndDropProps) => {
     handleDragOver,
     dragOverIndex,
     isDragging,
-    isDragOver
+    isDragOver,
   };
 };

@@ -8,6 +8,8 @@ import AddActivityBtn from "./AddActivityBtn";
 import DayMenu from "./DayMenu";
 import { LocationIcon } from "public/icons/location";
 import Image from "next/image";
+import { useDragAndDrop } from "../itinerary/hooks/useDragAndDrop";
+import { TripActivity } from "@prisma/client";
 
 async function getTripDayActivites(tripDayId: number | null) {
   const url = `/api/trip-activities${tripDayId !== null ? `?tripDayId=${tripDayId}` : ""}`;
@@ -41,7 +43,8 @@ export const DayDropdown = memo(function DayDropdown({
     e: React.DragEvent,
     index: number,
     dayId: number,
-    dayNumber: number,
+    dayNumber?: number,
+    activityId?: number,
   ) => void;
   onDragOver: (e: React.DragEvent, index: number) => void;
   onDragEnter: (e: React.DragEvent) => void;
@@ -80,13 +83,31 @@ export const DayDropdown = memo(function DayDropdown({
     }
   };
 
+  const activityDragAndDrop = useDragAndDrop({
+    itemType: "activity",
+    onReorder: (
+      hoverIndex: number,
+      dayId: number,
+      type: string,
+      activityId?: number,
+    ) => {
+      if (type === "activity") {
+        const draggedActivity = activities.find(
+          (activity: TripActivity) => activity.id === activityId,
+        );
+
+        console.log(draggedActivity);
+      }
+    },
+  });
+
   return (
     <>
       {toast}
       <div
         draggable={isOpen ? false : true}
         id={`day-${dayId}-${index}`}
-        className={`${isOpen ? "" : "cursor-grab"} ${isDragging(index) ? "opacity-50" : "opacity-100"} ${isDraggingOver(index) ? "bg-base-200" : ""}`}
+        className={`${isOpen ? `${isDragging(index) ? "opacity-50" : "opacity-100"} ${isDraggingOver(index) ? "bg-base-200" : ""}` : "cursor-grab"} `}
         onDragStart={(e) => onDragStart(e, index, dayId, dayNumber)}
         onDragOver={(e) => onDragOver(e, index)}
         onDragEnter={onDragEnter}
@@ -157,10 +178,32 @@ export const DayDropdown = memo(function DayDropdown({
             display: isOpen ? "block" : "none",
           }}
         >
-          {activities?.map((activity: any, i: number) => (
+          {activities?.map((activity: TripActivity, i: number) => (
             <div
               key={activity.id}
               className={`flex justify-between items-center mb-4 rounded-lg border-2 border-base-200 p-4 opacity-0 transition-all duration-400 ${isOpen ? "block opacity-100" : "hidden"}`}
+              draggable={isOpen}
+              onDragStart={(e) => {
+                e.stopPropagation();
+                activityDragAndDrop.handleDragStart(e, i, dayId, activity.id);
+              }}
+              onDragOver={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                activityDragAndDrop.handleDragOver(e, i);
+              }}
+              onDragEnter={(e) => {
+                e.stopPropagation();
+                activityDragAndDrop.handleDragEnter;
+              }}
+              onDragLeave={(e) => {
+                e.stopPropagation();
+                activityDragAndDrop.handleDragLeave;
+              }}
+              onDrop={(e) => {
+                e.stopPropagation();
+                activityDragAndDrop.handleDrop(e, i);
+              }}
             >
               <div className="flex gap-2 items-center">
                 {activity.iconMask ? (

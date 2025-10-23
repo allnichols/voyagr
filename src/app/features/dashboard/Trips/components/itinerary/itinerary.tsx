@@ -84,7 +84,7 @@ export default function Itinerary() {
                   return (
                       <motion.div
                         key={day.id}
-                        initial={{ opacity: 0 }}
+                        initial={{ opacity: 0, animationDelay: idx + 1 }}
                         animate={{ opacity: 1 }}
                       >
                         <DayDropdown
