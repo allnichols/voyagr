@@ -7,6 +7,7 @@ import { addDayToTrip } from "./actions";
 import { useDragAndDrop } from "../itinerary/hooks/useDragAndDrop";
 import { useReorderDay } from "./hooks/useItineraryMutation";
 import { useToastMutation } from "@/app/dashboard/hooks/useToastMutation";
+import * as motion from "motion/react-client";
 
 async function getTripDays(tripId: number | null) {
   const url = `/api/trip-days${tripId !== null ? `?tripId=${tripId}` : ""}`;
@@ -42,7 +43,7 @@ export default function Itinerary() {
   const dayDragAndDrop = useDragAndDrop({
     itemType: "day",
     onReorder: (hoverIndex: number, dayId: number, type: string) => {
-      if(type === 'day') {
+      if (type === "day") {
         const draggedDay = data.find((day: any) => day.id === dayId);
         reorderDayMutation.mutate({
           tripId: tripId as number,
@@ -58,59 +59,66 @@ export default function Itinerary() {
   return (
     <>
       {toast}
-    <div className="p-6 overflow-hidden">
-      <h1 className="text-3xl font-bold mb-4">Trip to {destination}</h1>
-      <div className="divider" />
-      <div className="space-y-4">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-semibold">Itinerary</h2>
+      <div className="p-6 overflow-hidden">
+        <h1 className="text-3xl font-bold mb-4">Trip to {destination}</h1>
+        <div className="divider" />
+        <div className="space-y-4">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-semibold">Itinerary</h2>
 
-          <div>
-            <button
-              className="btn btn-primary rounded-sm"
-              onClick={() => addTripDayMutation.mutate(tripId as number)}
-            >
-              Add Day
-            </button>
+            <div>
+              <button
+                className="btn btn-primary rounded-sm"
+                onClick={() => addTripDayMutation.mutate(tripId as number)}
+              >
+                Add Day
+              </button>
+            </div>
+          </div>
+          {isLoading && (
+            <span className="loading loading-infinity loading-md"></span>
+          )}
+          <div className="overflow-y-auto max-h-[600px] pr-2">
+              {data &&
+                data.map((day: any, idx: number) => {
+                  return (
+                      <motion.div
+                        key={day.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                      >
+                        <DayDropdown
+                          dayId={day.id}
+                          days={data}
+                          dayNumber={day.dayNumber}
+                          index={idx}
+                          isOpen={openDayDropdown === day.id}
+                          onToggle={() => {
+                            setOpenDayDropdown(
+                              openDayDropdown === day.id ? null : day.id,
+                            );
+                          }}
+                          onDragStart={dayDragAndDrop.handleDragStart}
+                          onDragOver={dayDragAndDrop.handleDragOver}
+                          onDragEnter={dayDragAndDrop.handleDragEnter}
+                          onDragLeave={dayDragAndDrop.handleDragLeave}
+                          onDrop={dayDragAndDrop.handleDrop}
+                          isDragging={dayDragAndDrop.isDragging}
+                          isDraggingOver={dayDragAndDrop.isDragOver}
+                        />
+                      </motion.div>
+                
+                  );
+                })}
+
+            {data && data.length === 0 && (
+              <p>
+                No days added yet. Click "Add Day" to start planning your trip!
+              </p>
+            )}
           </div>
         </div>
-        {isLoading && (
-          <span className="loading loading-infinity loading-md"></span>
-        )}
-        <div className="overflow-y-auto max-h-[600px] pr-2">
-          {data &&
-            data.map((day: any, idx: number) => {
-              return (     
-                <DayDropdown
-                  key={day.dayNumber}
-                  dayId={day.id}
-                  days={data}
-                  dayNumber={day.dayNumber}
-                  index={idx}
-                  isOpen={openDayDropdown === day.id}
-                  onToggle={() => {
-                    setOpenDayDropdown(
-                      openDayDropdown === day.id ? null : day.id,
-                    );
-                  }}
-                  onDragStart={dayDragAndDrop.handleDragStart}
-                  onDragOver={dayDragAndDrop.handleDragOver}
-                  onDragEnter={dayDragAndDrop.handleDragEnter}
-                  onDragLeave={dayDragAndDrop.handleDragLeave}
-                  onDrop={dayDragAndDrop.handleDrop}
-                  isDragging={dayDragAndDrop.isDragging}
-                  isDraggingOver={dayDragAndDrop.isDragOver}
-                />
-              );
-            })}
-          {data && data.length === 0 && (
-            <p>
-              No days added yet. Click "Add Day" to start planning your trip!
-            </p>
-          )}
-        </div>
       </div>
-    </div>
     </>
   );
 }
