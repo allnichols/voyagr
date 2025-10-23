@@ -10,13 +10,8 @@ import { LocationIcon } from "public/icons/location";
 import Image from "next/image";
 import { useDragAndDrop } from "../itinerary/hooks/useDragAndDrop";
 import { TripActivity } from "@prisma/client";
-
-async function getTripDayActivites(tripDayId: number | null) {
-  const url = `/api/trip-activities${tripDayId !== null ? `?tripDayId=${tripDayId}` : ""}`;
-  const res = await fetch(url, { method: "GET" });
-  if (!res.ok) throw new Error("Failed to get trip day ativities");
-  return res.json();
-}
+import { useReorderActivity } from "../itinerary/hooks/useItineraryMutation";
+import { getTripDayActivites } from "./api/getTripDayActivities";
 
 export const DayDropdown = memo(function DayDropdown({
   dayId,
@@ -56,6 +51,7 @@ export const DayDropdown = memo(function DayDropdown({
   const setCurrentDay = useCurrentDay((state) => state.setCurrentDay);
   const currentDay = useCurrentDay((state) => state.currentDay.id);
   const queryClient = useQueryClient();
+  const reorderActivityMutation = useReorderActivity();
 
   const { data: activities } = useQuery({
     queryKey: ["dayActivities", dayId],
@@ -92,11 +88,13 @@ export const DayDropdown = memo(function DayDropdown({
       activityId?: number,
     ) => {
       if (type === "activity") {
-        const draggedActivity = activities.find(
+        const draggedActivity: TripActivity = activities.find(
           (activity: TripActivity) => activity.id === activityId,
         );
-
-        console.log(draggedActivity);
+        reorderActivityMutation.mutate({
+          dayId: draggedActivity.tripDayId,
+          activityId: draggedActivity.id,
+        });
       }
     },
   });

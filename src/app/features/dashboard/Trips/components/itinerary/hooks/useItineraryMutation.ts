@@ -24,3 +24,31 @@ export const useReorderDay = () => {
     },
   });
 };
+
+interface ReorderActivityData {
+  dayId: number;
+  activityId: number;
+}
+
+export const useReorderActivity = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: ReorderActivityData) => {
+      const response = await fetch('http://localhost:3000/api/trip-days/reorder', {
+        method: "PATCH",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data),
+      })
+
+      if(!response.ok) {
+        throw new Error("Failed to reorder activities")
+      }
+
+      return response.json()
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({queryKey: ["dayActivities", variables.dayId]})
+    }
+  })
+}
