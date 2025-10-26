@@ -8,7 +8,12 @@ interface DragItem {
 }
 
 interface DragAndDropProps {
-  onReorder: (hoverIndex: number, dayId: number, type: string, activityId?: number) => void;
+  onReorder: (
+    type: string,
+    hoverIndex: number,
+    dayId?: number,
+    activityId?: number,
+  ) => void;
   itemType: "day" | "activity";
 }
 
@@ -23,14 +28,12 @@ export const useDragAndDrop = ({ onReorder, itemType }: DragAndDropProps) => {
     activityId?: number,
   ) => {
     let dragItem;
-    if (itemType === 'activity') {
-      dragItem = { index, dayId, type: itemType, activityId, };
+    if (itemType === "activity") {
+      dragItem = { index, dayId, type: itemType, activityId };
     } else {
       dragItem = { index, dayId, type: itemType };
     }
 
-    console.log(dragItem)
-    
     setDraggedItem(dragItem);
 
     e.dataTransfer.setData("text/plain", JSON.stringify(dragItem));
@@ -60,7 +63,7 @@ export const useDragAndDrop = ({ onReorder, itemType }: DragAndDropProps) => {
     const dragItem: DragItem = JSON.parse(data);
     console.log("Drop", { dragItem, dropIndex });
     if (dragItem && dragItem.type === itemType) {
-      onReorder(dropIndex, dragItem.dayId, dragItem.type, dragItem.activityId);
+      onReorder(dragItem.type, dropIndex, dragItem.dayId, dragItem.activityId);
     }
 
     setDraggedItem(null);

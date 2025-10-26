@@ -27,6 +27,7 @@ export const useReorderDay = () => {
 
 interface ReorderActivityData {
   dayId: number;
+  newPosition: number;
   activityId: number;
 }
 
@@ -35,7 +36,7 @@ export const useReorderActivity = () => {
 
   return useMutation({
     mutationFn: async (data: ReorderActivityData) => {
-      const response = await fetch('http://localhost:3000/api/trip-days/reorder', {
+      const response = await fetch('http://localhost:3000/api/trip-activities/reorder', {
         method: "PATCH",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(data),
