@@ -13,11 +13,9 @@ export default async function getGooglePlaces(
 
   const googlePlaces = Promise.all(
     parseAiResponse.map(async (dayPlan) => {
-
       try {
         const activityResults = await Promise.all(
           dayPlan.activities.map(async (activity) => {
-
             const headers: Record<string, string> = {
               "Content-Type": "application/json",
               "X-Goog-FieldMask": [
@@ -61,9 +59,23 @@ export default async function getGooglePlaces(
               console.warn(
                 `No places found for "${activity.place} in ${destination}"`,
               );
-              throw new Error(
-                `No places found for "${activity.place} in ${destination}"`,
-              );
+
+              return {
+                gPlaceId: null,
+                address: null,
+                latitude: null,
+                longitude: null,
+                place: activity.place,
+                timeOfDay: activity.timeOfDay,
+                iconMask: null,
+                rating: null,
+                userRatingCount: null,
+                websiteUri: null,
+                internationalPhoneNumber: null,
+                nationalPhoneNumber: null,
+                priceLevel: null,
+                types: null,
+              };
             }
 
             const place = data.places[0];
@@ -77,7 +89,9 @@ export default async function getGooglePlaces(
               timeOfDay: activity.time,
               iconMask: place.iconMaskBaseUri ? place.iconMaskBaseUri : null,
               rating: place.rating ? place.rating : null,
-              userRatingCount: place.userRatingCount ? place.userRatingCount : null,
+              userRatingCount: place.userRatingCount
+                ? place.userRatingCount
+                : null,
               websiteUri: place.websiteUri ? place.websiteUri : null,
               internationalPhoneNumber: place.internationalPhoneNumber
                 ? place.internationalPhoneNumber
@@ -87,7 +101,6 @@ export default async function getGooglePlaces(
                 : null,
               priceLevel: place.priceLevel ? place.priceLevel : null,
               types: place.types ? place.types : null,
-            
             };
           }),
         );
