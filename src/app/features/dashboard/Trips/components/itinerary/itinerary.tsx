@@ -7,7 +7,7 @@ import { addDayToTrip } from "./actions";
 import { useDragAndDrop } from "../itinerary/hooks/useDragAndDrop";
 import { useReorderDay } from "./hooks/useItineraryMutation";
 import { useToastMutation } from "@/app/dashboard/hooks/useToastMutation";
-import * as motion from "motion/react-client";
+import { AnimatePresence, motion } from "motion/react";
 
 async function getTripDays(tripId: number | null) {
   const url = `/api/trip-days${tripId !== null ? `?tripId=${tripId}` : ""}`;
@@ -42,7 +42,7 @@ export default function Itinerary() {
 
   const dayDragAndDrop = useDragAndDrop({
     itemType: "day",
-    onReorder: (hoverIndex: number, dayId: number, type: string) => {
+    onReorder: (type: string, hoverIndex: number, dayId?: number) => {
       if (type === "day") {
         const draggedDay = data.find((day: any) => day.id === dayId);
         reorderDayMutation.mutate({
@@ -79,37 +79,39 @@ export default function Itinerary() {
             <span className="loading loading-infinity loading-md"></span>
           )}
           <div className="overflow-y-auto max-h-[600px] pr-2">
+            <AnimatePresence initial={false}>
               {data &&
                 data.map((day: any, idx: number) => {
                   return (
-                      <motion.div
-                        key={day.id}
-                        initial={{ opacity: 0, animationDelay: idx + 1 }}
-                        animate={{ opacity: 1 }}
-                      >
-                        <DayDropdown
-                          dayId={day.id}
-                          days={data}
-                          dayNumber={day.dayNumber}
-                          index={idx}
-                          isOpen={openDayDropdown === day.id}
-                          onToggle={() => {
-                            setOpenDayDropdown(
-                              openDayDropdown === day.id ? null : day.id,
-                            );
-                          }}
-                          onDragStart={dayDragAndDrop.handleDragStart}
-                          onDragOver={dayDragAndDrop.handleDragOver}
-                          onDragEnter={dayDragAndDrop.handleDragEnter}
-                          onDragLeave={dayDragAndDrop.handleDragLeave}
-                          onDrop={dayDragAndDrop.handleDrop}
-                          isDragging={dayDragAndDrop.isDragging}
-                          isDraggingOver={dayDragAndDrop.isDragOver}
-                        />
-                      </motion.div>
-                
+                    <motion.div
+                      key={day.id}
+                      initial={{ opacity: 0, animationDelay: idx + 1 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                    >
+                      <DayDropdown
+                        dayId={day.id}
+                        days={data}
+                        dayNumber={day.dayNumber}
+                        index={idx}
+                        isOpen={openDayDropdown === day.id}
+                        onToggle={() => {
+                          setOpenDayDropdown(
+                            openDayDropdown === day.id ? null : day.id,
+                          );
+                        }}
+                        onDragStart={dayDragAndDrop.handleDragStart}
+                        onDragOver={dayDragAndDrop.handleDragOver}
+                        onDragEnter={dayDragAndDrop.handleDragEnter}
+                        onDragLeave={dayDragAndDrop.handleDragLeave}
+                        onDrop={dayDragAndDrop.handleDrop}
+                        isDragging={dayDragAndDrop.isDragging}
+                        isDraggingOver={dayDragAndDrop.isDragOver}
+                      />
+                    </motion.div>
                   );
                 })}
+            </AnimatePresence>
 
             {data && data.length === 0 && (
               <p>
