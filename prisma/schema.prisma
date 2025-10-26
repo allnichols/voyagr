@@ -78,6 +78,7 @@ model TripDay {
 model TripActivity {
   id        Int      @id @default(autoincrement())
   tripDayId Int
+  position  Int      @default(1) // <- for keeping track of order of activities
   timeOfDay String?
   place     String
   gPlaceId  String?
