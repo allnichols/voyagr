@@ -96,6 +96,6 @@ model TripActivity {
   longitude Float?
   createdAt DateTime @default(now())
 
-
   tripDay TripDay @relation(fields: [tripDayId], references: [id], onDelete: Cascade)
+  @@index([tripDayId, position])
 }
