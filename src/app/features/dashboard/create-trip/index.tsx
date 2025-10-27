@@ -49,6 +49,7 @@ export default function CreateTrip() {
       .then((data) => {
         setIsLoading(false);
         if (data) {
+          console.log(data)
           router.push(
             `/dashboard/trips/${data.createdTrip.id}?destination=${data.createdTrip.destination}`,
           );
@@ -56,8 +57,8 @@ export default function CreateTrip() {
       })
       .catch((error) => {
 
-        console.error("Error:", error);
-        const errorMessage = error?.message || "Something went wrong!";
+        console.error("Error:", error?.message);
+        const errorMessage = "Something went wrong!";
         setIsLoading(false)
         setErrorMessage(errorMessage);
       });

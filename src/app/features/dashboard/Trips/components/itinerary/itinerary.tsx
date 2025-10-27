@@ -42,13 +42,13 @@ export default function Itinerary() {
 
   const dayDragAndDrop = useDragAndDrop({
     itemType: "day",
-    onReorder: (type: string, hoverIndex: number, dayId?: number) => {
+    onReorder: (type: string, newPosition: number, dayId?: number) => {
       if (type === "day") {
         const draggedDay = data.find((day: any) => day.id === dayId);
         reorderDayMutation.mutate({
           tripId: tripId as number,
           dayId: draggedDay.id,
-          newPosition: hoverIndex + 1,
+          newDayNumber: newPosition + 1,
         });
       }
     },

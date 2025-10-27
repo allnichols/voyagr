@@ -1,55 +1,43 @@
 import prisma from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
+import { auth } from "../../auth/[...nextauth]/auth";
 
 export async function PATCH(req: NextRequest) {
   try {
-    const { tripId, dayId, newPosition } = await req.json();
-    console.log("Reorder Request:", { tripId, dayId, newPosition });
+    const { tripId, dayId, newDayNumber } = await req.json();
+    const session = await auth();
 
-    await prisma.$transaction(async (prisma) => {
-      const allDays = await prisma.tripDay.findMany({
-        where: { tripId },
-        orderBy: { dayNumber: "asc" },
-      });
+    if (!session?.user.id) {
+      return NextResponse.json({ message: "Not authorized" }, { status: 401 });
+    }
+    console.log(session);
+    console.log("Reorder Request:", { tripId, dayId, newDayNumber });
 
-      const dayToMove = allDays.find((day) => day.id === dayId);
-      if (!dayToMove) throw new Error("Day to move not found");
+    prisma.$transaction(async (tx) => {
+      const allDays = await tx.tripDay.findMany({
+        where: { tripId: tripId },
+        orderBy: { dayNumber: 'asc' },
+      })
 
-      if (newPosition < 1 || newPosition > allDays.length) {
-        throw new Error("Invalid new position");
-      }
+      const dayToMove = allDays.find(d => d.id === dayId);
 
-      const tempPosition = 99999;
-      await prisma.tripDay.update({
-        where: { id: dayToMove.id },
-        data: { dayNumber: tempPosition },
-      });
+      if(!dayToMove) throw new Error("Day to move not found");
 
-      const daysToUpdate = allDays.filter((day) => day.id !== Number(dayId));
+      const daysToUpdate = allDays.filter(d => d.id !== dayId);
 
-      daysToUpdate.splice(newPosition - 1, 0, dayToMove);
-
+      daysToUpdate.splice(newDayNumber - 1, 0, dayToMove);
+      
       for (let i = 0; i < daysToUpdate.length; i++) {
         const day = daysToUpdate[i];
-        const newDayNumber = i + 1;
+        
+        await tx.tripDay.update({
+          where: { id: day.id },
+          data: { dayNumber: i + 1 }
+        })
 
-        if (day.id === dayId) continue;
-
-        if (day.dayNumber !== newDayNumber) {
-          await prisma.tripDay.update({
-            where: { id: day.id },
-            data: { dayNumber: newDayNumber },
-          });
-        }
       }
 
-      await prisma.tripDay.update({
-        where: { id: dayId },
-        data: {
-          dayNumber: newPosition,
-        },
-      });
-    });
+    })
 
     return NextResponse.json(
       { message: "Day reordered successfully" },
@@ -59,7 +47,6 @@ export async function PATCH(req: NextRequest) {
     console.error("Reorder error details:", {
       error: error,
       message: error instanceof Error ? error.message : "Unknown error",
-      // stack: error instanceof Error ? error.stack : 'No stack trace'
     });
 
     return NextResponse.json(

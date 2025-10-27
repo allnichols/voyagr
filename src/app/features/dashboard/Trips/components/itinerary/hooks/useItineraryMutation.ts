@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 interface ReorderDayData {
     tripId: number;
     dayId: number;
-    newPosition: number;
+    newDayNumber: number;
 };
 
 export const useReorderDay = () => {

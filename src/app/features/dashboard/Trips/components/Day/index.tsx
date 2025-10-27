@@ -81,19 +81,18 @@ export const DayDropdown = memo(function DayDropdown({
 
   const activityDragAndDrop = useDragAndDrop({
     itemType: "activity",
-    onReorder: (
-      hoverIndex: number,
-      dayId: number,
-      type: string,
-      activityId?: number,
-    ) => {
+    onReorder: (type: string, newPosition: number, dayId?:number, activityId?: number) => {
       if (type === "activity") {
         const draggedActivity: TripActivity = activities.find(
-          (activity: TripActivity) => activity.id === activityId,
+          (activity: TripActivity) => {
+            console.log(activity.id, activityId);
+            return activity.id === activityId;
+          },
         );
         reorderActivityMutation.mutate({
           dayId: draggedActivity.tripDayId,
           activityId: draggedActivity.id,
+          newPosition: newPosition
         });
       }
     },
@@ -105,7 +104,7 @@ export const DayDropdown = memo(function DayDropdown({
       <div
         draggable={isOpen ? false : true}
         id={`day-${dayId}-${index}`}
-        className={`${isOpen ? `${isDragging(index) ? "opacity-50" : "opacity-100"} ${isDraggingOver(index) ? "bg-base-200" : ""}` : "cursor-grab"} `}
+        className={`${isOpen ? `${isDragging(index) ? "opacity-50" : "opacity-100"}` : "cursor-grab"} `}
         onDragStart={(e) => onDragStart(e, index, dayId, dayNumber)}
         onDragOver={(e) => onDragOver(e, index)}
         onDragEnter={onDragEnter}
@@ -179,7 +178,12 @@ export const DayDropdown = memo(function DayDropdown({
           {activities?.map((activity: TripActivity, i: number) => (
             <div
               key={activity.id}
-              className={`flex justify-between items-center mb-4 rounded-lg border-2 border-base-200 p-4 opacity-0 transition-all duration-400 ${isOpen ? "block opacity-100" : "hidden"}`}
+              className={`
+                flex justify-between items-center mb-4 rounded-lg border-2 border-base-200 p-4 opacity-0 transition-all duration-400 
+                cursor-grab
+                ${isDragging(i) ? "cursor-grabbing" : ""}
+                ${isOpen ? "block opacity-100" : "hidden"}
+                `}
               draggable={isOpen}
               onDragStart={(e) => {
                 e.stopPropagation();
