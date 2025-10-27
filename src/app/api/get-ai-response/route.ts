@@ -96,9 +96,10 @@ export async function POST(req: NextRequest) {
             date: new Date(day.date),
             dayNumber: parseInt(day.dayNumber),
             activities: {
-              create: day.activities.map((activity) => ({
+              create: day.activities.map((activity, i) => ({
                 timeOfDay: activity.timeOfDay,
                 place: activity.place,
+                position: i + 1,
                 address: activity.address,
                 longitude: activity.longitude,
                 latitude: activity.latitude,
