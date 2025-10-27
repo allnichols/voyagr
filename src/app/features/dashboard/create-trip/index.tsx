@@ -49,7 +49,6 @@ export default function CreateTrip() {
       .then((data) => {
         setIsLoading(false);
         if (data) {
-          console.log(data)
           router.push(
             `/dashboard/trips/${data.createdTrip.id}?destination=${data.createdTrip.destination}`,
           );
