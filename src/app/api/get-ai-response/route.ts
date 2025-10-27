@@ -17,6 +17,17 @@ export async function POST(req: NextRequest) {
     if(!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+  
+    const user = await prisma.user.findUnique({
+      where:  { email: session.user.email as string },
+    })
+
+    if(!user) {
+      return NextResponse.json(
+        { error: "Unauthorized - user not found"},
+        { status: 401 }
+      )
+    }
 
     const formData = await req.json();
     if (
@@ -57,10 +68,9 @@ export async function POST(req: NextRequest) {
 
     const aiResponse =
       response.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
-    console.log("Raw AI Response:", aiResponse);
       
     const parsedResponse = await parseTextReponse(aiResponse);
-      console.log("Parsed AI Response:", parsedResponse);
+
 
     if(parsedResponse.length === 0) {
       return NextResponse.json(
@@ -77,7 +87,7 @@ export async function POST(req: NextRequest) {
 
     if (googlePlaces.length === 0) {
       return NextResponse.json(
-        { error: "Failed to fetch places from Google Places API" },
+        { message: "Failed to fetch places from Google Places API" },
         { status: 500 },
       );
     }
@@ -86,7 +96,7 @@ export async function POST(req: NextRequest) {
 
     const createdTrip = await prisma.trip.create({
       data: {
-        userId: Number(session.user.id),
+        userId: user.id,
         destination: formData.destination,
         departureDate: new Date(formData.dates.from),
         returnDate: new Date(formData.dates.to),
@@ -123,7 +133,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("API Error:", error);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { message: "Internal Server Error" },
       { status: 500 },
     );
   }

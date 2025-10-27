@@ -1,5 +1,4 @@
 import { NextRequest } from "next/server";
-import { PrismaClient } from "@prisma/client";
 import prisma from "@/lib/prisma"
 
 // Get trip activities by tripDayId
@@ -10,6 +9,7 @@ export async function GET(req: NextRequest) {
   try {
     let tripActivities = await prisma.tripActivity.findMany({
       where: { tripDayId: Number(tripDayId) },
+      orderBy: { position: 'asc' }
     });
 
     return new Response(JSON.stringify(tripActivities), { status: 200 });
