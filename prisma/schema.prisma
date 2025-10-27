@@ -72,7 +72,7 @@ model TripDay {
   trip       Trip           @relation(fields: [tripId], references: [id], onDelete: Cascade)
   activities TripActivity[]
 
-  @@unique([tripId])
+  @@index([tripId])
 }
 
 model TripActivity {
