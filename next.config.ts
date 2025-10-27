@@ -10,6 +10,12 @@ const nextConfig: NextConfig = {
         hostname: 'maps.gstatic.com',
         port: '',
         pathname: '/mapfiles/**',
+      },
+      {
+        protocol: "https",
+        hostname: "img.daisyui.com",
+        port: "",
+        pathname: '/images/**'
       }
      ]
   }

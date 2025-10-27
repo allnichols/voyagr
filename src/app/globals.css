@@ -3,6 +3,12 @@
   themes: corporate --default;
 }
 
+@layer components {
+  .container-custom {
+    @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-screen-lg;
+  }
+}
+
 html,
 body,
 #__next {
