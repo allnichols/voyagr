@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export function NavBar() {
+export default function NavBar() {
   return (
     <div className="navbar container-custom">
       <div className="flex-1">

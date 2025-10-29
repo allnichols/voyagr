@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 
-export function Hero() {
+export default function Hero() {
     return (
         <div className="hero min-h-screen container-custom">
         <div className="hero-content text-center flex-col md:flex-row-reverse md:px-0 md:justify-between">
