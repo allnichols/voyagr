@@ -1,7 +1,7 @@
 export default function FlightIcon() {
   return (
     <svg
-    className="rotate-45"
+      className="rotate-45"
       xmlns="http://www.w3.org/2000/svg"
       height="40px"
       viewBox="0 0 24 24"
