@@ -1,6 +1,6 @@
-import Itinerary from "@/app/features/dashboard/trips/components/itinerary/index";
-import Map from "@/app/features/dashboard/trips/components/map/index";
-import MapToggle from "@/app/features/dashboard/trips/components/map/MapToggle";
+import Itinerary from "../../../features/dashboard/trips/components/itinerary/index";
+import Map from "../../../features/dashboard/trips/components/map/index";
+import MapToggle from "../../../features/dashboard/trips/components/map/MapToggle";
 import { MapIcon } from "@heroicons/react/24/outline";
 
 export default function TripPage() {
