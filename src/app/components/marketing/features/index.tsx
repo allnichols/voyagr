@@ -7,7 +7,7 @@ export default function Features() {
   return (
     <div className="container-custom">
       <div className="text-center md:w-[70%] md:m-auto">
-        <p className="mb-2 text-accent">Navigate</p>
+        <p className="mb-2 text-primary">Navigate</p>
         <h2 className="font-bold text-3xl md:text-4xl mb-4">
           Turn travel dreams into living memories
         </h2>
@@ -42,7 +42,7 @@ export default function Features() {
         </div>
       </div>
       <div className="flex justify-center mt-10">
-        <Link href={"/auth/signup"} className="btn btn-accent rounded-2xl ">
+        <Link href={"/auth/signup"} className="btn btn-primary rounded-2xl ">
           Get Started
         </Link>
       </div>

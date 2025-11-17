@@ -10,7 +10,7 @@ export default function Hero() {
             width={500}
             height={500}
             layout="responsive"
-            src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
+            src="/travel-adventure-with-baggage.jpg"
             className="hidden md:inline-flex max-w-sm rounded-lg shadow-2xl"
           />
           <div className="max-w-[100%] md:w-[50%] md:text-left">
