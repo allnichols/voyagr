@@ -2,7 +2,7 @@ import Head from "next/head";
 import Script from "next/script";
 import Sidebar from "@/features/dashboard/sidebar";
 import ReactQueryProvider from "../ReactQueryProvider";
-import ClientSessionProvider from "../components/ClientSessionProvider";
+import ClientSessionProvider from "@/components/ClientSessionProvider";
 
 export default function ItineraryDashboardLayout({
   children,

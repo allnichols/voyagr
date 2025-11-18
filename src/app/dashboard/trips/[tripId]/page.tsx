@@ -1,5 +1,5 @@
-import Itinerary from '@/features/dashboard/trips/components/itinerary';
-import Map from '@/features/dashboard/trips/components/map'
+import Itinerary from "@/features/dashboard/trips/components/itinerary";
+import Map from "@/features/dashboard/trips/components/map";
 import MapToggle from "@/features/dashboard/trips/components/map/MapToggle";
 
 export default function TripPage() {

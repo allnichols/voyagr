@@ -6,7 +6,7 @@ import { DayDropdown } from "@/features/dashboard/trips/components/day";
 import { addDayToTrip } from "./actions";
 import { useDragAndDrop } from "./hooks/useDragAndDrop";
 import { useReorderDay } from "./hooks/useItineraryMutation";
-import { useToastMutation } from "@/dashboard/hooks/useToastMutation";
+import { useToastMutation } from "../hooks/useToastMutation";
 import { AnimatePresence, motion } from "motion/react";
 
 async function getTripDays(tripId: number | null) {
