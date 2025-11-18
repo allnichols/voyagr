@@ -76,7 +76,7 @@ export const config = {
           } else {
             console.log("User already exists:", user.email);
             const existingGoogleAccount = existingUser.accounts.find(
-              acc => acc.provider === 'google' && acc.providerAccountId === account.providerAccountId
+              (acc: any) => acc.provider === 'google' && acc.providerAccountId === account.providerAccountId
             )
             if(existingGoogleAccount) {
               console.log("Existing Google account found for user:", user.email);

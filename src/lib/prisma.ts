@@ -10,3 +10,4 @@ const prisma = globalForPrisma.prisma || new PrismaClient().$extends(withAcceler
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 
 export default prisma
+export { PrismaClient }
