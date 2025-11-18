@@ -1,4 +1,5 @@
-import Itinerary from "@/app/features/dashboard/trips/components/itinerary";
+// import Itinerary from "@/app/features/dashboard/trips/components/itinerary";
+import Itinerary from '@/components/dashboard/trips/components/itinerary';
 import Map from '@/app/features/dashboard/trips/components/map'
 import MapToggle from "@/app/features/dashboard/trips/components/map/MapToggle";
 

@@ -1,7 +1,7 @@
 import Link from "next/link";
-import FlightIcon from "public/icons/flight";
-import GlobeIcon from "public/icons/globe";
-import CompassIcon from "public/icons/compass";
+import FlightIcon from "../../icons/flight";
+import GlobeIcon from "../../icons/globe";
+import CompassIcon from "../../icons/compass";
 
 export default function Features() {
   return (

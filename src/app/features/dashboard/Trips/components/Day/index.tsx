@@ -6,7 +6,7 @@ import { useToastMutation } from "@/app/dashboard/hooks/useToastMutation";
 import { useCurrentDay } from "@/app/features/dashboard/store/currentDay";
 import AddActivityBtn from "./AddActivityBtn";
 import DayMenu from "./DayMenu";
-import { LocationIcon } from "public/icons/location";
+import { LocationIcon } from "../../../../../components/icons/location";
 import Image from "next/image";
 import { useDragAndDrop } from "../itinerary/hooks/useDragAndDrop";
 import { TripActivity } from "@prisma/client";
