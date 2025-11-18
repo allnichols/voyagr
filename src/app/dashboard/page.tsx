@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import Trips from "@/features/dashboard/trips";
+import Trips from "@/app/features/dashboard/trips";
 
 export default function TripsPage() {
   return (
