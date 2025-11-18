@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Script from "next/script";
-import Sidebar from "@/app/features/dashboard/sidebar";
+import Sidebar from "@/features/dashboard/sidebar";
 import ReactQueryProvider from "../ReactQueryProvider";
 import ClientSessionProvider from "../components/ClientSessionProvider";
 

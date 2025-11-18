@@ -2,7 +2,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCurrentTrip } from "@/app/features/dashboard/store/currentTrip";
+import { useCurrentTrip } from "@/features/dashboard/store/currentTrip";
 import {  removeTrip } from "./actions";
 import "./trips.css";
 

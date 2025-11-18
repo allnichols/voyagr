@@ -1,4 +1,4 @@
-import TripFrom from "@/app/features/dashboard/create-trip";
+import TripFrom from "@/features/dashboard/create-trip";
 
 export default function CreateTripPage() {
   return (

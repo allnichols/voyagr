@@ -3,7 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { menuItems } from "./constants";
-import UserProfile from "@/app/features/dashboard/sidebar/components/user-profile";
+import UserProfile from "@/features/dashboard/sidebar/components/user-profile";
 
 export default function Menu() {
   const [isOpen, setIsOpen] = useState(false);

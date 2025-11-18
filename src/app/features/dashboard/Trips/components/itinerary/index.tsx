@@ -2,11 +2,11 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useSearchParams } from "next/navigation";
-import { DayDropdown } from "@/app/features/dashboard/trips/components/day";
+import { DayDropdown } from "@/features/dashboard/trips/components/day";
 import { addDayToTrip } from "./actions";
 import { useDragAndDrop } from "./hooks/useDragAndDrop";
 import { useReorderDay } from "./hooks/useItineraryMutation";
-import { useToastMutation } from "@/app/dashboard/hooks/useToastMutation";
+import { useToastMutation } from "@/dashboard/hooks/useToastMutation";
 import { AnimatePresence, motion } from "motion/react";
 
 async function getTripDays(tripId: number | null) {

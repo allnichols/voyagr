@@ -2,8 +2,8 @@
 import { memo } from "react";
 import { deleteActivity } from "../itinerary/actions"; // Adjust the path as needed
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useToastMutation } from "@/app/dashboard/hooks/useToastMutation";
-import { useCurrentDay } from "@/app/features/dashboard/store/currentDay";
+import { useToastMutation } from "@/dashboard/hooks/useToastMutation";
+import { useCurrentDay } from "@/features/dashboard/store/currentDay";
 import AddActivityBtn from "./AddActivityBtn";
 import DayMenu from "./DayMenu";
 import { LocationIcon } from "../../../../../components/icons/location";
