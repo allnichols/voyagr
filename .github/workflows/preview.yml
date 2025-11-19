@@ -1,0 +1,30 @@
+name: Preview Build and Test
+on: 
+  pull_request:
+    branches: 
+      - staging 
+jobs: 
+  build-and-test: # Name of the job
+    name: Build and Test for Staging
+    runs-on: ubuntu-latest # The type of runner taht the job will run on
+
+    steps: 
+      - name: Checkout code
+        uses: actions/checkout@v2 # action to check out the repoitory
+
+      - name: Setup Node.js 
+        uses: actions/setup-node@v2 
+        with: 
+          node-version: "22.x"
+
+      - name: Install Dependencies # installing dependencies
+        run: npm install 
+
+      - name: Build app # Buildig the app
+        run: npm run build
+      
+      - name: Run Tests # Running the tests
+        run: npm run test 
+
+      - name: Passed?
+        run: echo "Tests passed!"
