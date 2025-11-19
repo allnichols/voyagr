@@ -1,4 +1,4 @@
-name: Preview Build and Test
+name: Production Build and Test
 on: 
   pull_request:
     branches: 
@@ -10,7 +10,7 @@ concurrency:
   
 jobs: 
   build-and-test: # Name of the job
-    name: Build and Test for Staging
+    name: Production Build and Test
     runs-on: ubuntu-latest # The type of runner taht the job will run on
 
     steps: 
