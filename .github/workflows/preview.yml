@@ -1,18 +1,30 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
-jobs:
-  Explore-GitHub-Actions:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v5
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+name: Preview Build and Test
+on: 
+  pull_request:
+    branches: 
+      - staging 
+jobs: 
+  build-and-test: # Name of the job
+    name: Build and Test for Staging
+    runs-on: ubuntu-latest # The type of runner taht the job will run on
+
+    steps: 
+      - name: Checkout code
+        uses: actions/checkout@v2 # action to check out the repoitory
+
+      - name: Setup Node.js 
+        uses: actions/setup-node@v2 
+        with: 
+          node-version: "22.x"
+
+      - name: Install Dependencies # installing dependencies
+        run: npm install 
+
+      - name: Build app # Buildig the app
+        run: npm run build
+      
+      - name: Run Tests # Running the tests
+        run: npm run test 
+
+      - name: Passed?
+        run: echo "Tests passed!"
