@@ -178,7 +178,7 @@ export default function CreateTripForm({
 
         <button
           type="submit"
-          // disabled={!formData.destination || !formData.dates}
+          disabled={!formData.destination || !formData.dates}
           className={`btn btn-primary w-full py-4 text-lg font-bold`}
         >
           {loading ? (
