@@ -73,6 +73,7 @@ export const config = {
               },
             });
             console.log("User created successfully");
+            return true;
           } else {
             console.log("User already exists:", user.email);
             const existingGoogleAccount = existingUser.accounts.find(
@@ -93,7 +94,7 @@ export const config = {
                   provider: account.provider,
                   providerAccountId: account.providerAccountId,
                   refresh_token: account.refresh_token, 
-                  access_token: account.refresh_token, 
+                  access_token: account.access_token, 
                   expires_at: account.expires_at,
                   token_type: account.token_type,
                   scope: account.scope,
@@ -122,11 +123,15 @@ export const config = {
     },
 
     async redirect({ url, baseUrl }) {
+      if(url.includes('/api/auth/callback/google')) {
+        return `${baseUrl}/dashboard`;
+      }
+
       // Allows relative callback URLs
       if (url.startsWith("/")) return `${baseUrl}${url}`;
       // Allows callback URLs on the same origin
       else if (new URL(url).origin === baseUrl) return url;
-      return baseUrl;
+      return `${baseUrl}/dashboard`;
     },
 
     async jwt({ token, user, account }) {
