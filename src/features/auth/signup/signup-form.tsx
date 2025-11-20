@@ -26,9 +26,6 @@ async function signup(payload: SignupPayload) {
   return res.json();
 }
 
-// add toast hook for global notification
-// get current users session, store in global state, redirect to dashboard, get users trips
-
 export default function SignUpForm() {
   const router = useRouter();
   const [formData, setFormData] = useState<SignupPayload>({
