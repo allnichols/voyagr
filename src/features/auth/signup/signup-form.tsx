@@ -10,7 +10,7 @@ type SignupPayload = {
 };
 
 async function signup(payload: SignupPayload) {
-  const res = await fetch("http://localhost:3000/api/signup", {
+  const res = await fetch("/api/signup", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

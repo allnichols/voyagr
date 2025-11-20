@@ -38,7 +38,7 @@ export default function CreateTrip() {
     e.preventDefault();
     setIsLoading(true);
     setErrorMessage(null);
-    fetch("http://localhost:3000/api/get-ai-response", {
+    fetch("/api/get-ai-response", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
