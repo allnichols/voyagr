@@ -1,8 +1,9 @@
-name: Production Build and Test
+name: Build and Test
 on: 
   pull_request:
     branches: 
-      - main 
+      - main
+      - staging  
 
 concurrency: 
   group: pr-${{ github.event.pull_request.number }}
@@ -10,7 +11,7 @@ concurrency:
   
 jobs: 
   build-and-test: # Name of the job
-    name: Production Build and Test
+    name: Build and Test
     runs-on: ubuntu-latest # The type of runner taht the job will run on
 
     steps: 
