@@ -11,7 +11,7 @@ export const useReorderDay = () => {
   
   return useMutation({
     mutationFn: async (data: ReorderDayData) => {
-      const response = await fetch('http://localhost:3000/api/trip-days/reorder', {
+      const response = await fetch('/api/trip-days/reorder', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -36,7 +36,7 @@ export const useReorderActivity = () => {
 
   return useMutation({
     mutationFn: async (data: ReorderActivityData) => {
-      const response = await fetch('http://localhost:3000/api/trip-activities/reorder', {
+      const response = await fetch('/api/trip-activities/reorder', {
         method: "PATCH",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(data),
