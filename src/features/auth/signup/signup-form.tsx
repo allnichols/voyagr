@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 type SignupPayload = {
   email: string;
@@ -10,7 +11,7 @@ type SignupPayload = {
 };
 
 async function signup(payload: SignupPayload) {
-  const res = await fetch("http://localhost:3000/api/signup", {
+  const res = await fetch("/api/signup", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -25,9 +26,6 @@ async function signup(payload: SignupPayload) {
 
   return res.json();
 }
-
-// add toast hook for global notification
-// get current users session, store in global state, redirect to dashboard, get users trips
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -151,7 +149,9 @@ export default function SignUpForm() {
       <div className="divider">OR</div>
       <div>
         <button
-          onClick={() => signIn("google")}
+          onClick={() =>
+            signIn("google", { callbackUrl: "/dashboard", redirect: true })
+          }
           className="btn bg-white text-black border-[#e5e5e5] w-full"
         >
           <svg
@@ -183,6 +183,14 @@ export default function SignUpForm() {
           </svg>
           Signup with Google
         </button>
+      </div>
+      <div className="text-center mt-5">
+        <p className="text-sm">
+          Already have an account? Login{" "}
+          <Link href="/auth/login" className="text-blue-600">
+            Here
+          </Link>{" "}
+        </p>
       </div>
     </div>
   );

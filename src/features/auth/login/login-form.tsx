@@ -1,8 +1,8 @@
 "use client";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
+import Link from "next/link";
 
 type LoginPayload = {
   email: string;
@@ -134,7 +134,7 @@ export default function LoginForm() {
       </form>
       <div className="divider">OR</div>
       <div>
-        <button 
+        <button
           onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
           className="btn bg-white text-black border-[#e5e5e5] w-full"
           type="button"
@@ -169,6 +169,13 @@ export default function LoginForm() {
           Login with Google
         </button>
         {error && <p className="text-red-500 mt-2">Login failed. Try again.</p>}
+      </div>
+      <div className="text-center mt-5">
+        <p className="text-sm">
+          Don't have an account? Signup <Link href="/auth/signup" className="text-blue-600">
+            Here
+          </Link>{" "}
+        </p>
       </div>
     </div>
   );
