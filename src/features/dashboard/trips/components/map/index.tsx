@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { act, useEffect, useRef, useState } from "react";
 import { useCurrentDay } from "@/features/dashboard/store/currentDay";
 import ErrorBoundary from "@/utils/ErrorBoundry";
 import { TripActivity } from "@prisma/client";
@@ -10,6 +10,8 @@ import { MapPinIcon, PhoneIcon, GlobeAltIcon } from "@heroicons/react/24/solid";
 import "leaflet/dist/leaflet.css";
 import "./popup.css";
 import React from "react";
+import { useCurrentActivity } from "@/features/dashboard/store/activity";
+import { createMarkerIcon } from "./components/marker";
 
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
@@ -122,8 +124,14 @@ export default function Map() {
   const destination = searchParams.get("destination");
 
   const currentDayId = useCurrentDay((state) => state.currentDay.id);
-  const [icon, setIcon] = useState(null);
+  const currentActivity = useCurrentActivity((state) => state.currentActivity);
+  const [icons, setIcons] = useState<{ activeIcon: any; inactiveIcon: any }>({
+    activeIcon: null,
+    inactiveIcon: null,
+  });
   const [position, setPosition] = useState<[number, number]>([0, 0]);
+
+  const markerRefs = useRef<{ [key: number]: any }>({});
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["dayActivities", currentDayId],
@@ -139,20 +147,13 @@ export default function Map() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
+      const iconSet = createMarkerIcon();
+      setIcons(iconSet);
+
       if (data && data.length > 0) {
         const firstActivity = data[0];
         setPosition([firstActivity.latitude, firstActivity.longitude]);
       }
-      const L = require("leaflet");
-      setIcon(
-        new L.Icon({
-          iconUrl: `data:image/svg+xml,${svgString}`,
-          iconSize: [32, 32],
-          iconAnchor: [16, 32],
-          popupAnchor: [0, -32],
-          className: "",
-        }),
-      );
 
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition((position) => {
@@ -161,6 +162,19 @@ export default function Map() {
       }
     }
   }, [data]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && currentActivity.id) {
+      data.forEach((activity: TripActivity) => {
+        const markerRef = markerRefs.current[activity.id];
+        if (markerRef) {
+          const isActive = currentActivity.id === activity.id;
+          const newIcon = isActive ? icons.activeIcon : icons.inactiveIcon;
+          markerRef.setIcon(newIcon);
+        }
+      });
+    }
+  }, [currentActivity.id, icons, data]);
 
   if (isLoading || loadingDestination) return <div>Loading map...</div>;
   if (error) return <div>Error loading map data.</div>;
@@ -176,14 +190,21 @@ export default function Map() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {icon &&
+        {icons.inactiveIcon &&
           data &&
           data.map((activity: TripActivity) => {
+            const isActive = currentActivity.id === activity.id;
+            const icon = isActive ? icons.activeIcon : icons.inactiveIcon;
             return (
               <Marker
                 key={activity.id}
                 icon={icon}
                 position={[activity.latitude ?? 0, activity.longitude ?? 0]}
+                ref={(ref) => {
+                  if (ref) {
+                    markerRefs.current[activity.id] = ref;
+                  }
+                }}
               >
                 <Popup>
                   <div className="card">
