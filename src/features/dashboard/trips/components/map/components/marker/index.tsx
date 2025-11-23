@@ -1,4 +1,4 @@
-export const createMarkerIcon = (isActive: boolean = false) => {
+export const createMarkerIcon = () => {
   if (typeof window === "undefined") return { activeIcon: null, inactiveIcon: null };
   
   const L = require("leaflet");
