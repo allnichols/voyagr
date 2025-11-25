@@ -1,8 +1,8 @@
 "use client";
 import { memo } from "react";
 import { useCurrentDay } from "@/features/dashboard/store/currentDay";
-import AddActivityBtn from "./AddActivityBtn";
-import DayMenu from "./DayMenu";
+import AddActivityBtn from "./components/add-activity-btn";
+import DayMenu from "./components/menu/day-menu";
 import Activities from "./components/activity";
 import { DayDropdownProps } from "./types";
 

@@ -1,13 +1,13 @@
 "use client";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { fetchPlace, addActivity } from "../itinerary/actions";
+import { fetchPlace, addActivity } from "../../../itinerary/actions";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCurrentDay } from "@/features/dashboard/store/currentDay";
 import Image from "next/image";
 import { GooglePlace } from "@/types/google-places";
-import { getPriceLevelIcons } from "./utils";
-import { GooglePlaceResults } from "./components/results";
+import { getPriceLevelIcons } from "../../utils";
+import { GooglePlaceResults } from "../results";
 
 export default function AddActivityBtn({
   dayId,
