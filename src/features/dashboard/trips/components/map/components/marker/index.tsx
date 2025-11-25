@@ -4,7 +4,7 @@ export const createMarkerIcon = () => {
   const L = require("leaflet");
   
   const activeSvg = encodeURIComponent(`
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#e11d48" class="size-5">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#5b4de8" class="size-6">
       <defs>
         <filter id="glow">
           <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
