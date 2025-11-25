@@ -12,6 +12,8 @@ import { useDragAndDrop } from "../itinerary/hooks/useDragAndDrop";
 import { TripActivity } from "@prisma/client";
 import { useReorderActivity } from "../itinerary/hooks/useItineraryMutation";
 import { getTripDayActivites } from "./api/getTripDayActivities";
+import { useCurrentActivity } from "@/features/dashboard/store/activity";
+
 
 export const DayDropdown = memo(function DayDropdown({
   dayId,
@@ -52,6 +54,7 @@ export const DayDropdown = memo(function DayDropdown({
   const currentDay = useCurrentDay((state) => state.currentDay.id);
   const queryClient = useQueryClient();
   const reorderActivityMutation = useReorderActivity();
+  const setCurrentActivity = useCurrentActivity((state) => state.setCurrentActivity);
 
   const { data: activities } = useQuery({
     queryKey: ["dayActivities", dayId],
@@ -177,6 +180,7 @@ export const DayDropdown = memo(function DayDropdown({
         >
           {activities?.map((activity: TripActivity, i: number) => (
             <div
+
               key={activity.id}
               className={`
                 flex justify-between items-center mb-4 rounded-lg border-2 border-base-200 p-4 opacity-0 transition-all duration-400 
@@ -185,6 +189,8 @@ export const DayDropdown = memo(function DayDropdown({
                 ${isOpen ? "block opacity-100" : "hidden"}
                 `}
               draggable={isOpen}
+              onMouseEnter={() => setCurrentActivity(activity.id)}
+              onMouseLeave={() => setCurrentActivity(null)}
               onDragStart={(e) => {
                 e.stopPropagation();
                 activityDragAndDrop.handleDragStart(e, i, dayId, activity.id);

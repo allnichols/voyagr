@@ -7,7 +7,6 @@ import { addDayToTrip } from "./actions";
 import { useDragAndDrop } from "./hooks/useDragAndDrop";
 import { useReorderDay } from "./hooks/useItineraryMutation";
 import { useToastMutation } from "../hooks/useToastMutation";
-import { AnimatePresence, motion } from "motion/react";
 
 async function getTripDays(tripId: number | null) {
   const url = `/api/trip-days${tripId !== null ? `?tripId=${tripId}` : ""}`;
@@ -79,17 +78,11 @@ export default function Itinerary() {
             <span className="loading loading-infinity loading-md"></span>
           )}
           <div className="overflow-y-auto max-h-[600px] pr-2">
-            <AnimatePresence initial={false}>
               {data &&
                 data.map((day: any, idx: number) => {
                   return (
-                    <motion.div
-                      key={day.id}
-                      initial={{ opacity: 0, animationDelay: idx + 1 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    >
                       <DayDropdown
+                        key={day.dayNumber}
                         dayId={day.id}
                         days={data}
                         dayNumber={day.dayNumber}
@@ -108,10 +101,8 @@ export default function Itinerary() {
                         isDragging={dayDragAndDrop.isDragging}
                         isDraggingOver={dayDragAndDrop.isDragOver}
                       />
-                    </motion.div>
                   );
                 })}
-            </AnimatePresence>
 
             {data && data.length === 0 && (
               <p>
