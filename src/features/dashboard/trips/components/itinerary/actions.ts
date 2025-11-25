@@ -46,7 +46,8 @@ export async function fetchPlace(query: string, destination: string | null) {
         "places.userRatingCount",
         "places.internationalPhoneNumber",
         "places.nationalPhoneNumber",
-        "places.websiteUri"
+        "places.websiteUri",
+        "places.photos"
       ].join(","),
   };
   if (process.env.GOOGLE_MAPS_API_KEY) {

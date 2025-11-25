@@ -7,7 +7,7 @@ import { useCurrentDay } from "@/features/dashboard/store/currentDay";
 import Image from "next/image";
 import { GooglePlace } from "@/types/google-places";
 import { getPriceLevelIcons } from "./utils";
-import { GooglePlaceResults } from "./components/Results";
+import { GooglePlaceResults } from "./components/results";
 
 export default function AddActivityBtn({
   dayId,
