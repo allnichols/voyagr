@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-interface DragItem {
+export interface DragItem {
   index: number;
   dayId: number;
   type: string;
