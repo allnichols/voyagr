@@ -17,6 +17,12 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: '/images/**'
       }
+     ],
+     localPatterns: [
+      {
+        pathname: '/api/google-image/image**',
+        search: ''
+      }
      ]
   }
 };
