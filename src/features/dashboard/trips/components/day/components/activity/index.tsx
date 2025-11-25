@@ -5,7 +5,6 @@ import { useCurrentActivity } from "@/features/dashboard/store/activity";
 import { deleteActivity } from "../../../itinerary/actions";
 import { useDragAndDrop } from "../../../itinerary/hooks/useDragAndDrop";
 import { ActivityProps } from "./types";
-import { useToastMutation } from "../../../hooks/useToastMutation";
 import { TripActivity } from "@prisma/client";
 import { useReorderActivity } from "../../../itinerary/hooks/useItineraryMutation";
 import { getTripDayActivites } from "../../api/getTripDayActivities";
