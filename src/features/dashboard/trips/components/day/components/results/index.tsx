@@ -1,7 +1,5 @@
 import { GooglePlace } from "@/types/google-places";
-import Image from "next/image";
 import { getPriceLevelIcons } from "../../utils";
-import { MapPinIcon } from "@heroicons/react/24/outline";
 import GoogleImage from "./components/google-image";
 
 export function GooglePlaceResults({

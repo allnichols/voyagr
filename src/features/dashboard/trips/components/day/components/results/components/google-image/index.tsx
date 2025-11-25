@@ -2,7 +2,6 @@
 import Image from "next/image";
 import { GooglePlace } from "@/types/google-places";
 import { useQuery } from "@tanstack/react-query";
-import { error } from "console";
 
 export default function GoogleImage({ place }: { place: GooglePlace }) {
   const { data, isLoading, isError, isSuccess } = useQuery({
