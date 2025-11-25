@@ -10,7 +10,7 @@ import { TripActivity } from "@prisma/client";
 import { useReorderActivity } from "../../../itinerary/hooks/useItineraryMutation";
 import { getTripDayActivites } from "../../api/getTripDayActivities";
 
-export default function Activities({ isDragging, isOpen, dayId }: ActivityProps) {
+export default function Activities({ isOpen, dayId }: ActivityProps) {
   const queryClient = useQueryClient();
   const reorderActivityMutation = useReorderActivity();
 
@@ -26,8 +26,6 @@ export default function Activities({ isDragging, isOpen, dayId }: ActivityProps)
     queryKey: ["dayActivities", dayId],
     queryFn: () => getTripDayActivites(dayId),
   });
-
-  console.log(activities)
 
   const deleteActivityMutation = useMutation({
     mutationFn: async (activityId: number) => {
@@ -47,7 +45,6 @@ export default function Activities({ isDragging, isOpen, dayId }: ActivityProps)
     onReorder: (
       type: string,
       newPosition: number,
-      dayId?: number,
       activityId?: number,
     ) => {
       if (type === "activity") {
@@ -65,7 +62,7 @@ export default function Activities({ isDragging, isOpen, dayId }: ActivityProps)
       }
     },
   });
-  const toast = useToastMutation(deleteActivityMutation, 3000);
+ 
 
   if (isLoading) {
     return <p>Loading...</p>;
