@@ -61,9 +61,11 @@ export const useDragAndDrop = ({ onReorder, itemType }: DragAndDropProps) => {
     if (!data) return;
 
     const dragItem: DragItem = JSON.parse(data);
-    console.log("Drop", { dragItem, dropIndex });
-    if (dragItem && dragItem.type === itemType) {
-      onReorder(dragItem.type, dropIndex, dragItem.dayId, dragItem.activityId);
+
+    if (dragItem && dragItem.type === "activity") {
+      onReorder(dragItem.type, dropIndex, dragItem.activityId);
+    } else {
+      onReorder(dragItem.type, dropIndex, dragItem.dayId);
     }
 
     setDraggedItem(null);
