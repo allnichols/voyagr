@@ -5,7 +5,7 @@ import { fetchPlace, addActivity } from "../../itinerary/actions";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCurrentDay } from "@/features/dashboard/store/currentDay";
 import { GooglePlace } from "@/types/google-places";
-import { GooglePlaceResults } from "../components/results";
+import { GooglePlaceResults } from "./results";
 
 export default function AddActivityBtn({
   dayId,
@@ -109,7 +109,7 @@ export default function AddActivityBtn({
             </label>
             <button
               type="submit"
-              disabled={query.length <= 3}
+              disabled={query.length <= 2}
               className="btn btn-primary ml-2 rounded-2xl"
               onClick={handleSearch}
             >

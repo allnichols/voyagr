@@ -3,8 +3,11 @@ import Image from "next/image";
 import { GoogleImageProps, GoogleImageResponse } from "./types";
 import { useQuery } from "@tanstack/react-query";
 
-export default function GoogleImage({ placeId, width, height }: GoogleImageProps) {
- 
+export default function GoogleImage({
+  placeId,
+  width,
+  height,
+}: GoogleImageProps) {
   const { data, isLoading, isError, isSuccess } = useQuery<GoogleImageResponse>(
     {
       queryKey: ["googleImage", placeId],
@@ -23,7 +26,10 @@ export default function GoogleImage({ placeId, width, height }: GoogleImageProps
 
   if (isLoading) {
     return (
-      <div className={`skeleton h-[${height}px] w-[${width}px] rounded`} />
+      <div
+        className={`skeleton h-[${height}px] w-[${width}px] rounded`}
+        style={{ width: `${width}px`, height: `${height}px` }}
+      />
     );
   }
 
@@ -56,7 +62,10 @@ export default function GoogleImage({ placeId, width, height }: GoogleImageProps
     const photoUrl = `/api/google-image/image?image_ref=${photo.photo_reference}`;
 
     return (
-      <div className={`w-[${width}px] h-[${height}px] relative overflow-hidden rounded`}>
+      <div
+        className="relative overflow-hidden rounded"
+        style={{ width: `${width}px`, height: `${height}` }}
+      >
         <Image
           src={photoUrl}
           alt={"Place photo"}
