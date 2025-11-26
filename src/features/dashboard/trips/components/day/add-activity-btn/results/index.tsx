@@ -1,7 +1,6 @@
 import { GooglePlace } from "@/types/google-places";
-import Image from "next/image";
-import { getPriceLevelIcons } from "../utils";
-import { MapPinIcon } from "@heroicons/react/24/outline";
+import { getPriceLevelIcons } from "../../utils";
+import GoogleImage from "../../../google-image";
 
 export function GooglePlaceResults({
   places,
@@ -13,44 +12,12 @@ export function GooglePlaceResults({
   if (places.length === 0) {
     return <p className="text-center">No results found</p>;
   }
-  
+
   return (
     <ul className="list">
       {places.map((place) => (
         <li key={place.id} className="list-row items-center">
-          <div>
-            {/* if  generic_pinlet is part of the iconMask show default icon svg  */}
-            {place.iconMaskBaseUri?.includes("generic_pinlet") ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
-                />
-              </svg>
-            ) : place.iconMaskBaseUri ? (
-              <Image
-                width={15}
-                height={15}
-                src={`${place.iconMaskBaseUri}.png`}
-                alt="Place icon"
-              />
-            ) : (
-              <MapPinIcon className="h-6 w-6 text-gray-500" />
-            )}
-          </div>
+          <GoogleImage placeId={place.id} width={45} height={45}  />
           <div>
             <p>{place.displayName.text}</p>
             <div className="flex items-center gap-2">

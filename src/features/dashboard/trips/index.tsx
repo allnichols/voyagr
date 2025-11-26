@@ -3,23 +3,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCurrentTrip } from "@/features/dashboard/store/currentTrip";
-import {  removeTrip } from "./actions";
+import { removeTrip } from "./actions";
+import { getTotalDays } from "./utils";
+import { getTrips } from "./api";
 import "./trips.css";
-
-function getTotalDays(departureDate: Date, returnDate: Date): number {
-  const start = new Date(departureDate);
-  const end = new Date(returnDate);
-  // Calculate difference in milliseconds, then convert to days
-  const diffTime = end.getTime() - start.getTime();
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-  return diffDays;
-}
-
-async function getTrips() {
-  const res = await fetch("/api/trips", { method: "GET" });
-  if (!res.ok) throw new Error("Failed to fetch trips");
-  return res.json();
-}
 
 export default function Trips() {
   const router = useRouter();
@@ -27,7 +14,7 @@ export default function Trips() {
   const setTripID = useCurrentTrip((state) => state.setCurrentTripId);
 
   const { data } = useQuery({
-    queryFn: () => getTrips(), // Replace with actual user ID
+    queryFn: () => getTrips(),
     queryKey: ["trips"],
   });
 
@@ -78,9 +65,12 @@ export default function Trips() {
       <div className="divider" />
 
       <div className="grid gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
-        {data?.map((trip:any) => {
+        {data?.map((trip: any) => {
           return (
-            <div className="card border-1 border-base-200 shadow-md" key={trip.id}>
+            <div
+              className="card border-1 border-base-200 shadow-md"
+              key={trip.id}
+            >
               <div className="card-body">
                 <h2 className="card-title">{trip.destination}</h2>
                 <div>
