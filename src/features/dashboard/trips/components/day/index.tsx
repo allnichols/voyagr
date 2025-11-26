@@ -1,12 +1,11 @@
 "use client";
-import { memo } from "react";
 import { useCurrentDay } from "@/features/dashboard/store/currentDay";
 import AddActivityBtn from "./components/add-activity-btn";
 import DayMenu from "./components/menu/day-menu";
 import Activities from "./components/activity";
 import { DayDropdownProps } from "./types";
 
-export const DayDropdown = memo(function DayDropdown({
+export const DayDropdown = ({
   dayId,
   dayNumber,
   index,
@@ -20,7 +19,7 @@ export const DayDropdown = memo(function DayDropdown({
   onDrop,
   isDragging,
   isDraggingOver,
-}: DayDropdownProps) {
+}: DayDropdownProps) => {
   const setCurrentDay = useCurrentDay((state) => state.setCurrentDay);
   const currentDay = useCurrentDay((state) => state.currentDay.id);
 
@@ -30,12 +29,20 @@ export const DayDropdown = memo(function DayDropdown({
     }
   };
 
+  const getDragClassName = () => {
+    if(!isOpen) {
+      return "cursor-grab";
+    } else {
+      return isDragging(index) ? "opacity-50" : "opacity-100";
+    }
+  }
+
   return (
     <>
       <div
         draggable={isOpen ? false : true}
         id={`day-${dayId}-${index}`}
-        className={`${isOpen ? `${isDragging(index) ? "opacity-50" : "opacity-100"}` : "cursor-grab"} `}
+        className={`${getDragClassName()} `}
         onDragStart={(e) => onDragStart(e, index, dayId, dayNumber)}
         onDragOver={(e) => onDragOver(e, index)}
         onDragEnter={onDragEnter}
@@ -113,9 +120,9 @@ export const DayDropdown = memo(function DayDropdown({
             index={index}
           />
 
-          <AddActivityBtn dayId={dayId} dayNumber={0} />
+          <AddActivityBtn dayId={dayId} dayNumber={dayNumber} />
         </div>
       </div>
     </>
   );
-});
+};
