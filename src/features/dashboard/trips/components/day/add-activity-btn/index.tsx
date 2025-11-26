@@ -1,11 +1,11 @@
 "use client";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { fetchPlace, addActivity } from "../../../itinerary/actions";
+import { fetchPlace, addActivity } from "../../itinerary/actions";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCurrentDay } from "@/features/dashboard/store/currentDay";
 import { GooglePlace } from "@/types/google-places";
-import { GooglePlaceResults } from "../results";
+import { GooglePlaceResults } from "../components/results";
 
 export default function AddActivityBtn({
   dayId,

@@ -3,13 +3,13 @@ import Image from "next/image";
 import { GoogleImageProps, GoogleImageResponse } from "./types";
 import { useQuery } from "@tanstack/react-query";
 
-export default function GoogleImage({ place, width, height }: GoogleImageProps) {
-
+export default function GoogleImage({ placeId, width, height }: GoogleImageProps) {
+ 
   const { data, isLoading, isError, isSuccess } = useQuery<GoogleImageResponse>(
     {
-      queryKey: ["googleImage", place.id],
+      queryKey: ["googleImage", placeId],
       queryFn: async () => {
-        const res = await fetch(`/api/google-image?place_id=${place.id}`);
+        const res = await fetch(`/api/google-image?place_id=${placeId}`);
 
         if (!res.ok) {
           throw new Error("Failed to fetch place photos");
@@ -17,7 +17,7 @@ export default function GoogleImage({ place, width, height }: GoogleImageProps) 
 
         return res.json();
       },
-      enabled: !!place.id,
+      enabled: !!placeId,
     },
   );
 
@@ -59,7 +59,7 @@ export default function GoogleImage({ place, width, height }: GoogleImageProps) 
       <div className={`w-[${width}px] h-[${height}px] relative overflow-hidden rounded`}>
         <Image
           src={photoUrl}
-          alt={place.displayName.text || "Place photo"}
+          alt={"Place photo"}
           fill
           className="object-cover rounded"
           sizes={`${width}px`}

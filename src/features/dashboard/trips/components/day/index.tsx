@@ -1,8 +1,8 @@
 "use client";
 import { useCurrentDay } from "@/features/dashboard/store/currentDay";
-import AddActivityBtn from "./components/add-activity-btn";
-import DayMenu from "./components/menu/day-menu";
-import Activities from "./components/activity";
+import AddActivityBtn from "./add-activity-btn";
+import DayMenu from "./menu/day-menu";
+import Activities from "./activity";
 import { DayDropdownProps } from "./types";
 
 export const DayDropdown = ({

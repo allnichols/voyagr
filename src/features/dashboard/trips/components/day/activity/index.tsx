@@ -2,12 +2,13 @@ import Image from "next/image";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { LocationIcon } from "@/components/icons/location";
 import { useCurrentActivity } from "@/features/dashboard/store/activity";
-import { deleteActivity } from "../../../itinerary/actions";
-import { useDragAndDrop } from "../../../itinerary/hooks/useDragAndDrop";
-import { ActivityProps } from "./types";
+import { deleteActivity } from "../../itinerary/actions";
+import { useDragAndDrop } from "../../itinerary/hooks/useDragAndDrop";
+import { ActivityProps } from "../activity/types";
 import { TripActivity } from "@prisma/client";
-import { useReorderActivity } from "../../../itinerary/hooks/useItineraryMutation";
-import { getTripDayActivites } from "../../api/getTripDayActivities";
+import { useReorderActivity } from "../../itinerary/hooks/useItineraryMutation";
+import { getTripDayActivites } from "../api/getTripDayActivities";
+import GoogleImage from "../../google-image";
 
 export default function Activities({ isOpen, dayId }: ActivityProps) {
   const queryClient = useQueryClient();
@@ -113,7 +114,8 @@ export default function Activities({ isOpen, dayId }: ActivityProps) {
             }}
           >
             <div className="flex gap-2 items-center">
-              {activity.iconMask ? (
+              <GoogleImage placeId={activity.gPlaceId} width={45} height={45}/>
+              {/* {activity.iconMask ? (
                 <Image
                   width={15}
                   height={15}
@@ -122,7 +124,7 @@ export default function Activities({ isOpen, dayId }: ActivityProps) {
                 />
               ) : (
                 <LocationIcon />
-              )}
+              )} */}
               <p className="text-xs font-semibold mb-1">{activity.place}</p>
             </div>
 
