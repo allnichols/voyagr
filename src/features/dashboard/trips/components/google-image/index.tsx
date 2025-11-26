@@ -64,7 +64,7 @@ export default function GoogleImage({
     return (
       <div
         className="relative overflow-hidden rounded"
-        style={{ width: `${width}px`, height: `${height}` }}
+        style={{ width: `${width}px`, height: `${height}px` }}
       >
         <Image
           src={photoUrl}
