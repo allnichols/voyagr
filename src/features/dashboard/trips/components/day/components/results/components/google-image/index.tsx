@@ -1,28 +1,33 @@
 "use client";
 import Image from "next/image";
-import { GooglePlace } from "@/types/google-places";
+import { GoogleImageProps, GoogleImageResponse } from "./types";
 import { useQuery } from "@tanstack/react-query";
 
-export default function GoogleImage({ place }: { place: GooglePlace }) {
-  const { data, isLoading, isError, isSuccess } = useQuery({
-    queryKey: ["googleImage", place.id],
-    queryFn: async () => {
-      const res = await fetch(`/api/google-image?place_id=${place.id}`);
+export default function GoogleImage({ place, width, height }: GoogleImageProps) {
 
-      if (!res.ok) {
-        throw new Error("Failed to fetch place photos");
-      }
+  const { data, isLoading, isError, isSuccess } = useQuery<GoogleImageResponse>(
+    {
+      queryKey: ["googleImage", place.id],
+      queryFn: async () => {
+        const res = await fetch(`/api/google-image?place_id=${place.id}`);
 
-      return res.json();
+        if (!res.ok) {
+          throw new Error("Failed to fetch place photos");
+        }
+
+        return res.json();
+      },
+      enabled: !!place.id,
     },
-    enabled: !!place.id,
-  });
+  );
 
   if (isLoading) {
-    return <div className="skeleton h-[45px] w-[45px] rounded"></div>;
+    return (
+      <div className={`skeleton h-[${height}px] w-[${width}px] rounded`} />
+    );
   }
 
-  if (isError ||  !data?.result?.photos || data?.result?.photos.length < 0) {
+  if (isError || !data?.result?.photos || data?.result?.photos.length == 0) {
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -51,13 +56,13 @@ export default function GoogleImage({ place }: { place: GooglePlace }) {
     const photoUrl = `/api/google-image/image?image_ref=${photo.photo_reference}`;
 
     return (
-      <div className="w-[45px] h-[45px] relative overflow-hidden rounded">
+      <div className={`w-[${width}px] h-[${height}px] relative overflow-hidden rounded`}>
         <Image
           src={photoUrl}
           alt={place.displayName.text || "Place photo"}
           fill
           className="object-cover rounded"
-          sizes="45px"
+          sizes={`${width}px`}
           unoptimized
         />
       </div>

@@ -6,25 +6,33 @@ const nextConfig: NextConfig = {
     // "https://maps.gstatic.com/mapfiles/place_api/icons/v2/cafe_pinlet"
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'maps.gstatic.com',
-        port: '',
-        pathname: '/mapfiles/**',
+        protocol: "https",
+        hostname: "maps.gstatic.com",
+        port: "",
+        pathname: "/mapfiles/**",
       },
       {
         protocol: "https",
         hostname: "img.daisyui.com",
         port: "",
-        pathname: '/images/**'
-      }
-     ],
-     localPatterns: [
+        pathname: "/images/**",
+      },
+    ],
+    localPatterns: [
       {
-        pathname: '/api/google-image/image**',
-        search: ''
-      }
-     ]
-  }
+        pathname: "/api/google-image/image**",
+        search: "",
+      },
+      {
+        pathname: "/travel-adventure-with-baggage.jpg",
+        search: "",
+      },
+      {
+        pathname: "/**",
+        search: "",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
