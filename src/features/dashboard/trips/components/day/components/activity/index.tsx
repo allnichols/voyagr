@@ -35,7 +35,7 @@ export default function Activities({ isOpen, dayId }: ActivityProps) {
     },
   });
 
-  const handleDeleteActvity = (activityId: number) => {
+  const handleDeleteActivity = (activityId: number) => {
     deleteActivityMutation.mutate(activityId);
   };
 
@@ -46,7 +46,7 @@ export default function Activities({ isOpen, dayId }: ActivityProps) {
       newPosition: number,
       activityId?: number,
     ) => {
-      if (type === "activity") {
+      if (type === "activity" && activities) {
         const draggedActivity: TripActivity = activities.find(
           (activity: TripActivity) => {
             console.log(activity.id, activityId);
@@ -71,7 +71,11 @@ export default function Activities({ isOpen, dayId }: ActivityProps) {
     return <p>Sorry something went wrong</p>;
   }
 
-  if (activities) {
+  if(!activities || activities.length === 0) {
+    return <p>No Activities found</p>
+  }
+
+
    return (
       activities.map((activity: TripActivity, index: number) => {
         return (
@@ -145,7 +149,7 @@ export default function Activities({ isOpen, dayId }: ActivityProps) {
                 className="dropdown-content menu bg-base-100 rounded-box  w-52 p-2 shadow-xl/20"
               >
                 <li className="p-2 font-semibold">
-                  <a onClick={() => handleDeleteActvity(activity.id)}>
+                  <a onClick={() => handleDeleteActivity(activity.id)}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -170,5 +174,4 @@ export default function Activities({ isOpen, dayId }: ActivityProps) {
         );
       })
     )
-  }
 }
