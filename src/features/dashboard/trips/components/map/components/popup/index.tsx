@@ -3,12 +3,17 @@ import React from "react";
 import dynamic from "next/dynamic";
 import { MapPinIcon, PhoneIcon, GlobeAltIcon } from "@heroicons/react/24/solid";
 import GoogleImage from "../../../google-image";
+import { useDetailsDrawer } from "@/features/dashboard/store/detailsDrawer";
 
 const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
   ssr: false,
 });
 
 export default function MarkerPopup({ activity }: { activity: TripActivity }) {
+  const toggleDetailsPanel = useDetailsDrawer(
+    (state) => state.toggleDetailsDrawer,
+  );
+
   return (
     <Popup>
       <div className="card max-w-[300px] min-w-[300px]">
@@ -16,9 +21,7 @@ export default function MarkerPopup({ activity }: { activity: TripActivity }) {
           <GoogleImage placeId={activity.gPlaceId} />
         </figure>
         <div className="card-body items-start gap-0">
-          <h2 className="card-title">
-            {activity.place}
-          </h2>
+          <h2 className="card-title">{activity.place}</h2>
           <div className="flex mt-0 gap-1.5 border-b border-gray-200 pb-1">
             <div className="flex items-center gap-1">
               <p>{activity.rating}</p>
@@ -81,6 +84,14 @@ export default function MarkerPopup({ activity }: { activity: TripActivity }) {
               </a>
             </div>
           )}
+          <div className="mt-6">
+            <button
+              className="btn btn-sm btn-outline btn-info"
+              onClick={() => toggleDetailsPanel()}
+            >
+              View More
+            </button>
+          </div>
         </div>
       </div>
     </Popup>
