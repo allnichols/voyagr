@@ -15,15 +15,20 @@ export default function DetailsPanel() {
     (state) => state.currentActivity.id,
   );
 
-  console.log(currentActivity)
+  console.log(currentActivity);
 
-  const { data: activity, isLoading, isError } = useQuery<TripActivity>({
+  const {
+    data: activity,
+    isLoading,
+    isError,
+    isSuccess
+  } = useQuery<TripActivity>({
     queryFn: () => fetchActivity(currentActivity),
     queryKey: ["tripActivity", currentActivity],
     enabled: !!currentActivity,
   });
 
-  console.log(activity)
+  console.log(activity);
 
   return (
     <>
@@ -40,7 +45,7 @@ export default function DetailsPanel() {
       >
         {isLoading && (
           <div>
-              <div className="skeleton h-[100%] w-[100%]"></div>
+            <div className="skeleton h-[100%] w-[100%]"></div>
           </div>
         )}
 
@@ -66,19 +71,25 @@ export default function DetailsPanel() {
               </svg>
             </button>
           </div>
-          <figure className="h-[300px] w-[100%]">
-            
-          </figure>
+          <figure className="h-[300px] w-[100%]"></figure>
           <div className="card-body">
-            
             <h2 className="card-title">
               {isLoading && <div className="skeleton h-4 w-20"></div>}
-              {activity?.place ? activity.place : ''}
+              {activity?.place ? activity.place : ""}
             </h2>
-            <p>
-              A card component has a figure, a body part, and inside body there
-              are title and actions parts
-            </p>
+            <div>{isLoading && <div className="skeleton h-4 w-20"></div>}
+              {activity && isSuccess ? (
+                <div>
+                  <p>{activity.address}</p>
+                  <p>{activity.internationalPhoneNumber}</p>
+                  <p>{activity.rating}</p>
+                  <p>{activity.userRatingCount}</p>
+                  <p>{activity.websiteUri}</p>
+                </div>
+              ): (
+                null
+              )}
+            </div>
             <div className="card-actions justify-end">
               <div className="badge badge-outline">Fashion</div>
               <div className="badge badge-outline">Products</div>
