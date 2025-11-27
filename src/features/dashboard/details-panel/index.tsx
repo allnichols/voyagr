@@ -12,9 +12,13 @@ export default function DetailsPanel() {
       {/* Drawer */}
       <div
         className={`
-          absolute top-0 right-0 bottom-0 w-[100%] h-[99%] 
-          bg-white rounded-2xl shadow-2xl z-2000 transform transition-transform duration-300 ease-in-out 
+          absolute top-0 right-0 bottom-0 w-[100%] h-[99%] z-2000
+          bg-white rounded-xl  
+          transform transition-transform duration-300 ease-in-out 
           ${isDetailsOpen ? "translate-x-0" : "translate-x-full"}`}
+        style={{
+          boxShadow: "4px 0px 18px -6px rgba(150,150,150,0.85)",
+        }}
       >
         {/* Close button */}
         <div className="p-4 border-b border-base-300">

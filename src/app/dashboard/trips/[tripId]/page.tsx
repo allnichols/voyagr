@@ -6,7 +6,7 @@ import MapToggle from "@/features/dashboard/trips/components/map/MapToggle";
 export default function TripPage() {
   return (
     <>
-      <div className="flex h-screen relative">
+      <div className="flex h-screen relative  overflow-x-hidden">
         <MapToggle />
         {/* Left panel */}
         <div className="w-full lg:w-1/2 h-full lg:h-auto relative">
@@ -14,7 +14,7 @@ export default function TripPage() {
         </div>
 
         {/* Right panel (map placeholder) */}
-        <div className="flex-1 flex items-center justify-center relative overflow-x-hidden">
+        <div className="flex-1 flex items-center justify-center relative">
           <Map />
           <DetailsPanel />
         </div>
