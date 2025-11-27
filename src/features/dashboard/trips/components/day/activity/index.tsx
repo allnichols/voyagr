@@ -1,6 +1,4 @@
-import Image from "next/image";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { LocationIcon } from "@/components/icons/location";
 import { useCurrentActivity } from "@/features/dashboard/store/activity";
 import { deleteActivity } from "../../itinerary/actions";
 import { useDragAndDrop } from "../../itinerary/hooks/useDragAndDrop";
@@ -107,17 +105,9 @@ export default function Activities({ isOpen, dayId }: ActivityProps) {
         }}
       >
         <div className="flex gap-2 items-center">
-          <GoogleImage placeId={activity.gPlaceId} width={45} height={45} />
-          {/* {activity.iconMask ? (
-                <Image
-                  width={15}
-                  height={15}
-                  src={`${activity.iconMask}.png`}
-                  alt="Place icon"
-                />
-              ) : (
-                <LocationIcon />
-              )} */}
+          <div className="relative overflow-hidden rounded w-[55px] h-[55px]">
+            <GoogleImage placeId={activity.gPlaceId} />
+          </div>
           <p className="text-xs font-semibold mb-1">{activity.place}</p>
         </div>
 
