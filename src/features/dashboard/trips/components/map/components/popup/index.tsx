@@ -2,6 +2,7 @@ import { TripActivity } from "@prisma/client";
 import React from "react";
 import dynamic from "next/dynamic";
 import { MapPinIcon, PhoneIcon, GlobeAltIcon } from "@heroicons/react/24/solid";
+import GoogleImage from "../../../google-image";
 
 const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
   ssr: false,
@@ -10,9 +11,14 @@ const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
 export default function MarkerPopup({ activity }: { activity: TripActivity }) {
   return (
     <Popup>
-      <div className="card">
+      <div className="card items-center">
+        <figure className="relative h-[175px] px-10 pt-10 w-full">
+          <GoogleImage placeId={activity.gPlaceId} />
+        </figure>
         <div className="card-body gap-0">
-          <h2 className="text-xl ellipsis mb-[-10px]">{activity.place}</h2>
+          <h2 className="card-title">
+            {activity.place}
+          </h2>
           <div className="flex mt-0 gap-1.5 border-b border-gray-200 pb-1">
             <div className="flex items-center gap-1">
               <p>{activity.rating}</p>
