@@ -74,16 +74,12 @@ export default function Map() {
 
   useEffect(() => {
     if (typeof window !== "undefined" && currentActivity.id) {
-      data.forEach((activity: TripActivity) => {
-        const markerRef = markerRefs.current[activity.id];
-        if (markerRef) {
-          const isActive = currentActivity.id === activity.id;
-          const newIcon = isActive ? icons.activeIcon : icons.inactiveIcon;
-          markerRef.setIcon(newIcon);
-        }
-      });
+     const markerRef = markerRefs.current[currentActivity.id];
+     if(markerRef) {
+      markerRef.openPopup();
+     }
     }
-  }, [currentActivity.id, icons, data]);
+  }, [currentActivity.id]);
 
   if (isLoading || loadingDestination) return <div>Loading map...</div>;
   if (error) return <div>Error loading map data.</div>;
@@ -115,7 +111,7 @@ export default function Map() {
                   }
                 }}
               >
-               <MarkerPopup activity={activity} />
+                <MarkerPopup activity={activity} />
               </Marker>
             );
           })}
