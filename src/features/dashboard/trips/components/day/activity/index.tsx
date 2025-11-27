@@ -112,10 +112,11 @@ export default function Activities({ isOpen, dayId }: ActivityProps) {
           <p className="text-xs font-semibold mb-1">{activity.place}</p>
         </div>
 
-        <ActivityMenu 
-          activityId={activity.id} 
-          activityIndex={index} 
-          handleDeleteActivity={handleDeleteActivity} />
+        <ActivityMenu
+          activityId={activity.id}
+          activityIndex={index}
+          handleDeleteActivity={handleDeleteActivity}
+        />
       </div>
     );
   });

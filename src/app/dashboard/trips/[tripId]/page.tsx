@@ -14,7 +14,7 @@ export default function TripPage() {
         </div>
 
         {/* Right panel (map placeholder) */}
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex-1 flex items-center justify-center relative">
           <Map />
           <DetailsPanel />
         </div>

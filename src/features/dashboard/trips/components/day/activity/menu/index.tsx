@@ -9,7 +9,7 @@ type ActivityMenuProps = {
 
 export default function ActivityMenu({ activityIndex, activityId, handleDeleteActivity }: ActivityMenuProps) {
     const toggleDetailsDrawer = useDetailsDrawer((state) => state.toggleDetailsDrawer);
-    
+
     return (
         <div className="dropdown dropdown-top dropdown-left">
             <div tabIndex={activityIndex} className="btn btn-ghost btn-circle">
@@ -63,6 +63,7 @@ export default function ActivityMenu({ activityIndex, activityId, handleDeleteAc
                             stroke="currentColor"
                             className="size-4"
                         >
+                            <title>View Details</title>
                             <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"

@@ -89,7 +89,7 @@ export default function Map() {
       <MapContainer
         center={[destinationLatLong?.lat ?? 0, destinationLatLong?.lon ?? 0]}
         zoom={10}
-        style={{ height: "90%", width: "100%", borderRadius: "16px" }}
+        style={{ height: "99%", width: "100%", borderRadius: "16px" }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
