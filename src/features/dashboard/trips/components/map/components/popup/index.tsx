@@ -11,11 +11,11 @@ const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
 export default function MarkerPopup({ activity }: { activity: TripActivity }) {
   return (
     <Popup>
-      <div className="card items-center max-w-[300px] min-w-[300px]">
+      <div className="card max-w-[300px] min-w-[300px]">
         <figure className="relative h-[175px] px-10 pt-10 w-full">
           <GoogleImage placeId={activity.gPlaceId} />
         </figure>
-        <div className="card-body gap-0">
+        <div className="card-body items-start gap-0">
           <h2 className="card-title">
             {activity.place}
           </h2>
@@ -51,7 +51,7 @@ export default function MarkerPopup({ activity }: { activity: TripActivity }) {
           </div>
 
           <div className="flex items-center gap-1">
-            <MapPinIcon className="h-10 w-10 text-gray-500" />
+            <MapPinIcon className="h-5 w-5 text-gray-500" />
             <p className="text-sm text-gray-500 m-2!">{activity.address}</p>
           </div>
           {activity.nationalPhoneNumber && (
