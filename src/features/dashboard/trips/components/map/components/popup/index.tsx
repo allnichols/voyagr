@@ -11,7 +11,7 @@ const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
 export default function MarkerPopup({ activity }: { activity: TripActivity }) {
   return (
     <Popup>
-      <div className="card items-center">
+      <div className="card items-center max-w-[300px] min-w-[300px]">
         <figure className="relative h-[175px] px-10 pt-10 w-full">
           <GoogleImage placeId={activity.gPlaceId} />
         </figure>
