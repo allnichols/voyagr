@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { MapPinIcon, PhoneIcon, GlobeAltIcon } from "@heroicons/react/24/solid";
 import GoogleImage from "../../../google-image";
 import { useDetailsDrawer } from "@/features/dashboard/store/detailsDrawer";
+import { useCurrentActivity } from "@/features/dashboard/store/activity";
 
 const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
   ssr: false,
@@ -12,6 +13,9 @@ const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
 export default function MarkerPopup({ activity }: { activity: TripActivity }) {
   const toggleDetailsPanel = useDetailsDrawer(
     (state) => state.toggleDetailsDrawer,
+  );
+  const setCurrentActivity = useCurrentActivity(
+    (state) => state.setCurrentActivity,
   );
 
   return (
@@ -87,7 +91,10 @@ export default function MarkerPopup({ activity }: { activity: TripActivity }) {
           <div className="mt-6">
             <button
               className="btn btn-sm btn-outline btn-info"
-              onClick={() => toggleDetailsPanel()}
+              onClick={() => {
+                toggleDetailsPanel();
+                setCurrentActivity(activity.id);
+              }}
             >
               View More
             </button>
