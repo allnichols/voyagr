@@ -26,69 +26,8 @@ export default function MarkerPopup({ activity }: { activity: TripActivity }) {
         </figure>
         <div className="card-body items-start gap-0">
           <h2 className="card-title">{activity.place}</h2>
-          <div className="flex mt-0 gap-1.5 border-b border-gray-200 pb-1">
-            <div className="flex items-center gap-1">
-              <p>{activity.rating}</p>
-              <div className="rating rating-sm rating-half">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <React.Fragment key={star}>
-                    <input
-                      type="radio"
-                      name={`rating-${activity.id}`}
-                      className="mask mask-star-2 mask-half-1 bg-yellow-300 cursor-none"
-                      aria-label={`${star - 0.5} star`}
-                      defaultChecked={activity.rating === star - 0.5}
-                      disabled
-                    />
-                    <input
-                      type="radio"
-                      name={`rating-${activity.id}`}
-                      className="mask mask-star-2 mask-half-2 bg-yellow-300 cursor-none"
-                      aria-label={`${star} star`}
-                      defaultChecked={activity.rating === star}
-                      disabled
-                    />
-                  </React.Fragment>
-                ))}
-              </div>
-            </div>
-            <p>
-              {activity.userRatingCount ? `(${activity.userRatingCount})` : "0"}
-            </p>
-          </div>
-
-          <div className="flex items-center gap-1">
-            <MapPinIcon className="h-5 w-5 text-gray-500" />
-            <p className="text-sm text-gray-500 m-2!">{activity.address}</p>
-          </div>
-          {activity.nationalPhoneNumber && (
-            <div className="flex items-center gap-1">
-              <PhoneIcon className="h-5 w-5 text-gray-500" />
-              <p className="text-sm text-gray-500 m-2!">
-                {activity.nationalPhoneNumber}
-              </p>
-            </div>
-          )}
-          {activity.internationalPhoneNumber && (
-            <div className="flex items-center gap-1">
-              <PhoneIcon className="h-5 w-5 text-gray-500" />
-              <p className="text-sm text-gray-500 m-2!">
-                {activity.internationalPhoneNumber}
-              </p>
-            </div>
-          )}
-          {activity.websiteUri && (
-            <div className="flex items-center gap-1 text-ellipsis">
-              <GlobeAltIcon className="h-5 w-5 text-gray-500" />
-              <a
-                href={activity.websiteUri}
-                className="text-sm  text-gray-500 m-2! overflow-hidden text-ellipsis whitespace-nowrap max-w-48 block"
-              >
-                {activity.websiteUri}
-              </a>
-            </div>
-          )}
-          <div className="mt-6">
+          <p className="text-grey">{activity.address}</p>
+          <div className="card-actions">
             <button
               className="btn btn-sm btn-outline btn-info"
               onClick={() => {
