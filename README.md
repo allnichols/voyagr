@@ -1,36 +1,126 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Voyagr
+
+An AI-powered travel planning app that helps users create personalized itineraries. Built with Next.js, Typescript, and Google AI.
+
+## 📋 Table of Contents
+
+- [Features](#features)
+- [Tech Stack](#️tech-stack)
+- [Architecture](#️architecture)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Testing](#testing)
+
+---
+
+## Features 
+- **AI-Powered Itinerary Generation** - Uses Google Gemini AI to generate personalized trips
+- **Interactive Trip Planning** - Drag-and-drop interface for organizing activities and days
+- **Real-time Map Integration** - Interactive maps with activity markers using Leaflet
+- **Google Places Integration** - Search and add real places with ratings, photos, and details
+- **User Authentication** - Secure login with NextAuth.js (Google OAuth, more to come...)
+- **Real-time Updates** - React Query for efficient data fetching and caching
+
+## Tech Stack
+
+**Frontend:**
+- Next.js 15 (App Router)
+- TypeScript
+- React Query (TanStack)
+- Tailwind CSS + DaisyUI
+- React Leaflet (Maps)
+- Zustand (State Management)
+
+**Backend:**
+- Next.js API Routes
+- Prisma ORM
+- PostgreSQL
+- NextAuth.js
+
+**External APIs:**
+- Google Gemini AI
+- Google Places API
+- Google Maps API
+
+**Testing & Quality:**
+- Jest + React Testing Library
+- Biome (Linting & Formatting)
+
+## Architecture
+
+**Features based structure**
+```
+src/
+├── app/                    # Next.js App Router
+├── components/            # Reusable UI components
+├── features/              # Feature-based modules
+│   ├── auth/             # Authentication
+│   ├── dashboard/        # Main dashboard
+│   └── trips/           # Trip management
+├── lib/                  # Utilities and configurations
+└── types/               # TypeScript definitions
+```
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+
+- PostgreSQL database
+- Google Cloud API keys (Places, Maps, Gemini AI)
+
+### Installation
+
+1. **Clone the repository**
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/yourusername/voyagr.git
+cd voyagr
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Install dependencies**
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **Set up environment variables**
+```bash
+cp .env.example .env.local
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Required environment variables:
+```env
+DATABASE_URL="postgresql://..."
+NEXTAUTH_SECRET="your-secret"
+NEXTAUTH_URL="http://localhost:3000"
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
+GOOGLE_MAPS_API_KEY="your-maps-api-key"
+GOOGLE_GENAI_API_KEY="your-gemini-api-key"
+```
 
-## Learn More
+4. **Set up the database**
+```bash
+npx prisma generate
+npx prisma db push
+```
 
-To learn more about Next.js, take a look at the following resources:
+5. **Run the development server**
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Visit [http://localhost:3000](http://localhost:3000) to see the application.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Testing
 
-## Deploy on Vercel
+```bash
+# Run all tests
+npm run test
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Run tests in watch mode
+npm run test:watch
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Run tests with coverage
+npm run test:coverage
+```
