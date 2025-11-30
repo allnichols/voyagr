@@ -8,11 +8,12 @@ import { useReorderActivity } from "../../itinerary/hooks/useItineraryMutation";
 import { getTripDayActivites } from "../api/getTripDayActivities";
 import GoogleImage from "../../google-image";
 import ActivityMenu from "./menu";
+import { useDetailsDrawer } from "@/features/dashboard/store/detailsDrawer";
 
 export default function Activities({ isOpen, dayId }: ActivityProps) {
   const queryClient = useQueryClient();
   const reorderActivityMutation = useReorderActivity();
-
+  const isDetailsOpen = useDetailsDrawer((state) => state.isDetailsOpen);
   const setCurrentActivity = useCurrentActivity(
     (state) => state.setCurrentActivity,
   );
@@ -81,8 +82,14 @@ export default function Activities({ isOpen, dayId }: ActivityProps) {
                 ${activityDragAndDrop.isDragging(index) ? "cursor-grabbing" : ""}
                 ${isOpen ? "block opacity-100" : "hidden"}
                 `}
-        onMouseEnter={() => setCurrentActivity(activity.id)}
-        onMouseLeave={() => setCurrentActivity(null)}
+        onMouseEnter={() => {
+          if (isDetailsOpen) return;
+          setCurrentActivity(activity.id);
+        }}
+        onMouseLeave={() => {
+          if (isDetailsOpen) return;
+          setCurrentActivity(null);
+        }}
         onDragStart={(e) => {
           e.stopPropagation();
           activityDragAndDrop.handleDragStart(e, index, dayId, activity.id);

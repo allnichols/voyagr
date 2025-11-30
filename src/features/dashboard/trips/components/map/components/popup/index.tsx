@@ -1,7 +1,5 @@
 import { TripActivity } from "@prisma/client";
-import React from "react";
 import dynamic from "next/dynamic";
-import { MapPinIcon, PhoneIcon, GlobeAltIcon } from "@heroicons/react/24/solid";
 import GoogleImage from "../../../google-image";
 import { useDetailsDrawer } from "@/features/dashboard/store/detailsDrawer";
 import { useCurrentActivity } from "@/features/dashboard/store/activity";
