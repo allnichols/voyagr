@@ -3,9 +3,10 @@ import { TripActivity } from "@prisma/client";
 
 export type GoogleImageProps = {
   placeId: number | string | null;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   place?: GooglePlace | TripActivity;
+  multiple?: boolean;
 };
 
 interface GooglePhoto {
