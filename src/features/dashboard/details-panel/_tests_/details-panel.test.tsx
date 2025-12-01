@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { getByText, prettyDOM, render, waitFor } from "@testing-library/react";
 import DetailsPanel from "..";
 import {
   QueryClient,
@@ -67,8 +67,11 @@ describe("Details Panel", () => {
   it("displays trip place name when query is successful", async () => {
     const { getByText } = renderWithQueryClient(<DetailsPanel />);
 
-    await waitFor(() => {
+     waitFor(async () => {
       expect(getByText("A Great Place")).toBeInTheDocument();
+      expect(getByText('Great Place St')).toBeInTheDocument();
+      expect(getByText('1000')).toBeInTheDocument();
+      expect(getByText('123-123-123')).toBeInTheDocument();
     });
   });
 });
