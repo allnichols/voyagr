@@ -106,7 +106,7 @@ export const DayDropdown = ({
           <DayMenu index={index} dayId={dayId} days={days} />
         </div>
         <div
-          className="ml-4 mb-4 transition-all duration-300"
+          className="ml-4 mb-4 transition-all duration-300 overflow-y-auto"
           style={{
             maxHeight: isOpen ? "500px" : "0",
             opacity: isOpen ? 1 : 0,

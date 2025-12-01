@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
     ],
     localPatterns: [
       {
-        pathname: "/api/google-image/image**",
+        pathname: "/api/google-image/**",
         search: "",
       },
       {

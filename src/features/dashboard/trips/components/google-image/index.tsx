@@ -62,19 +62,14 @@ export default function GoogleImage({
     const photoUrl = `/api/google-image/image?image_ref=${photo.photo_reference}`;
 
     return (
-      <div
-        className="relative overflow-hidden rounded"
-        style={{ width: `${width}px`, height: `${height}px` }}
-      >
         <Image
           src={photoUrl}
           alt={"Place photo"}
           fill
           className="object-cover rounded"
-          sizes={`${width}px`}
+          sizes="100vw"
           unoptimized
         />
-      </div>
     );
   }
 }
