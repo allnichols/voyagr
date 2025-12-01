@@ -25,7 +25,7 @@ export default function DetailsPanel() {
   } = useQuery<TripActivity>({
     queryFn: () => fetchActivity(currentActivity),
     queryKey: ["tripActivity", currentActivity],
-    enabled: !!currentActivity,
+    enabled: !!currentActivity && !!isDetailsOpen,
   });
 
   return (
