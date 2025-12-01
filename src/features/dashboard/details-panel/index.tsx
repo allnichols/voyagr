@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { TripActivity } from "@prisma/client";
 import Rating from "./rating";
 import Details from "./details";
+import ImageCarousel from "./image-carousel";
 
 export default function DetailsPanel() {
   const isDetailsOpen = useDetailsDrawer((state) => state.isDetailsOpen);
@@ -45,7 +46,7 @@ export default function DetailsPanel() {
       )}
 
       <div className="card bg-base-100 w-[100%] h-[100%] shadow-sm relative">
-        <div className="p-4 border-b border-base-300 absolute right-0 top-0">
+        <div className="p-4 absolute right-0 top-0 z-10">
           <button
             onClick={() => toggleDetailsDrawer()}
             className="btn btn-sm ml-auto flex"
@@ -66,7 +67,9 @@ export default function DetailsPanel() {
             </svg>
           </button>
         </div>
-        <figure className="h-[300px] w-[100%]"></figure>
+        <figure className="h-[300px] w-[100%]">
+          <ImageCarousel placeId={activity?.gPlaceId} />
+        </figure>
         <div className="card-body">
           <h2 className="card-title text-5xl">
             {activity?.place ? activity.place : ""}
