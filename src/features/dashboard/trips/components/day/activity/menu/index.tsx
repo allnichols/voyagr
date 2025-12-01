@@ -1,4 +1,3 @@
-import DetailsPanel from "../../../../../details-panel";
 import { useDetailsDrawer } from "@/features/dashboard/store/detailsDrawer";
 
 type ActivityMenuProps = {
@@ -11,7 +10,7 @@ export default function ActivityMenu({ activityIndex, activityId, handleDeleteAc
     const toggleDetailsDrawer = useDetailsDrawer((state) => state.toggleDetailsDrawer);
 
     return (
-        <div className="dropdown dropdown-top dropdown-left">
+        <div className="dropdown dropdown-bottom dropdown-end">
             <div tabIndex={activityIndex} className="btn btn-ghost btn-circle">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
