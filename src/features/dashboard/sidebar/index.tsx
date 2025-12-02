@@ -2,7 +2,7 @@ import Menu from "./components/menu";
 import TopBar from "./components/top-bar";
 
 export default function Sidebar({ children }: { children: React.ReactNode }) {
-  //   add very light grey to background then refactor how the tirps cards look
+  
   return (
     <div className="flex h-full">
       <Menu />
