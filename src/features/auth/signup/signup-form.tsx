@@ -1,8 +1,12 @@
 "use client";
 import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 export default function SignUpForm() {
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error");
+
   return (
     <div>
       <div className="mt-2">
@@ -41,6 +45,7 @@ export default function SignUpForm() {
           </svg>
           Signup with Google
         </button>
+        {error && <p className="text-red-500 mt-2">Signup failed. Try again.</p>}
       </div>
       <div className="text-center mt-5">
         <p className="text-sm">
