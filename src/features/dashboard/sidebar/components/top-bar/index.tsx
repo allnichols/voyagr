@@ -1,13 +1,16 @@
 "use client";
+import { signOut } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 export default function TopBar() {
   const searchParams = useSearchParams().get("destination");
 
   return (
-    <div className="flex justify-between p-2 border-b-base-200">
+    <div className="flex justify-between p-2 border-b-1 border-b-base-200">
       {searchParams ? (
         <p className="text-xl font-semibold">Trip to {searchParams}</p>
-      ) : <p></p>}
+      ) : (
+        <p></p>
+      )}
       <div className="dropdown dropdown-end self-end">
         <div tabIndex={0} role="button" className="btn btn-circle me-6">
           <svg
@@ -30,10 +33,26 @@ export default function TopBar() {
           className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
         >
           <li>
-            <a>Item 1</a>
-          </li>
-          <li>
-            <a>Item 2</a>
+            <button
+              onClick={() => signOut({ callbackUrl: "/auth/login" })}
+              className="btn btn-sm"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
+                />
+              </svg>
+              Sign Out
+            </button>
           </li>
         </ul>
       </div>
