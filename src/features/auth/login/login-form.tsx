@@ -1,139 +1,15 @@
 "use client";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { useState } from "react";
 import Link from "next/link";
 
-type LoginPayload = {
-  email: string;
-  password: string;
-};
-
 export default function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
-  const [formData, setFormData] = useState<LoginPayload>({
-    email: "",
-    password: "",
-  });
-  const [loading, setLoading] = useState(false);
-  const [loginError, setLoginError] = useState<string | null>(null);
-
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const res = await signIn("credentials", {
-        redirect: false,
-        email: formData.email,
-        password: formData.password,
-        callbackUrl: "/dashboard",
-      });
-
-      if (res?.error) {
-        setLoginError(res.error);
-        setLoading(false);
-        return;
-      }
-
-      router.push("/dashboard");
-    } catch (error) {
-      setLoading(false);
-      console.error("Login failed:", error);
-    }
-  };
 
   return (
     <div>
-      <h1 className="text-center text-3xl">Login</h1>
-      <form onSubmit={handleLogin} className="m-auto mt-6 max-w-md">
-        {loginError && (
-          <p className="text-red-500 mb-4">
-            {loginError === "CredentialsSignin"
-              ? "Invalid email or password."
-              : "Login failed. Please try again."}
-          </p>
-        )}
-        <fieldset className="fieldset">
-          <label className="input validator w-full mb-4">
-            <svg
-              className="h-[1em] opacity-50"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-            >
-              <g
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                strokeWidth="2.5"
-                fill="none"
-                stroke="currentColor"
-              >
-                <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-              </g>
-            </svg>
-            <input
-              type="email"
-              name="email"
-              placeholder="mail@site.com"
-              required
-              onChange={handleInput}
-            />
-          </label>
-
-          <label className="input validator w-full mb-4">
-            <svg
-              className="h-[1em] opacity-50"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-            >
-              <g
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                strokeWidth="2.5"
-                fill="none"
-                stroke="currentColor"
-              >
-                <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path>
-                <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
-              </g>
-            </svg>
-            <input
-              type="password"
-              name="password"
-              required
-              placeholder="Password"
-              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-              title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
-              onChange={handleInput}
-            />
-          </label>
-          <p className="validator-hint hidden">
-            Must be more than 8 characters, including
-            <br />
-            At least one number <br />
-            At least one lowercase letter <br />
-            At least one uppercase letter
-          </p>
-        </fieldset>
-        <button
-          disabled={
-            formData.email === "" || formData.password === "" || loading
-          }
-          className="btn btn-primary w-full mt-4 disabled:opacity-70 disabled:cursor-not-allowed"
-          type="submit"
-        >
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
-      <div className="divider">OR</div>
-      <div>
+      <div className="mt-2">
         <button
           onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
           className="btn bg-white text-black border-[#e5e5e5] w-full"

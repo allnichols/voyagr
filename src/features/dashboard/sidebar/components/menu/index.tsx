@@ -37,7 +37,7 @@ export default function Menu() {
         />
       )}
       <aside className={`
-        w-[225px] bg-white border-r border-base-200 transition-transform duration-300 ease-in-out z-50
+        w-[150px] bg-white border-r border-base-200 transition-transform duration-300 ease-in-out z-50
         md:relative md:translate-x-0
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         ${window?.innerWidth < 1024 ? 'fixed top-0 left-0 h-full' : ''}

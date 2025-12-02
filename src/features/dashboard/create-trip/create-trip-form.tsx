@@ -25,7 +25,6 @@ export default function CreateTripForm({
 }: CreateTripFormProps) {
   return (
     <div className="mt-10 p-6 bg-white rounded-lg shadow-md w-full max-w-lg">
-      <h1 className="text-2xl mb-4 text-center font-bold">Create your trip</h1>
       {errorMessage && (
         <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
           {errorMessage}

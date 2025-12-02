@@ -14,7 +14,10 @@ export default function UserProfile() {
 
   return (
     <div className="p-4">
-      <button onClick={() => signOut({ callbackUrl: "/auth/login" })} className="btn">
+      <button
+        onClick={() => signOut({ callbackUrl: "/auth/login" })}
+        className="btn btn-sm"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
