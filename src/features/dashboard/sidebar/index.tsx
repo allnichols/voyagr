@@ -1,5 +1,4 @@
 import Menu from "./components/menu";
-import TopBar from "./components/top-bar";
 
 export default function Sidebar({ children }: { children: React.ReactNode }) {
   
@@ -8,8 +7,6 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
       <Menu />
 
       <main className="flex-1 p-1 overflow-y-hidden">
-        <TopBar />
-
         <div className="md:pt-0 pt-10">{children}</div>
       </main>
     </div>
