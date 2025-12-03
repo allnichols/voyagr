@@ -17,7 +17,9 @@ export function GooglePlaceResults({
     <ul className="list">
       {places.map((place) => (
         <li key={place.id} className="list-row items-center">
-          <GoogleImage placeId={place.id} width={45} height={45}  />
+          <div className="w-[55px] h-[55px] relative">
+            <GoogleImage placeId={place.id} width={55} height={55} />
+          </div>
           <div>
             <p>{place.displayName.text}</p>
             <div className="flex items-center gap-2">
