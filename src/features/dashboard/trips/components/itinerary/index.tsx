@@ -7,13 +7,8 @@ import { addDayToTrip } from "./actions";
 import { useDragAndDrop } from "./hooks/useDragAndDrop";
 import { useReorderDay } from "./hooks/useItineraryMutation";
 import { useToastMutation } from "../hooks/useToastMutation";
+import { getTripDays } from "./api";
 
-async function getTripDays(tripId: number | null) {
-  const url = `/api/trip-days${tripId !== null ? `?tripId=${tripId}` : ""}`;
-  const res = await fetch(url, { method: "GET" });
-  if (!res.ok) throw new Error("Failed to get trip days");
-  return res.json();
-}
 
 export default function Itinerary() {
   const params = useParams();
@@ -53,11 +48,8 @@ export default function Itinerary() {
     },
   });
 
-  const toast = useToastMutation(reorderDayMutation, 3000);
-
   return (
     <>
-      {toast}
       <div className="p-6 overflow-hidden">
         <h1 className="text-3xl font-bold mb-4">Trip to {destination}</h1>
         <div className="divider" />
