@@ -127,10 +127,7 @@ npm run test:watch
 npm run test:coverage
 ```
 
-## Known Issues & Roadmap
-
-- [ ] **Finish Details Panel** - Display extra details about a place [branch](https://github.com/allnichols/voyagr/tree/feature-details)
-- [ ] **Better Sidebar Layout** - Use the sidebar from [daisy ui]([http://localhost:3000](https://daisyui.com/components/drawer/#responsive-collapsible-icon-only-drawer-sidebar-using-is-drawer-close-and-is-drawer-open)) 
+## Roadmap & Future Work
 - [ ] **Add Budget** - Ability for users to set a budget for their trip
 - [ ] **Export Features** - Export itinerary to PDF or calendar
 - [ ] **Improve Mobile Experience** - Polish the mobile experience for the web.
