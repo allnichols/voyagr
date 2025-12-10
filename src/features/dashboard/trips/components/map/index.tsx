@@ -34,10 +34,7 @@ export default function Map() {
 
   const currentDayId = useCurrentDay((state) => state.currentDay.id);
   const currentActivity = useCurrentActivity((state) => state.currentActivity);
-  const [icons, setIcons] = useState<{ activeIcon: any; inactiveIcon: any }>({
-    activeIcon: null,
-    inactiveIcon: null,
-  });
+  const [icons, setIcons] = useState<any>(null);
   const [position, setPosition] = useState<[number, number]>([0, 0]);
 
   const markerRefs = useRef<{ [key: number]: any }>({});
@@ -95,15 +92,13 @@ export default function Map() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {icons.inactiveIcon &&
+        {icons &&
           data &&
           data.map((activity: TripActivity) => {
-            const isActive = currentActivity.id === activity.id;
-            const icon = isActive ? icons.activeIcon : icons.inactiveIcon;
             return (
               <Marker
                 key={activity.id}
-                icon={icon}
+                icon={icons}
                 position={[activity.latitude ?? 0, activity.longitude ?? 0]}
                 ref={(ref) => {
                   if (ref) {
