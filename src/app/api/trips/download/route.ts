@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { auth } from "../../auth/[...nextauth]/auth";
 import prisma from "@/lib/prisma";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+import sanitizeText from "./sanatizeText";
 
 export async function GET(req: NextRequest) {
   const session = await auth();
@@ -35,8 +36,8 @@ export async function GET(req: NextRequest) {
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([600, 800]);
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-
-    page.drawText(`Itinerary for ${itineraryItems[0]?.trip.destination || "Trip"}`, {
+    const destination = sanitizeText(itineraryItems[0]?.trip.destination || "Trip");
+    page.drawText(`Itinerary for ${destination}`, {
       x: 50,
       y: 750,
       size: 20,
@@ -46,6 +47,7 @@ export async function GET(req: NextRequest) {
 
     let yPosition = 720;
     for (const day of itineraryItems) {
+    
       page.drawText(`Day ${day.dayNumber}: ${day.date.toDateString()}`, {
         x: 50,
         y: yPosition,
@@ -55,7 +57,8 @@ export async function GET(req: NextRequest) {
       });
       yPosition -=  20;
         for (const activity of day.activities) {
-            page.drawText(`${activity.position}: ${activity.place}`, {
+          const place = sanitizeText(activity.place || "N/A");
+            page.drawText(`${activity.position}: ${place}`, {
                 x: 70,
                 y: yPosition,
                 size: 12,
@@ -63,8 +66,8 @@ export async function GET(req: NextRequest) {
                 color: rgb(0, 0, 0),
             });
             yPosition -=  15;
-
-            page.drawText(`   Address: ${activity.address}`, {
+            const address = sanitizeText(activity.address || "N/A");
+            page.drawText(`   Address: ${address}`, {
                 x: 90,
                 y: yPosition,
                 size: 10,
@@ -72,7 +75,7 @@ export async function GET(req: NextRequest) {
                 color: rgb(0, 0, 0),
             });
             yPosition -=  15;
-            const phoneNumber = activity.nationalPhoneNumber || "N/A";
+            const phoneNumber = sanitizeText(activity.nationalPhoneNumber || "N/A");
             page.drawText(`   Phone: ${phoneNumber}`, {
                 x: 90,
                 y: yPosition,
@@ -81,8 +84,7 @@ export async function GET(req: NextRequest) {
                 color: rgb(0, 0, 0),
             });
             yPosition -=  15;
-
-            const website = activity.websiteUri || "N/A";
+            const website = sanitizeText(activity.websiteUri || "N/A");
             page.drawText(`   Website: ${website}`, {
                 x: 90,
                 y: yPosition,
