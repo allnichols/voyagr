@@ -6,10 +6,17 @@ import "@testing-library/jest-dom";
 import DownloadItinerary from "../index";
 import { downloadItinerary } from "../../api";
 import { useSearchParams } from "next/navigation";
-import { mock } from "node:test";
 
 jest.mock("next/navigation");
 jest.mock("../../api");
+jest.mock("@/features/dashboard/hooks/useToast", () => {
+  const useToast = jest.fn(() => ({
+    toasts: [],
+    showError: jest.fn(),
+    removeToast: jest.fn(),
+  }));
+  return { _esModule: true, useToast, default: useToast };
+});
 
 const mockedDownloadItinerary = downloadItinerary as jest.MockedFunction<
   typeof downloadItinerary
@@ -17,32 +24,6 @@ const mockedDownloadItinerary = downloadItinerary as jest.MockedFunction<
 const mockedUseSearchParams = useSearchParams as jest.MockedFunction<
   typeof useSearchParams
 >;
-
-//   Object.defineProperty(window, "URL", {
-//     value: {
-//       createObjectURL: mockedCreateObjectURL,
-//       revokeObjectURL: mockedRevokeObjectURL,
-//     },
-//     writable: true,
-//   });
-
-//   const mockCreateElement = jest.fn((tagName: string) => {
-//     if (tagName === 'a') {
-//       return {
-//         click: mockClick,
-//         remove: mockRemove,
-//         href: "",
-//         download: "",
-//       };
-//     }
-//     return document.createElement(tagName);
-//   });
-
-//   Object.defineProperty(document, 'createElement', {
-//     value: mockCreateElement,
-//     writable: true,
-//   });
-// });
 
 const mockedCreateObjectURL = jest.fn();
 const mockedRevokeObjectURL = jest.fn();
@@ -149,5 +130,28 @@ describe("DownloadItinerary", () => {
     await waitFor(() => {
       expect(mockedDownloadItinerary).toHaveBeenCalledWith(1);
     });
+  });
+
+  it("shows error toast on download failure", async () => {
+    const { useToast } = require("@/features/dashboard/hooks/useToast");
+    const mockShowError = jest.fn();
+    useToast.mockReturnValue({
+      toasts: [],
+      showError: mockShowError,
+      removeToast: jest.fn(),
+    });
+    mockSearchParams.get.mockReturnValue("Paris");
+    mockedDownloadItinerary.mockRejectedValueOnce(true);
+
+    render(<DownloadItinerary tripId={1} />);
+
+    const downloadBtn = screen.getByRole("button");
+    fireEvent.click(downloadBtn);
+
+    await waitFor(() => {
+      expect(mockShowError).toHaveBeenCalled();
+      
+    });
+    expect(downloadBtn).not.toBeDisabled();
   });
 });

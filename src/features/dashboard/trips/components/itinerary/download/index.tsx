@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { downloadItinerary } from "../api";
-import useToast from "@/features/dashboard/hooks/useToast";
+import { useToast } from "@/features/dashboard/hooks/useToast";
 import ToastComponent from "@/features/dashboard/components/toast";
 
 type DownloadItineraryProps = {

@@ -7,7 +7,7 @@ export interface Toast {
   duration?: number;
 }
 
-export default function useToast() {
+export function useToast() {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   const addToast = (
