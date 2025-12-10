@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { downloadItinerary } from "../api";
+import useToast from "@/features/dashboard/hooks/useToast";
+import ToastComponent from "@/features/dashboard/components/toast";
 
 type DownloadItineraryProps = {
   tripId: number | string;
@@ -9,7 +11,8 @@ type DownloadItineraryProps = {
 export default function DownloadItinerary({ tripId }: DownloadItineraryProps) {
   const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
-  const destination = searchParams.get("destination") || "trip";
+  const destination = searchParams.get("destination") || "Your_Trip";
+  const { toasts, showError, removeToast } = useToast();
 
   const handleDownload = async () => {
     try {
@@ -17,7 +20,8 @@ export default function DownloadItinerary({ tripId }: DownloadItineraryProps) {
       const res = await downloadItinerary(tripId);
 
       if (!res) {
-        throw new Error("Failed to download itinerary");
+        showError("Download failed. Please try again.");
+        console.log("No itinerary available for download.");
       }
 
       const blob = res;
@@ -29,6 +33,7 @@ export default function DownloadItinerary({ tripId }: DownloadItineraryProps) {
       window.URL.revokeObjectURL(url);
       a.remove();
     } catch (error) {
+      showError("Download failed. Please try again.");
       console.error("Download failed", error);
     } finally {
       setIsLoading(false);
@@ -62,18 +67,7 @@ export default function DownloadItinerary({ tripId }: DownloadItineraryProps) {
         )}
         Download
       </button>
-      {/* <dialog id="download-modal" className="modal">
-        <div className="modal-box">
-          <h3 className="font-bold text-lg">Hello!</h3>
-          {isLoading && <p>Preparing your download...</p>}
-          <div className="modal-action">
-            <form method="dialog">
-             
-              <button className="btn">Close</button>
-            </form>
-          </div>
-        </div>
-      </dialog> */}
+      <ToastComponent toasts={toasts} onRemove={removeToast} />
     </>
   );
 }
