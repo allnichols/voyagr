@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    let trip = await prisma.tripDay.findFirst({
+    let trip = await prisma.tripDay.findMany({
       where: { id: Number(tripId), trip: { userId: Number(session.user.id) } },
       orderBy: { dayNumber: "desc" },
     });
