@@ -1,3 +1,11 @@
+
+/**
+ * Sanitizes input text by replacing or removing specific non-ASCII characters.
+ * This function targets various character sets including Japanese, European accented characters,
+ * Korean, Chinese, Arabic, Cyrillic, and common symbols.
+ * @param {string} text - The input text to be sanitized.
+ * @returns {string} The sanitized text.
+ */
 export default function sanitizeText(text: string): string {
     let sanitized = text
         // Japanese characters
