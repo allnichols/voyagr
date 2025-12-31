@@ -7,16 +7,11 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const tripId = searchParams.get("tripId");
 
-  const session = await auth();
-  if (!session?.user.id) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
-    });
-  }
-
   try {
+    const session = await auth();
+
     let trip = await prisma.tripDay.findMany({
-      where: { id: Number(tripId), trip: { userId: Number(session.user.id) } },
+      where: { id: Number(tripId), userId: Number(session?.user.id) },
       orderBy: { dayNumber: "desc" },
     });
 
@@ -29,7 +24,6 @@ export async function GET(req: NextRequest) {
     console.error("Error fetching trip day:", {
       error: error instanceof Error ? error.message : "Unknown error",
       tripId,
-      userId: session.user.id,
       stack: error instanceof Error ? error.stack : undefined,
       timestamp: new Date().toISOString(),
     });

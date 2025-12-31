@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     let tripActivities = await prisma.tripActivity.findMany({
       where: {
         tripDayId: Number(tripDayId),
-        tripDay: { trip: { userId: Number(session?.user.id) } },
+        userId: Number(session?.user.id),
       },
       orderBy: { position: "asc" },
     });
