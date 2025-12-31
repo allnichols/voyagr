@@ -3,7 +3,6 @@ import prisma from "@/lib/prisma";
 
 // GET a single trip activity
 export async function GET(
-  req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {

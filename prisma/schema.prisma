@@ -24,8 +24,9 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
-  sessions      Session[]
   trips         Trip[]
+  tripDays      TripDay[]
+  tripActivities TripActivity[]
 }
 
 model Account {
@@ -44,14 +45,6 @@ model Account {
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model Session {
-  id           Int      @id @default(autoincrement())
-  sessionToken String   @unique
-  userId       Int
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
 model Trip {
   id            Int       @id @default(autoincrement())
   userId        Int
@@ -62,17 +55,21 @@ model Trip {
   createdAt     DateTime  @default(now())
   user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   days          TripDay[]
+  @@index([userId]) 
 }
 
 model TripDay {
   id         Int            @id @default(autoincrement())
   tripId     Int
   dayNumber  Int
+  userId     Int
   date       DateTime
   trip       Trip           @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  user       User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
   activities TripActivity[]
 
   @@index([tripId])
+  @@index([tripId, userId])
 }
 
 model TripActivity {
@@ -94,8 +91,11 @@ model TripActivity {
   types String?
   latitude  Float?
   longitude Float?
+  userId    Int
   createdAt DateTime @default(now())
-
   tripDay TripDay @relation(fields: [tripDayId], references: [id], onDelete: Cascade)
-  @@index([tripDayId])
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([tripDayId, userId])
 }
